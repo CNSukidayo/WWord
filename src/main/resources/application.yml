@@ -1,0 +1,22 @@
+server:
+  port: 8080
+spring:
+  profiles:
+    active: dev
+  datasource:
+    username: root
+    password: 123456
+    url: jdbc:mysql://localhost:3306/wword?serverTimezone=UTC
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+logging:
+  file:
+    name: logs/WWord.log
+
+mybatis:
+  type-aliases-package: cnsukidayo.com.gitee.model.pojo
+  mapper-locations: classpath:mybatis/*.xml
+  configuration:
+    map-underscore-to-camel-case: true

@@ -11,6 +11,11 @@ spring:
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      # password:
 logging:
   file:
     name: logs/WWord.log

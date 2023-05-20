@@ -5,28 +5,39 @@ import cnsukidayo.com.gitee.model.pojo.User;
 import cnsukidayo.com.gitee.security.authentication.AuthenticationImpl;
 import cnsukidayo.com.gitee.security.context.SecurityContextHolder;
 import cnsukidayo.com.gitee.security.context.SecurityContextImpl;
+import cnsukidayo.com.gitee.security.util.SecurityUtils;
+import cnsukidayo.com.gitee.service.UserService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.core.annotation.Order;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import java.io.IOException;
 
 /**
- * Api authentication Filter
+ * API授权过滤器
  *
- * @author johnniang
+ * @author cnsukidayo
+ * @date 2023/5/19 18:11
  */
 @Component
 @Order(0)
 public class ApiAuthenticationFilter extends AbstractAuthenticationFilter {
 
-    public ApiAuthenticationFilter() {
-        addUrlPatterns("/api/user/**");
-        addExcludeUrlPatterns("/api/user/login");
+    private final UserService userService;
+    private final RedisTemplate<String, String> redisTemplate;
+
+    public ApiAuthenticationFilter(UserService userService,
+                                   RedisTemplate<String, String> redisTemplate) {
+        this.userService = userService;
+        this.redisTemplate = redisTemplate;
+        addUrlPatterns("/api/authentication/**");
+        addExcludeUrlPatterns("/api/authentication/user/login",
+                "/api/authentication/user/refresh/*");
     }
 
     @Override
@@ -38,8 +49,11 @@ public class ApiAuthenticationFilter extends AbstractAuthenticationFilter {
         if (!StringUtils.hasText(token)) {
             throw new AuthenticationException("未登录，请登录后访问");
         }
-
-        User user = new User();
+        String userID = redisTemplate.opsForValue().get(SecurityUtils.buildTokenAccessKey(token));
+        if (userID == null) {
+            throw new AuthenticationException("token不存在或已过期").setErrorData(token);
+        }
+        User user = userService.getById(Integer.valueOf(userID));
 
         // 设置安全性
         SecurityContextHolder

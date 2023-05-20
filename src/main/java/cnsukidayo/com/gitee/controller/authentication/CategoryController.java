@@ -1,4 +1,4 @@
-package cnsukidayo.com.gitee.controller.user;
+package cnsukidayo.com.gitee.controller.authentication;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

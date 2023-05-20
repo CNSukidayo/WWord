@@ -7,7 +7,6 @@ import cnsukidayo.com.gitee.security.handler.AuthenticationFailureHandler;
 import cnsukidayo.com.gitee.security.handler.DefaultAuthenticationFailureHandler;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.lang.NonNull;
@@ -20,10 +19,10 @@ import java.io.IOException;
 import java.util.*;
 
 /**
- * Abstract authentication filter.
+ * 抽象的授权过滤器
  *
- * @author johnniang
- * @date 19-4-16
+ * @author cnsukidayo
+ * @date 2023/5/19 18:11
  */
 public abstract class AbstractAuthenticationFilter extends OncePerRequestFilter {
 
@@ -52,15 +51,7 @@ public abstract class AbstractAuthenticationFilter extends OncePerRequestFilter 
         Assert.notNull(request, "Http servlet request must not be null");
 
         // Get from header
-        Cookie[] cookies = request.getCookies();
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                if (cookie.getName().equals(WWordConst.USER_TOKEN)) {
-                    return cookie.getValue();
-                }
-            }
-        }
-        return null;
+        return request.getHeader(WWordConst.API_ACCESS_KEY_HEADER_NAME);
     }
 
     protected abstract void doAuthenticate(HttpServletRequest request, HttpServletResponse response,
@@ -70,7 +61,7 @@ public abstract class AbstractAuthenticationFilter extends OncePerRequestFilter 
     protected boolean shouldNotFilter(HttpServletRequest request) {
         Assert.notNull(request, "Http servlet request must not be null");
 
-        // check white list
+        // 检查白名单
         boolean result = excludeUrlPatterns.stream()
                 .anyMatch(p -> antPathMatcher.match(p, urlPathHelper.getRequestUri(request)));
 
@@ -144,9 +135,9 @@ public abstract class AbstractAuthenticationFilter extends OncePerRequestFilter 
     }
 
     /**
-     * Sets authentication failure handler.
+     * 设置认证错误处理器
      *
-     * @param failureHandler authentication failure handler
+     * @param failureHandler 错误认证处理器
      */
     public synchronized void setFailureHandler(
             @NonNull AuthenticationFailureHandler failureHandler) {

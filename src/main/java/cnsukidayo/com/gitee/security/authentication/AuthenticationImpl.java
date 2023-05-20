@@ -6,7 +6,7 @@ import cnsukidayo.com.gitee.model.pojo.User;
 /**
  * Authentication implementation.
  *
- * @author johnniang
+ * @author cnsukidayo
  */
 public class AuthenticationImpl implements Authentication {
 
@@ -18,6 +18,6 @@ public class AuthenticationImpl implements Authentication {
 
     @Override
     public User getUser() {
-        return user;
+        return this.user;
     }
 }

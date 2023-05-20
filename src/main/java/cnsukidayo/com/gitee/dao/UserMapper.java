@@ -1,6 +1,6 @@
 package cnsukidayo.com.gitee.dao;
 
-import cnsukidayo.com.gitee.model.pojo.Student;
+import cnsukidayo.com.gitee.model.pojo.User;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
@@ -9,8 +9,10 @@ import org.apache.ibatis.annotations.Mapper;
  */
 
 @Mapper
-public interface StudentMapper {
+public interface UserMapper {
 
-    Student selectStudentByID(Integer id);
+    User getUserByID(Integer id);
+
+    User getUserByName(String name);
 
 }

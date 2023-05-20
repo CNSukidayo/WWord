@@ -5,16 +5,15 @@ import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
 /**
- * Base exception of the project.
+ * 项目基本的异常
  *
- * @author johnniang
- * @author ryan0up
- * @date 2019-03-15
+ * @author cnsukidayo
+ * @date 2023/5/19 18:11
  */
 public abstract class AbstractWWordException extends RuntimeException {
 
     /**
-     * Error errorData.
+     * 错误数据
      */
     private Object errorData;
 
@@ -27,7 +26,7 @@ public abstract class AbstractWWordException extends RuntimeException {
     }
 
     /**
-     * Http status code
+     * Http 状态码
      *
      * @return {@link HttpStatus}
      */
@@ -40,10 +39,10 @@ public abstract class AbstractWWordException extends RuntimeException {
     }
 
     /**
-     * Sets error errorData.
+     * 设置错误数据
      *
-     * @param errorData error data
-     * @return current exception.
+     * @param errorData 错误数据
+     * @return 返回当前的异常
      */
     @NonNull
     public AbstractWWordException setErrorData(@Nullable Object errorData) {

@@ -1,5 +1,12 @@
 server:
   port: 8080
+  servlet:
+    encoding:
+      charset: UTF-8
+      force: true
+      enabled: true
+  tomcat:
+    uri-encoding: UTF-8
 spring:
   profiles:
     active: dev
@@ -19,9 +26,14 @@ spring:
 logging:
   file:
     name: logs/WWord.log
+  level:
+    cnsukidayo.com.gitee: info
 
 mybatis:
   type-aliases-package: cnsukidayo.com.gitee.model.pojo
   mapper-locations: classpath:mybatis/*.xml
   configuration:
     map-underscore-to-camel-case: true
+
+wword:
+  resource-locations: D:/Program/Java Project/WWord/wwordResources/

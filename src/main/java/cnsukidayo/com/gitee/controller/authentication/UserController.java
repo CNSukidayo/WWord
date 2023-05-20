@@ -4,6 +4,7 @@ import cnsukidayo.com.gitee.model.params.LoginParam;
 import cnsukidayo.com.gitee.model.pojo.User;
 import cnsukidayo.com.gitee.security.token.AuthToken;
 import cnsukidayo.com.gitee.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -22,7 +23,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public AuthToken login(@RequestBody LoginParam loginParam) {
+    public AuthToken login(@RequestBody @Valid LoginParam loginParam) {
         return userService.login(loginParam);
     }
 

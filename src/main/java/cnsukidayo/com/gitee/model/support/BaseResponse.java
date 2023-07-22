@@ -48,17 +48,6 @@ public class BaseResponse<T> {
     }
 
     /**
-     * Creates an ok result with message only. (Default status is 200)
-     *
-     * @param message result message
-     * @return ok result with message only
-     */
-    @NonNull
-    public static <T> BaseResponse<T> ok(@Nullable String message) {
-        return ok(message, null);
-    }
-
-    /**
      * Creates an ok result with data only. (Default message is OK, status is 200)
      *
      * @param data data to response

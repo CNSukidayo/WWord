@@ -1,5 +1,7 @@
 package cnsukidayo.com.gitee.controller.content;
 
+import cnsukidayo.com.gitee.model.support.BaseResponse;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -11,6 +13,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/content/categories")
 public class CategoryController {
 
-
+    @GetMapping("/hello")
+    public BaseResponse<String> hello() {
+        return BaseResponse.ok("good!");
+    }
 
 }

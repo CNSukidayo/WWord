@@ -15,6 +15,7 @@
         <mybatis.version>3.0.1</mybatis.version>
         <swagger.version>2.9.2</swagger.version>
         <springboot.version>3.0.4</springboot.version>
+        <spring-doc.version>2.1.0</spring-doc.version>
     </properties>
 
 
@@ -47,7 +48,11 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-configuration-processor</artifactId>
         </dependency>
-
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+            <version>${spring-doc.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>mysql</groupId>
@@ -62,11 +67,10 @@
         </dependency>
 
         <dependency>
-            <groupId>org.springdoc</groupId>
-            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-            <version>2.0.2</version>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
         </dependency>
-
 
     </dependencies>
 

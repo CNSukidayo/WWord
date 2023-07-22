@@ -10,6 +10,8 @@
     <packaging>pom</packaging>
     <modules>
         <module>service</module>
+        <module>model</module>
+        <module>service-client</module>
     </modules>
 
     <properties>

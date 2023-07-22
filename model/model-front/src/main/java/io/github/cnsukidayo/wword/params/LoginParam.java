@@ -1,4 +1,4 @@
-package cnsukidayo.com.gitee.model.params;
+package io.github.cnsukidayo.wword.params;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;

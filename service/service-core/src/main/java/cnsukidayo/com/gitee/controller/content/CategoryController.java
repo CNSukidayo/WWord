@@ -1,6 +1,6 @@
 package cnsukidayo.com.gitee.controller.content;
 
-import cnsukidayo.com.gitee.model.support.BaseResponse;
+import io.github.cnsukidayo.wword.support.BaseResponse;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

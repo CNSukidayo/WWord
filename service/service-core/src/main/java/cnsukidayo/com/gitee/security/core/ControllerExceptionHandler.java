@@ -1,7 +1,7 @@
 package cnsukidayo.com.gitee.security.core;
 
 import cnsukidayo.com.gitee.exception.AbstractWWordException;
-import cnsukidayo.com.gitee.model.support.BaseResponse;
+import io.github.cnsukidayo.wword.support.BaseResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;

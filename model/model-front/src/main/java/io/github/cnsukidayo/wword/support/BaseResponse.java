@@ -1,4 +1,4 @@
-package cnsukidayo.com.gitee.model.support;
+package io.github.cnsukidayo.wword.support;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.lang.NonNull;

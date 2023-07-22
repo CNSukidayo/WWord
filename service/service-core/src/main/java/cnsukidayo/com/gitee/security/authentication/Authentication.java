@@ -1,12 +1,12 @@
 package cnsukidayo.com.gitee.security.authentication;
 
 
-import cnsukidayo.com.gitee.model.pojo.User;
+import io.github.cnsukidayo.wword.pojo.User;
 
 /**
  * Authentication.
  *
- * @author johnniang
+ * @author cnsukidayo
  */
 public interface Authentication {
 
@@ -15,5 +15,5 @@ public interface Authentication {
      *
      * @return user detail
      */
-    User getUser();
+    User user();
 }

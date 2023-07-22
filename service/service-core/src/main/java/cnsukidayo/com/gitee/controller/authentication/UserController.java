@@ -1,9 +1,9 @@
 package cnsukidayo.com.gitee.controller.authentication;
 
-import cnsukidayo.com.gitee.model.params.LoginParam;
-import cnsukidayo.com.gitee.model.pojo.User;
 import cnsukidayo.com.gitee.security.token.AuthToken;
 import cnsukidayo.com.gitee.service.UserService;
+import io.github.cnsukidayo.wword.params.LoginParam;
+import io.github.cnsukidayo.wword.pojo.User;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 

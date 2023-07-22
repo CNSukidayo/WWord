@@ -1,8 +1,8 @@
 package cnsukidayo.com.gitee.service;
 
-import cnsukidayo.com.gitee.model.params.LoginParam;
-import cnsukidayo.com.gitee.model.pojo.User;
 import cnsukidayo.com.gitee.security.token.AuthToken;
+import io.github.cnsukidayo.wword.params.LoginParam;
+import io.github.cnsukidayo.wword.pojo.User;
 
 /**
  * @author sukidayo

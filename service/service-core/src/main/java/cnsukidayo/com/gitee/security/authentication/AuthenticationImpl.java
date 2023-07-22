@@ -1,23 +1,13 @@
 package cnsukidayo.com.gitee.security.authentication;
 
 
-import cnsukidayo.com.gitee.model.pojo.User;
+import io.github.cnsukidayo.wword.pojo.User;
 
 /**
  * Authentication implementation.
  *
  * @author cnsukidayo
  */
-public class AuthenticationImpl implements Authentication {
+public record AuthenticationImpl(User user) implements Authentication {
 
-    private final User user;
-
-    public AuthenticationImpl(User user) {
-        this.user = user;
-    }
-
-    @Override
-    public User getUser() {
-        return this.user;
-    }
 }

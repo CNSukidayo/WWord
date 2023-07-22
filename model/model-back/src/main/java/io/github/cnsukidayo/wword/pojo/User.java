@@ -1,4 +1,4 @@
-package cnsukidayo.com.gitee.model.pojo;
+package io.github.cnsukidayo.wword.pojo;
 
 /**
  * @author sukidayo

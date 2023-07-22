@@ -1,6 +1,6 @@
 package cnsukidayo.com.gitee.security.util;
 
-import cnsukidayo.com.gitee.model.pojo.User;
+import io.github.cnsukidayo.wword.pojo.User;
 import org.springframework.lang.NonNull;
 import org.springframework.util.Assert;
 

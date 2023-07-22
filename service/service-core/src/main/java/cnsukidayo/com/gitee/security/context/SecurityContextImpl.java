@@ -6,7 +6,7 @@ import cnsukidayo.com.gitee.security.authentication.Authentication;
 /**
  * Security context implementation.
  *
- * @author johnniang
+ * @author cnsukidayo
  */
 public class SecurityContextImpl implements SecurityContext {
 

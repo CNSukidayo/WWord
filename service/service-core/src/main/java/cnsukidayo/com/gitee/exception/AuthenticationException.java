@@ -5,7 +5,7 @@ import org.springframework.http.HttpStatus;
 /**
  * Authentication exception.
  *
- * @author johnniang
+ * @author cnsukidayo
  */
 public class AuthenticationException extends AbstractWWordException {
 

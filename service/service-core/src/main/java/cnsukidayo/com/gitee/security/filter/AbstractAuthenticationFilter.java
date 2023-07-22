@@ -1,10 +1,10 @@
 package cnsukidayo.com.gitee.security.filter;
 
 import cnsukidayo.com.gitee.exception.AbstractWWordException;
-import cnsukidayo.com.gitee.model.support.WWordConst;
 import cnsukidayo.com.gitee.security.context.SecurityContextHolder;
 import cnsukidayo.com.gitee.security.handler.AuthenticationFailureHandler;
 import cnsukidayo.com.gitee.security.handler.DefaultAuthenticationFailureHandler;
+import io.github.cnsukidayo.wword.support.WWordConst;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

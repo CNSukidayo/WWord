@@ -1,6 +1,6 @@
 package cnsukidayo.com.gitee.dao;
 
-import cnsukidayo.com.gitee.model.pojo.User;
+import io.github.cnsukidayo.wword.pojo.User;
 import org.apache.ibatis.annotations.Mapper;
 
 /**

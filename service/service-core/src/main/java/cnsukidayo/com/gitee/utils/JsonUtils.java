@@ -16,7 +16,7 @@ import java.util.Map;
 /**
  * Json utilities.
  *
- * @author johnniang
+ * @author cnsukidayo
  * @date 3/18/19
  */
 public class JsonUtils {

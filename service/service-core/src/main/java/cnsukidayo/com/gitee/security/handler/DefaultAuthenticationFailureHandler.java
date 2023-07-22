@@ -1,9 +1,9 @@
 package cnsukidayo.com.gitee.security.handler;
 
 import cnsukidayo.com.gitee.exception.AbstractWWordException;
-import cnsukidayo.com.gitee.model.support.BaseResponse;
 import cnsukidayo.com.gitee.utils.JsonUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.github.cnsukidayo.wword.support.BaseResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.MediaType;
@@ -14,7 +14,7 @@ import java.io.IOException;
 /**
  * Default AuthenticationFailureHandler.
  *
- * @author johnniang
+ * @author cnsukidayo
  * @date 12/12/18
  */
 public class DefaultAuthenticationFailureHandler implements AuthenticationFailureHandler {

@@ -10,7 +10,7 @@ import java.io.IOException;
 /**
  * Authentication failure handler.
  *
- * @author johnniang
+ * @author cnsukidayo
  */
 public interface AuthenticationFailureHandler {
 

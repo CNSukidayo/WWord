@@ -2,14 +2,14 @@ package cnsukidayo.com.gitee.service.impl;
 
 import cnsukidayo.com.gitee.dao.UserMapper;
 import cnsukidayo.com.gitee.exception.BadRequestException;
-import cnsukidayo.com.gitee.model.params.LoginParam;
-import cnsukidayo.com.gitee.model.pojo.User;
-import cnsukidayo.com.gitee.model.support.WWordConst;
 import cnsukidayo.com.gitee.security.authentication.Authentication;
 import cnsukidayo.com.gitee.security.context.SecurityContextHolder;
 import cnsukidayo.com.gitee.security.token.AuthToken;
 import cnsukidayo.com.gitee.security.util.SecurityUtils;
 import cnsukidayo.com.gitee.service.UserService;
+import io.github.cnsukidayo.wword.params.LoginParam;
+import io.github.cnsukidayo.wword.pojo.User;
+import io.github.cnsukidayo.wword.support.WWordConst;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
@@ -83,7 +83,7 @@ public class UserServiceImpl implements UserService {
     public User getProfile() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null) {
-            return authentication.getUser();
+            return authentication.user();
         }
         throw new BadRequestException("未登录，请登录后访问");
     }
@@ -98,7 +98,7 @@ public class UserServiceImpl implements UserService {
         }
 
         // 得到当前的用户
-        User user = authentication.getUser();
+        User user = authentication.user();
 
         // 清除认证令牌
         Optional.ofNullable(redisTemplate.opsForValue().get(SecurityUtils.buildAccessTokenKey(user))).ifPresent(access_token -> {

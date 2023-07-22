@@ -1,6 +1,6 @@
 package cnsukidayo.com.gitee.security.core;
 
-import cnsukidayo.com.gitee.model.support.BaseResponse;
+import io.github.cnsukidayo.wword.support.BaseResponse;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpStatus;
@@ -19,7 +19,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 /**
  * 统一的返回值控制器,正常返回时会走该全局控制器
  *
- * @author johnniang
+ * @author cnsukidayo
  */
 @ControllerAdvice("cnsukidayo.com.gitee.controller")
 public class CommonResultControllerAdvice implements ResponseBodyAdvice<Object> {

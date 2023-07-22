@@ -6,7 +6,7 @@ import org.springframework.lang.Nullable;
 /**
  * Security context holder.
  *
- * @author johnniang
+ * @author cnsukidayo
  * @date 12/11/18
  */
 public class SecurityContextHolder {

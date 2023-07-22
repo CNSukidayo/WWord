@@ -1,12 +1,12 @@
 package cnsukidayo.com.gitee.security.filter;
 
 import cnsukidayo.com.gitee.exception.AuthenticationException;
-import cnsukidayo.com.gitee.model.pojo.User;
 import cnsukidayo.com.gitee.security.authentication.AuthenticationImpl;
 import cnsukidayo.com.gitee.security.context.SecurityContextHolder;
 import cnsukidayo.com.gitee.security.context.SecurityContextImpl;
 import cnsukidayo.com.gitee.security.util.SecurityUtils;
 import cnsukidayo.com.gitee.service.UserService;
+import io.github.cnsukidayo.wword.pojo.User;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -58,7 +58,6 @@ public class ApiAuthenticationFilter extends AbstractAuthenticationFilter {
         // 设置安全性
         SecurityContextHolder
                 .setContext(new SecurityContextImpl(new AuthenticationImpl(user)));
-
         // 执行过滤链
         filterChain.doFilter(request, response);
     }

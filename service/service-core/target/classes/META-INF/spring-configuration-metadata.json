@@ -2,15 +2,15 @@
   "groups": [
     {
       "name": "wword",
-      "type": "cnsukidayo.com.gitee.config.properties.WWordProperties",
-      "sourceType": "cnsukidayo.com.gitee.config.properties.WWordProperties"
+      "type": "io.github.cnsukidayo.wword.config.properties.WWordProperties",
+      "sourceType": "io.github.cnsukidayo.wword.config.properties.WWordProperties"
     }
   ],
   "properties": [
     {
       "name": "wword.resource-locations",
       "type": "java.lang.String",
-      "sourceType": "cnsukidayo.com.gitee.config.properties.WWordProperties"
+      "sourceType": "io.github.cnsukidayo.wword.config.properties.WWordProperties"
     }
   ],
   "hints": []

@@ -1,5 +1,5 @@
 server:
-  port: 8080
+  port: 8200
   servlet:
     encoding:
       charset: UTF-8
@@ -27,10 +27,10 @@ logging:
   file:
     name: logs/WWord.log
   level:
-    cnsukidayo.com.gitee: info
+    io.github.cnsukidayo: info
 
 mybatis:
-  type-aliases-package: cnsukidayo.com.gitee.model.pojo
+  type-aliases-package: io.github.cnsukidayo.wword.pojo
   mapper-locations: classpath:mybatis/*.xml
   configuration:
     map-underscore-to-camel-case: true

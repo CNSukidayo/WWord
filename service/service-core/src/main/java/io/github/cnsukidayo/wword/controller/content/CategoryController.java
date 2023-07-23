@@ -1,7 +1,5 @@
 package io.github.cnsukidayo.wword.controller.content;
 
-import io.github.cnsukidayo.wword.support.BaseResponse;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -12,10 +10,5 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController("ApiContentCategoryController")
 @RequestMapping("/api/content/categories")
 public class CategoryController {
-
-    @GetMapping("/hello")
-    public BaseResponse<String> hello() {
-        return BaseResponse.ok("good!");
-    }
 
 }

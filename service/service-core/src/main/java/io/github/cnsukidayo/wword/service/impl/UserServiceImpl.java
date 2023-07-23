@@ -4,7 +4,7 @@ import io.github.cnsukidayo.wword.dao.UserMapper;
 import io.github.cnsukidayo.wword.exception.BadRequestException;
 import io.github.cnsukidayo.wword.security.authentication.Authentication;
 import io.github.cnsukidayo.wword.security.context.SecurityContextHolder;
-import io.github.cnsukidayo.wword.security.token.AuthToken;
+import io.github.cnsukidayo.wword.token.AuthToken;
 import io.github.cnsukidayo.wword.security.util.SecurityUtils;
 import io.github.cnsukidayo.wword.service.UserService;
 import io.github.cnsukidayo.wword.params.LoginParam;

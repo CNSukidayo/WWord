@@ -1,4 +1,6 @@
-package io.github.cnsukidayo.wword.security.token;
+package io.github.cnsukidayo.wword.token;
+
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * 验证token,双token
@@ -6,21 +8,16 @@ package io.github.cnsukidayo.wword.security.token;
  * @author sukidayo
  * @date 2023/5/19 16:41
  */
+@Schema(description = "登陆成功后返回的令牌对象")
 public class AuthToken {
 
-    /**
-     * 验证token
-     */
+    @Schema(description = "请求(验证)令牌")
     private String accessToken;
 
-    /**
-     * 过期时间
-     */
+    @Schema(description = "请求令牌过期时间")
     private int expiredIn;
 
-    /**
-     * 刷新token
-     */
+    @Schema(description = "刷新令牌")
     private String refreshToken;
 
     public String getAccessToken() {

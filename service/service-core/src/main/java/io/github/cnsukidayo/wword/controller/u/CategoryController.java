@@ -1,4 +1,4 @@
-package io.github.cnsukidayo.wword.controller.authentication;
+package io.github.cnsukidayo.wword.controller.u;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

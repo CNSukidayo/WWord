@@ -35,9 +35,9 @@ public class ApiAuthenticationFilter extends AbstractAuthenticationFilter {
                                    RedisTemplate<String, String> redisTemplate) {
         this.userService = userService;
         this.redisTemplate = redisTemplate;
-        addUrlPatterns("/api/authentication/**");
-        addExcludeUrlPatterns("/api/authentication/user/login",
-                "/api/authentication/user/refresh/*");
+        addUrlPatterns("/api/u/**");
+        addExcludeUrlPatterns("/api/u/user/login",
+                "/api/u/user/refresh/*");
     }
 
     @Override

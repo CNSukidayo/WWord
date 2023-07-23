@@ -1,6 +1,6 @@
 package io.github.cnsukidayo.wword.service;
 
-import io.github.cnsukidayo.wword.security.token.AuthToken;
+import io.github.cnsukidayo.wword.token.AuthToken;
 import io.github.cnsukidayo.wword.params.LoginParam;
 import io.github.cnsukidayo.wword.pojo.User;
 

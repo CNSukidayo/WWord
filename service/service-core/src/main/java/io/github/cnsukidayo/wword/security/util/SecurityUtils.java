@@ -33,14 +33,14 @@ public class SecurityUtils {
     public static String buildAccessTokenKey(@NonNull User user) {
         Assert.notNull(user, "User must not be null");
         // 从User->access_token
-        return ACCESS_TOKEN_CACHE_PREFIX + user.getId();
+        return ACCESS_TOKEN_CACHE_PREFIX + user.getUUID();
     }
 
     @NonNull
     public static String buildRefreshTokenKey(@NonNull User user) {
         Assert.notNull(user, "User must not be null");
         // 从User->refresh_token
-        return REFRESH_TOKEN_CACHE_PREFIX + user.getId();
+        return REFRESH_TOKEN_CACHE_PREFIX + user.getUUID();
     }
 
     @NonNull

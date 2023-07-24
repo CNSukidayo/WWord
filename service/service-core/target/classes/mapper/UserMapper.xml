@@ -7,13 +7,13 @@
     <select id="getUserByID" resultType="user">
         select *
         from user
-        where id = #{id}
+        where uuid = #{id}
     </select>
 
     <select id="getUserByName" resultType="user">
         select *
         from user
-        where name = #{name};
+        where nick = #{name};
     </select>
 
 </mapper>

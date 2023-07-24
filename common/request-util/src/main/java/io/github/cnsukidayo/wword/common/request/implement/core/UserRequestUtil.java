@@ -1,7 +1,5 @@
 package io.github.cnsukidayo.wword.common.request.implement.core;
 
-import okhttp3.Response;
-
 /**
  * 如果是void方法则返回response,否则就封装返回的对象
  *
@@ -10,9 +8,8 @@ import okhttp3.Response;
  */
 public class UserRequestUtil {
 
-    public static Response refresh() {
+    public static void refresh() {
         // 在该方法内完成token的封装
-        return null;
     }
 
 }

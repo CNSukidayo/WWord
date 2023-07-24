@@ -1,5 +1,6 @@
 package io.github.cnsukidayo.wword.service.impl;
 
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import io.github.cnsukidayo.wword.dao.UserMapper;
 import io.github.cnsukidayo.wword.exception.BadRequestException;
 import io.github.cnsukidayo.wword.params.LoginParam;
@@ -24,15 +25,24 @@ import java.util.concurrent.TimeUnit;
  * @date 2023/5/19 18:11
  */
 @Service
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
 
     private final RedisTemplate<String, String> redisTemplate;
+
     private final UserMapper userMapper;
 
     public UserServiceImpl(RedisTemplate<String, String> redisTemplate,
                            UserMapper userMapper) {
         this.redisTemplate = redisTemplate;
         this.userMapper = userMapper;
+    }
+
+    @Override
+    public void register() {
+        User user = new User();
+        user.setUUID(6L);
+        user.setNick("C女士");
+        baseMapper.updateById(user);
     }
 
     @Override
@@ -137,9 +147,9 @@ public class UserServiceImpl implements UserService {
                 WWordConst.REFRESH_TOKEN_EXPIRED_DAYS, TimeUnit.DAYS);
 
         // 缓存这些令牌,通过令牌获取用户的ID
-        redisTemplate.opsForValue().set(SecurityUtils.buildTokenAccessKey(token.getAccessToken()), String.valueOf(user.getId()),
+        redisTemplate.opsForValue().set(SecurityUtils.buildTokenAccessKey(token.getAccessToken()), String.valueOf(user.getUUID()),
                 WWordConst.ACCESS_TOKEN_EXPIRED_SECONDS, TimeUnit.SECONDS);
-        redisTemplate.opsForValue().set(SecurityUtils.buildTokenRefreshKey(token.getRefreshToken()), String.valueOf(user.getId()),
+        redisTemplate.opsForValue().set(SecurityUtils.buildTokenRefreshKey(token.getRefreshToken()), String.valueOf(user.getUUID()),
                 WWordConst.REFRESH_TOKEN_EXPIRED_DAYS, TimeUnit.DAYS);
 
         return token;

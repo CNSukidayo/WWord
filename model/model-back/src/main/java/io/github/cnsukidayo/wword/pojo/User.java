@@ -1,31 +1,46 @@
 package io.github.cnsukidayo.wword.pojo;
 
+import com.baomidou.mybatisplus.annotation.*;
+import io.github.cnsukidayo.wword.pojo.base.BaseEntity;
+
+import java.io.Serial;
+
 /**
  * @author sukidayo
  * @date 2023/5/17 19:30
  */
-public class User {
-    private int id;
-    private String name;
+@TableName(value = "user", autoResultMap = true)
+public class User extends BaseEntity {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
+
+    @TableId(value = "uuid", type = IdType.AUTO)
+    private Long UUID;
+
+    @TableField(value = "nick",select = true,fill = FieldFill.INSERT_UPDATE)
+    private String nick;
+
+    @TableField("password")
     private String password;
 
     public User() {
     }
 
-    public String getName() {
-        return name;
+    public Long getUUID() {
+        return UUID;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setUUID(Long UUID) {
+        this.UUID = UUID;
     }
 
-    public int getId() {
-        return id;
+    public String getNick() {
+        return nick;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setNick(String nick) {
+        this.nick = nick;
     }
 
     public String getPassword() {

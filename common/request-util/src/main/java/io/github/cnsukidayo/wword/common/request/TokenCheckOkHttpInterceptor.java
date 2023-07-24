@@ -25,15 +25,11 @@ public final class TokenCheckOkHttpInterceptor implements Interceptor {
         Request request = chain.request();
         // 添加token信息
         AuthToken authToken = RequestRegister.getAuthToken();
-        request.newBuilder().header(WWordConst.API_ACCESS_KEY_HEADER_NAME, Optional.ofNullable(authToken.getAccessToken()).orElse(""));
+        request = request.newBuilder().header(WWordConst.API_ACCESS_KEY_HEADER_NAME, Optional.ofNullable(authToken.getAccessToken()).orElse("")).build();
         Response response = chain.proceed(request);
         if (response.code() == 401) {
             // token过期,尝试刷新token
-            Response refreshResponse = UserRequestUtil.refresh();
-            // 如果刷新失败则发出异常,终止操作
-            if (!refreshResponse.isSuccessful()) {
-                throw new RuntimeException("token过期,请重新登陆.");
-            }
+            UserRequestUtil.refresh();
             // 重新请求当前方法(会再走一次拦截器,重新设置token等内容),拿到返回值进行返回
             return RequestRegister.getRequestHandler().execute(response.request());
         }

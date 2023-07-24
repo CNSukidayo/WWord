@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/u/categories")
 public class CategoryController {
 
+
     @PostMapping("ping")
     public String ping() {
         return "pong";

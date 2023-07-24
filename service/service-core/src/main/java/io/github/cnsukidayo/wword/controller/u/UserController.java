@@ -27,6 +27,12 @@ public class UserController {
         this.userService = userService;
     }
 
+    @Operation(summary = "用户注册接口")
+    @PostMapping("/register")
+    public void register() {
+        userService.register();
+    }
+
     @Operation(summary = "用户登录接口")
     @PostMapping("/login")
     public AuthToken login(@RequestBody @Valid LoginParam loginParam) {
@@ -54,5 +60,6 @@ public class UserController {
     public void logout() {
         userService.clearToken();
     }
+
 
 }

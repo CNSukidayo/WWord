@@ -28,17 +28,24 @@ spring:
       host: localhost
       port: 6379
       # password:
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+
 logging:
   file:
     name: logs/WWord.log
   level:
     io.github.cnsukidayo: info
 
-mybatis:
-  type-aliases-package: io.github.cnsukidayo.wword.pojo
-  mapper-locations: classpath:mybatis/*.xml
+#mybatis-plus相关配置
+mybatis-plus:
   configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
     map-underscore-to-camel-case: true
+  #  mapper-locations: classpath*:/mapper/**/*.xml
+  type-aliases-package: io.github.cnsukidayo.wword.pojo
+
 
 wword:
   resource-locations: D:/Program/Java Project/WWord/wwordResources/

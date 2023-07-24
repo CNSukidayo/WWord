@@ -31,6 +31,7 @@ public class RequestHandler {
         this.okHttpClient = okHttpClient;
         this.gson = gson;
         this.commonExceptionHandler = commonExceptionHandler;
+        this.okHttpClient.interceptors().add(0, new BadResponseOkHttpInterceptor(gson));
     }
 
 

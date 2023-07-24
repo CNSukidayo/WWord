@@ -23,7 +23,7 @@ import java.util.Map;
  * @author cnsukidayo
  */
 @RestControllerAdvice(value = {"io.github.cnsukidayo.wword.controller.content",
-        "io.github.cnsukidayo.wword.controller.controller.u"})
+        "io.github.cnsukidayo.wword.controller.u"})
 public class ControllerExceptionHandler {
 
     private final Logger log = LoggerFactory.getLogger(getClass());

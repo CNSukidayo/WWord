@@ -1,15 +1,17 @@
 package io.github.cnsukidayo.wword.common.request;
 
+import okhttp3.Interceptor;
 import okhttp3.Request;
 import okhttp3.Response;
 
 import java.io.File;
+import java.io.IOException;
 
 /**
  * @author sukidayo
  * @date 2023/7/24 11:25
  */
-final class RequestPrefixOkHttpInterceptor implements OkHttpInterceptor {
+final class RequestPrefixOkHttpInterceptor implements Interceptor {
 
     private String baseUrl = null;
 
@@ -43,19 +45,9 @@ final class RequestPrefixOkHttpInterceptor implements OkHttpInterceptor {
         this("https", ipAddress, port);
     }
 
-
     @Override
-    public int getOrder() {
-        return 5;
-    }
-
-    @Override
-    public void requestHandle(Request request) {
-
-    }
-
-    @Override
-    public Response responseHandle(Response response) {
-        return response;
+    public Response intercept(Chain chain) throws IOException {
+        Request request = chain.request();
+        return chain.proceed(request);
     }
 }

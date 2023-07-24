@@ -18,6 +18,7 @@ public class RequestRegister {
     private static AuthToken authToken;
 
     private RequestRegister() {
+
     }
 
     public static void register(RequestHandler requestHandler) {

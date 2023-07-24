@@ -8,7 +8,6 @@ import okhttp3.ResponseBody;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
-import java.util.List;
 
 /**
  * 请求处理器,通过该工具类进行请求的发起和响应<br>
@@ -21,20 +20,17 @@ public class RequestHandler {
 
     private final OkHttpClient okHttpClient;
 
-    private final List<OkHttpInterceptor> okHttpInterceptorList;
-
     private final Gson gson;
 
-    private final OkHttpClientExceptionHandler okHttpClientExceptionHandler;
+    private final OkHttpClientExceptionHandler commonExceptionHandler;
 
-    RequestHandler(OkHttpClient okHttpClient,
-                   List<OkHttpInterceptor> okHttpInterceptorList,
-                   Gson gson,
-                   OkHttpClientExceptionHandler okHttpClientExceptionHandler) {
+    public RequestHandler(OkHttpClient okHttpClient,
+                          Gson gson,
+                          OkHttpClientExceptionHandler commonExceptionHandler) {
+        if (gson == null) throw new IllegalArgumentException("gson param must not be null");
         this.okHttpClient = okHttpClient;
-        this.okHttpInterceptorList = okHttpInterceptorList;
         this.gson = gson;
-        this.okHttpClientExceptionHandler = okHttpClientExceptionHandler;
+        this.commonExceptionHandler = commonExceptionHandler;
     }
 
     /**
@@ -47,20 +43,16 @@ public class RequestHandler {
     }
 
     public Response execute(Request request) {
-        okHttpInterceptorList.forEach(okHttpInterceptor -> okHttpInterceptor.requestHandle(request));
         Response response = null;
         try {
             response = okHttpClient.newCall(request).execute();
         } catch (IOException e) {
             // 调用默认的处理器进行处理
-            if (okHttpClientExceptionHandler != null) {
-                okHttpClientExceptionHandler.handlerError(e);
+            if (commonExceptionHandler != null) {
+                commonExceptionHandler.handlerError(e);
             } else {
                 throw new RuntimeException(e);
             }
-        }
-        for (OkHttpInterceptor okHttpInterceptor : okHttpInterceptorList) {
-            response = okHttpInterceptor.responseHandle(response);
         }
         return response;
     }

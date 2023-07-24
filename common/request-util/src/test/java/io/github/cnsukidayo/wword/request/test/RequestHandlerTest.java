@@ -1,14 +1,14 @@
 package io.github.cnsukidayo.wword.request.test;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import io.github.cnsukidayo.wword.common.request.MySSLSocketClient;
-import io.github.cnsukidayo.wword.common.request.RequestHandler;
-import io.github.cnsukidayo.wword.common.request.RequestHandlerBuilder;
-import io.github.cnsukidayo.wword.support.BaseResponse;
-import io.github.cnsukidayo.wword.vo.ErrorVo;
+import io.github.cnsukidayo.wword.common.request.OkHttpHostnameVerifier;
+import io.github.cnsukidayo.wword.common.request.SSLSocketFactoryCreate;
+import io.github.cnsukidayo.wword.common.request.TokenCheckOkHttpInterceptor;
 import okhttp3.*;
 import org.junit.Test;
+
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * @author sukidayo
@@ -17,23 +17,21 @@ import org.junit.Test;
 public class RequestHandlerTest {
 
     @Test
-    public void requestTest() {
+    public void requestTest() throws IOException {
+        InputStream inputStream = this.getClass().getClassLoader().getResource("cert/publicKey.cer").openStream();
+        SSLSocketFactoryCreate sslSocketFactoryCreate = SSLSocketFactoryCreate.newInstance(inputStream);
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                .sslSocketFactory(MySSLSocketClient.getSSLSocketFactory(), MySSLSocketClient.getX509TrustManager())
-                .hostnameVerifier(MySSLSocketClient.getHostnameVerifier())
+                .hostnameVerifier(new OkHttpHostnameVerifier())
+                .sslSocketFactory(sslSocketFactoryCreate.getSslSocketFactory(),sslSocketFactoryCreate.getX509TrustManager())
+                .addInterceptor(new TokenCheckOkHttpInterceptor())
                 .build();
         Gson gson = new Gson();
-        RequestHandler requestHandler = new RequestHandlerBuilder()
-                .gson(gson)
-                .okHttpClient(okHttpClient)
-                .build();
         Request request = new Request.Builder()
-                .url("http://localhost:8200/getList")
-                .post(RequestBody.create(MediaType.parse("application/json; charset=utf-8"), ""))
+                .url("https://localhost:8200/api/u/categories/ping")
+                .post(RequestBody.create(MediaType.parse(org.springframework.http.MediaType.APPLICATION_JSON_VALUE),""))
                 .build();
-        BaseResponse<ErrorVo> baseResponse = requestHandler.execute(request,new TypeToken<BaseResponse<ErrorVo>>() {
-        }.getType());
-
+        Response response = okHttpClient.newCall(request).execute();
+        System.out.println(response.body().string());
     }
 
 }

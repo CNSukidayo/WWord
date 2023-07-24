@@ -1,11 +1,14 @@
 package io.github.cnsukidayo.wword.common.request;
 
 import io.github.cnsukidayo.wword.common.request.implement.core.UserRequestUtil;
+import io.github.cnsukidayo.wword.support.WWordConst;
+import io.github.cnsukidayo.wword.token.AuthToken;
 import okhttp3.Interceptor;
 import okhttp3.Request;
 import okhttp3.Response;
 
 import java.io.IOException;
+import java.util.Optional;
 
 /**
  * token检查的拦截器,如果当前用户拥有access_token,但是access_token的时效已经过期.<br>
@@ -20,6 +23,9 @@ public final class TokenCheckOkHttpInterceptor implements Interceptor {
     public Response intercept(Chain chain) throws IOException {
         // 获取当前的请求体
         Request request = chain.request();
+        // 添加token信息
+        AuthToken authToken = RequestRegister.getAuthToken();
+        request.newBuilder().header(WWordConst.API_ACCESS_KEY_HEADER_NAME, Optional.ofNullable(authToken.getAccessToken()).orElse(""));
         Response response = chain.proceed(request);
         if (response.code() == 401) {
             // token过期,尝试刷新token

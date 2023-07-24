@@ -5,10 +5,7 @@ import com.google.gson.reflect.TypeToken;
 import io.github.cnsukidayo.wword.common.request.*;
 import io.github.cnsukidayo.wword.dto.UserProfileDTO;
 import io.github.cnsukidayo.wword.support.BaseResponse;
-import okhttp3.MediaType;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
+import okhttp3.*;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -26,14 +23,15 @@ public class UserRequestTest {
         SSLSocketFactoryCreate sslSocketFactoryCreate = SSLSocketFactoryCreate.newInstance(inputStream);
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
                 .hostnameVerifier(new OkHttpHostnameVerifier())
-                .sslSocketFactory(sslSocketFactoryCreate.getSslSocketFactory(),sslSocketFactoryCreate.getX509TrustManager())
+                .sslSocketFactory(sslSocketFactoryCreate.getSslSocketFactory(), sslSocketFactoryCreate.getX509TrustManager())
                 .addInterceptor(new TokenCheckOkHttpInterceptor())
                 .build();
         Gson gson = new Gson();
-        RequestHandler requestHandler = new RequestHandler(okHttpClient,gson,null);
+        RequestHandler requestHandler = new RequestHandler(okHttpClient, gson, null);
+        requestHandler.setBaseUrl("https://baidu.com");
         Request request = new Request.Builder()
-                .url("https://localhost:8200/api/u/user/getProfile")
-                .post(RequestBody.create(MediaType.parse("application/json; charset=utf-8"), ""))
+                .url(requestHandler.createPrefixUrl("api/u/user/getProfile"))
+                .post(requestHandler.jsonBody(null))
                 .build();
         RequestRegister.register(requestHandler);
         BaseResponse<UserProfileDTO> baseResponse = requestHandler.execute(request, new TypeToken<BaseResponse<UserProfileDTO>>() {

@@ -38,7 +38,7 @@ public class RequestRegister {
 
 
     public static AuthToken getAuthToken() {
-        return Optional.of(authToken).orElseGet(AuthToken::new);
+        return Optional.ofNullable(authToken).orElseGet(AuthToken::new);
     }
 
     public static void setAuthToken(AuthToken authToken) {

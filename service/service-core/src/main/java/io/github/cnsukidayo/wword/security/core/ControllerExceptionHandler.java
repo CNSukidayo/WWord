@@ -2,6 +2,7 @@ package io.github.cnsukidayo.wword.security.core;
 
 import io.github.cnsukidayo.wword.exception.AbstractWWordException;
 import io.github.cnsukidayo.wword.support.BaseResponse;
+import io.github.cnsukidayo.wword.vo.ErrorVo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -13,9 +14,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.util.HashMap;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.List;
-import java.util.Map;
 
 /**
  * controller层的异常处理器,仅仅是应用内的方法出现异常时会被次控制器捕获.
@@ -35,10 +36,10 @@ public class ControllerExceptionHandler {
      * @return 返回响应信息
      */
     @ExceptionHandler(AbstractWWordException.class)
-    public ResponseEntity<BaseResponse<?>> handleWWordException(AbstractWWordException e) {
-        BaseResponse<Object> baseResponse = handleBaseException(e);
+    public ResponseEntity<BaseResponse<ErrorVo>> handleWWordException(AbstractWWordException e) {
+        BaseResponse<ErrorVo> baseResponse = handleBaseException(e);
         baseResponse.setStatus(e.getStatus().value());
-        baseResponse.setData(e.getErrorData());
+        baseResponse.getData().setStatus(e.getStatus().value());
         return new ResponseEntity<>(baseResponse, e.getStatus());
     }
 
@@ -50,16 +51,15 @@ public class ControllerExceptionHandler {
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public BaseResponse<?> handleMethodArgumentNotValidException(
-            MethodArgumentNotValidException e) {
-        BaseResponse<Map<String, String>> baseResponse = handleBaseException(e);
-        baseResponse.setStatus(HttpStatus.BAD_REQUEST.value());
-        baseResponse.setMessage("字段验证错误，请完善后重试！");
+    public BaseResponse<ErrorVo> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
         List<FieldError> fieldErrors = e.getBindingResult().getFieldErrors();
-        Map<String, String> errMap = new HashMap<>(4);
-        fieldErrors.forEach(
-                filedError -> errMap.put(filedError.getField(), filedError.getDefaultMessage()));
-        baseResponse.setData(errMap);
+        BaseResponse<ErrorVo> baseResponse = handleBaseException(e);
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+        baseResponse.setStatus(status.value());
+        baseResponse.setMessage("字段验证错误,请完善后重试!");
+        baseResponse.getData().setStatus(status.value());
+        baseResponse.getData().setMessage(fieldErrors.get(0).getDefaultMessage());
+        baseResponse.getData().setPath(e.getBindingResult().getNestedPath());
         return baseResponse;
     }
 
@@ -71,24 +71,31 @@ public class ControllerExceptionHandler {
      */
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public BaseResponse<?> handleGlobalException(Exception e) {
-        BaseResponse<?> baseResponse = handleBaseException(e);
+    public BaseResponse<ErrorVo> handleGlobalException(Exception e) {
+        BaseResponse<ErrorVo> baseResponse = handleBaseException(e);
         HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
         baseResponse.setStatus(status.value());
         baseResponse.setMessage(status.getReasonPhrase());
+        baseResponse.getData().setStatus(status.value());
+        baseResponse.getData().setMessage(status.getReasonPhrase());
         return baseResponse;
     }
 
-    private <T> BaseResponse<T> handleBaseException(Throwable t) {
+    private BaseResponse<ErrorVo> handleBaseException(Throwable t) {
         Assert.notNull(t, "Throwable must not be null");
 
-        BaseResponse<T> baseResponse = new BaseResponse<>();
+        BaseResponse<ErrorVo> baseResponse = new BaseResponse<>();
         baseResponse.setMessage(t.getMessage());
+        // 设置时间戳和错误信息
+        ErrorVo errorVo = new ErrorVo();
+        errorVo.setTimestamp(LocalDateTime.now().toEpochSecond(ZoneOffset.of("+8")));
+        errorVo.setMessage(t.getMessage());
+        baseResponse.setData(errorVo);
 
         log.error("Captured an exception:", t);
-
         return baseResponse;
     }
+
 
 }
 

@@ -1,7 +1,10 @@
 package io.github.cnsukidayo.wword.service.impl;
 
+import cn.hutool.crypto.digest.BCrypt;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import io.github.cnsukidayo.wword.dao.UserMapper;
+import io.github.cnsukidayo.wword.exception.AlreadyExistsException;
 import io.github.cnsukidayo.wword.exception.BadRequestException;
 import io.github.cnsukidayo.wword.params.LoginParam;
 import io.github.cnsukidayo.wword.params.UserRegisterParam;
@@ -12,6 +15,7 @@ import io.github.cnsukidayo.wword.security.util.SecurityUtils;
 import io.github.cnsukidayo.wword.service.UserService;
 import io.github.cnsukidayo.wword.support.WWordConst;
 import io.github.cnsukidayo.wword.token.AuthToken;
+import org.springframework.beans.BeanUtils;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
@@ -40,10 +44,17 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     public void register(UserRegisterParam userRegisterParam) {
+        Assert.notNull(userRegisterParam, "UserRegisterParam must be null");
+        // 参数校验总是在最先进行
+        if (!userRegisterParam.getPassword().equals(userRegisterParam.getConfirmPassword()))
+            throw new IllegalArgumentException("两次输入密码不一致");
+        Optional.ofNullable(baseMapper.selectOne(new LambdaQueryWrapper<User>().eq(User::getAccount, userRegisterParam.getAccount())))
+                .orElseThrow(() -> new AlreadyExistsException("用户名已存在!"));
         User user = new User();
-        user.setUUID(6L);
-        user.setNick("C女士");
-        baseMapper.updateById(user);
+        BeanUtils.copyProperties(userRegisterParam, user);
+        // 加密密码
+        user.setPassword(BCrypt.hashpw(userRegisterParam.getPassword()));
+        baseMapper.insert(user);
     }
 
     @Override

@@ -16,13 +16,13 @@ public class ErrorVo {
     private Integer status;
 
     @Schema(description = "http错误信息")
-    private String error;
+    private String message;
 
     @Schema(description = "本次请求的路径")
     private String path;
 
     @Schema(description = "错误信息")
-    private String message;
+    private String error;
 
     @Schema(description = "错误堆栈信息")
     private String trace;

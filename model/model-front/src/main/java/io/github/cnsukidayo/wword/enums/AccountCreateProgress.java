@@ -9,7 +9,4 @@ public enum AccountCreateProgress {
     INIT,
     UPDATE_PROFILE;
 
-
-
-
 }

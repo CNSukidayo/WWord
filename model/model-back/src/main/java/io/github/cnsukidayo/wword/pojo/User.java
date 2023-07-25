@@ -41,8 +41,8 @@ public class User extends BaseEntity {
     @TableField(value = "sex")
     private SexType sex;
 
-    @TableField("create_procedure")
-    private AccountCreateProgress createProcedure;
+    @TableField("create_progress")
+    private AccountCreateProgress createProgress;
 
     @TableField("birthday")
     private String birthday;
@@ -120,12 +120,12 @@ public class User extends BaseEntity {
         this.sex = sex;
     }
 
-    public AccountCreateProgress getCreateProcedure() {
-        return createProcedure;
+    public AccountCreateProgress getCreateProgress() {
+        return createProgress;
     }
 
-    public void setCreateProcedure(AccountCreateProgress createProcedure) {
-        this.createProcedure = createProcedure;
+    public void setCreateProgress(AccountCreateProgress createProgress) {
+        this.createProgress = createProgress;
     }
 
     public String getBirthday() {

@@ -10,9 +10,13 @@ public enum SexType {
     FEMALE("女"),
     SECRECY("保密");
 
-    private String describe;
+    private final String value;
 
-    SexType(String describe) {
-        this.describe = describe;
+    SexType(String value) {
+        this.value = value;
+    }
+
+    public String value() {
+        return value;
     }
 }

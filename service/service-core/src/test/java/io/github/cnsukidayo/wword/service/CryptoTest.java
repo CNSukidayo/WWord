@@ -13,7 +13,7 @@ public class CryptoTest {
     public void testHutoolCrypto() {
         // 加盐加密
         String hashpw = BCrypt.hashpw("123456789");
-        System.out.println(BCrypt.checkpw("12345678", hashpw));
+        System.out.println(BCrypt.checkpw("123456789", hashpw));
     }
 
 }

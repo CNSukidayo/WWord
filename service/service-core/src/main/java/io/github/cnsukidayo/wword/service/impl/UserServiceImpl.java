@@ -45,16 +45,34 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     public void register(UserRegisterParam userRegisterParam) {
         Assert.notNull(userRegisterParam, "UserRegisterParam must be null");
-        // 参数校验总是在最先进行
+        // 参数校验总是在最先执行的
         if (!userRegisterParam.getPassword().equals(userRegisterParam.getConfirmPassword()))
-            throw new IllegalArgumentException("两次输入密码不一致");
+            throw new BadRequestException("两次输入密码不一致");
         Optional.ofNullable(baseMapper.selectOne(new LambdaQueryWrapper<User>().eq(User::getAccount, userRegisterParam.getAccount())))
-                .orElseThrow(() -> new AlreadyExistsException("用户名已存在!"));
+                .ifPresent(user -> {
+                    throw new AlreadyExistsException("用户名已存在!");
+                });
         User user = new User();
         BeanUtils.copyProperties(userRegisterParam, user);
         // 加密密码
         user.setPassword(BCrypt.hashpw(userRegisterParam.getPassword()));
         baseMapper.insert(user);
+    }
+
+    @Override
+    public AuthToken login(LoginParam loginParam) {
+        Assert.notNull(loginParam, "LoginParam must not be null");
+        if (SecurityContextHolder.getContext().isAuthenticated()) {
+            // If the user has been logged in
+            throw new BadRequestException("您已登录，请不要重复登录");
+        }
+
+        User user = baseMapper.selectOne(new LambdaQueryWrapper<User>().eq(User::getAccount, loginParam.getAccount()));
+        if (user == null || !BCrypt.checkpw(loginParam.getPassword(), user.getPassword())) {
+            throw new BadRequestException("用户名或者密码不正确");
+        }
+
+        return buildAuthToken(user);
     }
 
     @Override
@@ -78,37 +96,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         return buildAuthToken(user);
     }
 
-    @Override
-    public User getById(Integer id) {
-        return userMapper.getUserByID(id);
-    }
-
-    @Override
-    public AuthToken login(LoginParam loginParam) {
-        Assert.notNull(loginParam, "LoginParam must not be null");
-
-        User user = userMapper.getUserByName(loginParam.getUsername());
-
-        if (SecurityContextHolder.getContext().isAuthenticated()) {
-            // If the user has been logged in
-            throw new BadRequestException("您已登录，请不要重复登录");
-        }
-
-        if (user == null || !user.getPassword().equals(loginParam.getPassword())) {
-            throw new BadRequestException("用户名或者密码不正确");
-        }
-
-        return buildAuthToken(user);
-    }
-
-    @Override
-    public User getProfile() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null) {
-            return authentication.user();
-        }
-        throw new BadRequestException("未登录，请登录后访问");
-    }
 
     @Override
     public void clearToken() {
@@ -116,7 +103,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if (authentication == null) {
-            throw new BadRequestException("您尚未登录，因此无法注销");
+            throw new BadRequestException("您尚未登录,因此无法注销");
         }
 
         // 得到当前的用户
@@ -145,7 +132,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     private AuthToken buildAuthToken(@NonNull User user) {
         Assert.notNull(user, "User must not be null");
 
-        // Generate new token
+        // 创建新的token
         AuthToken token = new AuthToken();
 
         token.setAccessToken(UUID.randomUUID().toString().replaceAll("-", ""));

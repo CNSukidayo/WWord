@@ -1,6 +1,5 @@
 package io.github.cnsukidayo.wword.pojo.base;
 
-import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -23,7 +22,7 @@ public class BaseEntity implements Serializable {
 
     @JsonIgnore
     @TableLogic
-    @TableField(value = "is_deleted",fill = FieldFill.INSERT_UPDATE)
+    @TableField(value = "is_deleted")
     private Integer isDeleted;
 
     @TableField(exist = false)

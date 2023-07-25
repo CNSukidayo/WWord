@@ -1,5 +1,6 @@
 package io.github.cnsukidayo.wword.support;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.http.HttpStatus;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
@@ -9,21 +10,17 @@ import org.springframework.lang.Nullable;
  *
  * @author cnsukidayo
  */
+
+@Schema(name = "BaseResponse", description = "全局统一返回对象")
 public class BaseResponse<T> {
 
-    /**
-     * Response status.
-     */
+    @Schema(description = "返回状态码")
     private Integer status;
 
-    /**
-     * Response message.
-     */
+    @Schema(description = "响应信息")
     private String message;
 
-    /**
-     * Response data
-     */
+    @Schema(description = "响应数据", name = "Object", type = "Object")
     private T data;
 
     public BaseResponse() {
@@ -63,7 +60,7 @@ public class BaseResponse<T> {
      * 设置数据,返回对象的方法
      *
      * @param data    the data of response
-     * @param status    the status of response
+     * @param status  the status of response
      * @param message the message of response
      * @param <T>     泛型
      * @return 返回值不为null

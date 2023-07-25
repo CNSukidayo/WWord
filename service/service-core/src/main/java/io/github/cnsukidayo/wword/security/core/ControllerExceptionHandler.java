@@ -39,6 +39,7 @@ public class ControllerExceptionHandler {
     public ResponseEntity<BaseResponse<ErrorVo>> handleWWordException(AbstractWWordException e) {
         BaseResponse<ErrorVo> baseResponse = handleBaseException(e);
         baseResponse.setStatus(e.getStatus().value());
+        baseResponse.setMessage(e.getStatus().getReasonPhrase());
         baseResponse.getData().setStatus(e.getStatus().value());
         return new ResponseEntity<>(baseResponse, e.getStatus());
     }
@@ -58,7 +59,7 @@ public class ControllerExceptionHandler {
         baseResponse.setStatus(status.value());
         baseResponse.setMessage("字段验证错误,请完善后重试!");
         baseResponse.getData().setStatus(status.value());
-        baseResponse.getData().setMessage(fieldErrors.get(0).getDefaultMessage());
+        baseResponse.getData().setError(fieldErrors.get(0).getDefaultMessage());
         baseResponse.getData().setPath(e.getBindingResult().getNestedPath());
         return baseResponse;
     }
@@ -85,11 +86,10 @@ public class ControllerExceptionHandler {
         Assert.notNull(t, "Throwable must not be null");
 
         BaseResponse<ErrorVo> baseResponse = new BaseResponse<>();
-        baseResponse.setMessage(t.getMessage());
         // 设置时间戳和错误信息
         ErrorVo errorVo = new ErrorVo();
         errorVo.setTimestamp(LocalDateTime.now().toEpochSecond(ZoneOffset.of("+8")));
-        errorVo.setMessage(t.getMessage());
+        errorVo.setError(t.getMessage());
         baseResponse.setData(errorVo);
 
         log.error("Captured an exception:", t);

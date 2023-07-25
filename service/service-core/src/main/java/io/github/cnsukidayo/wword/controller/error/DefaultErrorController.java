@@ -42,7 +42,7 @@ public class DefaultErrorController extends BasicErrorController {
         Map<String, Object> errorAttributes = getErrorAttributes(request, getErrorAttributeOptions(request, MediaType.ALL));
         errorVo.setTimestamp(((Date) errorAttributes.get("timestamp")).getTime());
         errorVo.setStatus((Integer) errorAttributes.get("status"));
-        errorVo.setMessage((String) errorAttributes.get("error"));
+        errorVo.setError((String) errorAttributes.get("error"));
         errorVo.setPath((String) errorAttributes.get("path"));
         return BaseResponse.build(status.value(), status.getReasonPhrase(), errorVo);
     }

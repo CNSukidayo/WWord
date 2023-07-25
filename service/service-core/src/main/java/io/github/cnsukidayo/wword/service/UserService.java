@@ -16,12 +16,7 @@ public interface UserService extends IService<User> {
 
     AuthToken refreshToken(String refreshToken);
 
-    User getById(Integer id);
-
     AuthToken login(LoginParam loginParam);
-
-    User getProfile();
-
 
     void clearToken();
 }

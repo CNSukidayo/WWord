@@ -1,11 +1,14 @@
 package io.github.cnsukidayo.wword.controller.u;
 
 import io.github.cnsukidayo.wword.dto.UserProfileDTO;
-import io.github.cnsukidayo.wword.params.UserRegisterParam;
-import io.github.cnsukidayo.wword.token.AuthToken;
-import io.github.cnsukidayo.wword.service.UserService;
+import io.github.cnsukidayo.wword.exception.BadRequestException;
 import io.github.cnsukidayo.wword.params.LoginParam;
+import io.github.cnsukidayo.wword.params.UserRegisterParam;
 import io.github.cnsukidayo.wword.pojo.User;
+import io.github.cnsukidayo.wword.security.authentication.Authentication;
+import io.github.cnsukidayo.wword.security.context.SecurityContextHolder;
+import io.github.cnsukidayo.wword.service.UserService;
+import io.github.cnsukidayo.wword.token.AuthToken;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -43,12 +46,14 @@ public class UserController {
     @Operation(summary = "获取用户个人信息接口")
     @GetMapping("/getProfile")
     public UserProfileDTO getProfile() {
-        User user = userService.getProfile();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null) throw new BadRequestException("未登录,请登录后访问");
+        User user = authentication.user();
         UserProfileDTO userProfileDTO = new UserProfileDTO();
         BeanUtils.copyProperties(user, userProfileDTO);
+        userProfileDTO.setSexString(user.getSex().value());
         return userProfileDTO;
     }
-
 
     @Operation(summary = "刷新客户端令牌")
     @PostMapping("refresh/{refreshToken}")

@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import io.github.cnsukidayo.wword.dao.UserMapper;
 import io.github.cnsukidayo.wword.exception.BadRequestException;
 import io.github.cnsukidayo.wword.params.LoginParam;
+import io.github.cnsukidayo.wword.params.UserRegisterParam;
 import io.github.cnsukidayo.wword.pojo.User;
 import io.github.cnsukidayo.wword.security.authentication.Authentication;
 import io.github.cnsukidayo.wword.security.context.SecurityContextHolder;
@@ -38,7 +39,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     @Override
-    public void register() {
+    public void register(UserRegisterParam userRegisterParam) {
         User user = new User();
         user.setUUID(6L);
         user.setNick("C女士");

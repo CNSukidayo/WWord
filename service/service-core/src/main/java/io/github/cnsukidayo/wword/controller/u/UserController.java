@@ -1,6 +1,7 @@
 package io.github.cnsukidayo.wword.controller.u;
 
 import io.github.cnsukidayo.wword.dto.UserProfileDTO;
+import io.github.cnsukidayo.wword.params.UserRegisterParam;
 import io.github.cnsukidayo.wword.token.AuthToken;
 import io.github.cnsukidayo.wword.service.UserService;
 import io.github.cnsukidayo.wword.params.LoginParam;
@@ -29,8 +30,8 @@ public class UserController {
 
     @Operation(summary = "用户注册接口")
     @PostMapping("/register")
-    public void register() {
-        userService.register();
+    public void register(@RequestBody @Valid UserRegisterParam userRegisterParam) {
+        userService.register(userRegisterParam);
     }
 
     @Operation(summary = "用户登录接口")

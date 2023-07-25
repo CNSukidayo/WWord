@@ -19,11 +19,8 @@
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <mybatis.version>3.0.1</mybatis.version>
-        <swagger.version>2.9.2</swagger.version>
-        <springboot.version>3.0.4</springboot.version>
-        <spring-doc.version>2.1.0</spring-doc.version>
         <mybatis-plus.version>3.5.3.1</mybatis-plus.version>
+        <knife4j.version>4.1.0</knife4j.version>
     </properties>
 
 
@@ -36,11 +33,6 @@
 
     <dependencyManagement>
         <dependencies>
-            <dependency>
-                <groupId>org.springdoc</groupId>
-                <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-                <version>${spring-doc.version}</version>
-            </dependency>
 
             <dependency>
                 <groupId>mysql</groupId>
@@ -48,17 +40,18 @@
                 <version>${mysql.version}</version>
             </dependency>
 
-<!--            <dependency>-->
-<!--                <groupId>org.mybatis.spring.boot</groupId>-->
-<!--                <artifactId>mybatis-spring-boot-starter</artifactId>-->
-<!--                <version>${mybatis.version}</version>-->
-<!--            </dependency>-->
-
             <dependency>
                 <groupId>com.baomidou</groupId>
                 <artifactId>mybatis-plus-boot-starter</artifactId>
                 <version>${mybatis-plus.version}</version>
             </dependency>
+
+            <dependency>
+                <groupId>com.github.xiaoymin</groupId>
+                <artifactId>knife4j-openapi3-jakarta-spring-boot-starter</artifactId>
+                <version>${knife4j.version}</version>
+            </dependency>
+
 
         </dependencies>
     </dependencyManagement>

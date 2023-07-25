@@ -2,6 +2,7 @@ package io.github.cnsukidayo.wword.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import io.github.cnsukidayo.wword.params.LoginParam;
+import io.github.cnsukidayo.wword.params.UserRegisterParam;
 import io.github.cnsukidayo.wword.pojo.User;
 import io.github.cnsukidayo.wword.token.AuthToken;
 
@@ -11,7 +12,7 @@ import io.github.cnsukidayo.wword.token.AuthToken;
  */
 public interface UserService extends IService<User> {
 
-    void register();
+    void register(UserRegisterParam userRegisterParam);
 
     AuthToken refreshToken(String refreshToken);
 

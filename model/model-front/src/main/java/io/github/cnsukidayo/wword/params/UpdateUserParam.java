@@ -5,7 +5,7 @@ import io.github.cnsukidayo.wword.enums.SexType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 /**
  * 登陆参数,如果参数是空并且没有加以约束,则该会将用户对应的字段设置以为空.
@@ -36,7 +36,7 @@ public class UpdateUserParam {
 
     @Schema(description = "生日")
     @Past
-    private LocalDateTime birthday;
+    private LocalDate birthday;
 
     @Schema(description = "大学")
     private String university;
@@ -76,11 +76,11 @@ public class UpdateUserParam {
         this.sex = sex;
     }
 
-    public LocalDateTime getBirthday() {
+    public LocalDate getBirthday() {
         return birthday;
     }
 
-    public void setBirthday(LocalDateTime birthday) {
+    public void setBirthday(LocalDate birthday) {
         this.birthday = birthday;
     }
 

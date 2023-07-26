@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import io.github.cnsukidayo.wword.dao.UserMapper;
 import io.github.cnsukidayo.wword.exception.AlreadyExistsException;
 import io.github.cnsukidayo.wword.exception.BadRequestException;
+import io.github.cnsukidayo.wword.exception.NonExistsException;
 import io.github.cnsukidayo.wword.params.LoginParam;
 import io.github.cnsukidayo.wword.params.UpdatePasswordParam;
 import io.github.cnsukidayo.wword.params.UpdateUserParam;
@@ -14,6 +15,7 @@ import io.github.cnsukidayo.wword.pojo.User;
 import io.github.cnsukidayo.wword.security.authentication.Authentication;
 import io.github.cnsukidayo.wword.security.context.SecurityContextHolder;
 import io.github.cnsukidayo.wword.security.util.SecurityUtils;
+import io.github.cnsukidayo.wword.service.UniversityService;
 import io.github.cnsukidayo.wword.service.UserService;
 import io.github.cnsukidayo.wword.support.WWordConst;
 import io.github.cnsukidayo.wword.token.AuthToken;
@@ -22,6 +24,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -36,12 +39,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     private final RedisTemplate<String, String> redisTemplate;
 
-    private final UserMapper userMapper;
+    private final UniversityService universityService;
 
     public UserServiceImpl(RedisTemplate<String, String> redisTemplate,
-                           UserMapper userMapper) {
+                           UniversityService universityService) {
         this.redisTemplate = redisTemplate;
-        this.userMapper = userMapper;
+        this.universityService = universityService;
     }
 
     @Override
@@ -120,6 +123,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     public void update(UpdateUserParam updateUserParam, User user) {
         Assert.notNull(updateUserParam, "UpdateUserParam must not be null");
         Assert.notNull(user, "User must not be null");
+        // 判断学校是否是数据库中存在的学校
+        if (StringUtils.hasText(updateUserParam.getUniversity()) && !universityService.hasUniversity(updateUserParam.getUniversity())) {
+            throw new NonExistsException("学校:" + updateUserParam.getUniversity() + "不存在!");
+        }
         // 为null的字段mybatis默认是不会更新的
         User update = new User();
         BeanUtils.copyProperties(updateUserParam, update);

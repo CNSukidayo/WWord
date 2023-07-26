@@ -1,11 +1,13 @@
 package io.github.cnsukidayo.wword.pojo;
 
 import com.baomidou.mybatisplus.annotation.*;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.github.cnsukidayo.wword.enums.AccountCreateProgress;
 import io.github.cnsukidayo.wword.enums.SexType;
 import io.github.cnsukidayo.wword.pojo.base.BaseEntity;
 
 import java.io.Serial;
+import java.time.LocalDate;
 
 /**
  * @author sukidayo
@@ -44,8 +46,9 @@ public class User extends BaseEntity {
     @TableField("create_progress")
     private AccountCreateProgress createProgress;
 
+    @JsonFormat(pattern = "yyyy-MM-dd")
     @TableField("birthday")
-    private String birthday;
+    private LocalDate birthday;
 
     @TableField("university")
     private String university;
@@ -128,11 +131,11 @@ public class User extends BaseEntity {
         this.createProgress = createProgress;
     }
 
-    public String getBirthday() {
+    public LocalDate getBirthday() {
         return birthday;
     }
 
-    public void setBirthday(String birthday) {
+    public void setBirthday(LocalDate birthday) {
         this.birthday = birthday;
     }
 

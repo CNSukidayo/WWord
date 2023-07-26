@@ -1,11 +1,13 @@
 package io.github.cnsukidayo.wword.config;
 
-import io.github.cnsukidayo.wword.config.properties.WWordProperties;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+import io.github.cnsukidayo.wword.config.properties.WWordProperties;
 import io.github.cnsukidayo.wword.security.resolver.AuthenticationArgumentResolver;
 import org.springframework.boot.autoconfigure.http.HttpMessageConvertersAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.boot.jackson.JsonComponentModule;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -16,6 +18,9 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 /**
@@ -43,8 +48,13 @@ public class WWordMvcConfiguration implements WebMvcConfigurer {
                 .ifPresent(converter -> {
                     MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter =
                             (MappingJackson2HttpMessageConverter) converter;
+                    // 构建ObjectMapper的对象
                     Jackson2ObjectMapperBuilder builder = Jackson2ObjectMapperBuilder.json();
-                    JsonComponentModule module = new JsonComponentModule();
+                    // Json组件模块
+                    JavaTimeModule module = new JavaTimeModule();
+                    // 添加自定义解析器
+                    module.addSerializer(LocalDate.class, new LocalDateSerializer(DateTimeFormatter.ISO_LOCAL_DATE));
+                    module.addSerializer(LocalDateTime.class, new LocalDateTimeSerializer(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
                     ObjectMapper objectMapper = builder.modules(module).build();
                     mappingJackson2HttpMessageConverter.setObjectMapper(objectMapper);
                 });
@@ -60,4 +70,5 @@ public class WWordMvcConfiguration implements WebMvcConfigurer {
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
         resolvers.add(new AuthenticationArgumentResolver());
     }
+
 }

@@ -67,7 +67,7 @@ public class UserController {
 
     @Operation(summary = "刷新客户端令牌")
     @PostMapping("refresh/{refreshToken}")
-    public AuthToken refresh(@PathVariable("refreshToken") @Parameter(description = "刷新令牌", required = true) String refreshToken) {
+    public AuthToken refresh(@Parameter(description = "刷新令牌", required = true) @PathVariable("refreshToken") String refreshToken) {
         return userService.refreshToken(refreshToken);
     }
 

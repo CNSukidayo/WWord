@@ -4,6 +4,8 @@ import io.github.cnsukidayo.wword.enums.AccountCreateProgress;
 import io.github.cnsukidayo.wword.enums.SexType;
 import io.swagger.v3.oas.annotations.media.Schema;
 
+import java.time.LocalDate;
+
 /**
  * @author sukidayo
  * @date 2023/7/23 15:25
@@ -36,7 +38,7 @@ public class UserProfileDTO {
     private SexType sex;
 
     @Schema(description = "生日")
-    private String birthday;
+    private LocalDate birthday;
 
     @Schema(description = "大学")
     private String university;
@@ -46,7 +48,6 @@ public class UserProfileDTO {
 
     @Schema(description = "账号创建的进度")
     private AccountCreateProgress createProgress;
-
 
     public UserProfileDTO() {
     }
@@ -115,11 +116,11 @@ public class UserProfileDTO {
         this.sex = sex;
     }
 
-    public String getBirthday() {
+    public LocalDate getBirthday() {
         return birthday;
     }
 
-    public void setBirthday(String birthday) {
+    public void setBirthday(LocalDate birthday) {
         this.birthday = birthday;
     }
 

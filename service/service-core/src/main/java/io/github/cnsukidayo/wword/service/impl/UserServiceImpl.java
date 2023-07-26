@@ -7,6 +7,8 @@ import io.github.cnsukidayo.wword.dao.UserMapper;
 import io.github.cnsukidayo.wword.exception.AlreadyExistsException;
 import io.github.cnsukidayo.wword.exception.BadRequestException;
 import io.github.cnsukidayo.wword.params.LoginParam;
+import io.github.cnsukidayo.wword.params.UpdatePasswordParam;
+import io.github.cnsukidayo.wword.params.UpdateUserParam;
 import io.github.cnsukidayo.wword.params.UserRegisterParam;
 import io.github.cnsukidayo.wword.pojo.User;
 import io.github.cnsukidayo.wword.security.authentication.Authentication;
@@ -56,6 +58,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         BeanUtils.copyProperties(userRegisterParam, user);
         // 加密密码
         user.setPassword(BCrypt.hashpw(userRegisterParam.getPassword()));
+        // 设置默认用户名
+        user.setNick(WWordConst.USER_NICK_PREFIX + UUID.randomUUID().toString().substring(0, 8));
         baseMapper.insert(user);
     }
 
@@ -73,6 +77,21 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         }
 
         return buildAuthToken(user);
+    }
+
+    @Override
+    public void updatePassword(User user, UpdatePasswordParam updatePasswordParam) {
+        Assert.notNull(user, "user must not be null");
+        Assert.notNull(updatePasswordParam, "updatePasswordParam must not be null");
+        if (!updatePasswordParam.getNewPassword().equals(updatePasswordParam.getConfirmNewPassword()))
+            throw new BadRequestException("两次输入密码不一致");
+
+        if (!BCrypt.checkpw(updatePasswordParam.getOldPassword(), user.getPassword()))
+            throw new BadRequestException("旧密码错误");
+        // 加密密码
+        user.setPassword(BCrypt.hashpw(updatePasswordParam.getNewPassword()));
+        // 更新
+        baseMapper.updateById(user);
     }
 
     @Override
@@ -96,6 +115,17 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         return buildAuthToken(user);
     }
 
+
+    @Override
+    public void update(UpdateUserParam updateUserParam, User user) {
+        Assert.notNull(updateUserParam, "UpdateUserParam must not be null");
+        Assert.notNull(user, "User must not be null");
+        // 为null的字段mybatis默认是不会更新的
+        User update = new User();
+        BeanUtils.copyProperties(updateUserParam, update);
+        update.setUUID(user.getUUID());
+        baseMapper.updateById(update);
+    }
 
     @Override
     public void clearToken() {

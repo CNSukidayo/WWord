@@ -15,4 +15,7 @@ public class WWordConst {
 
     public static final int REFRESH_TOKEN_EXPIRED_DAYS = 30;
 
+    // 用户昵称前缀
+    public static final String USER_NICK_PREFIX = "用户_";
+
 }

@@ -1,12 +1,11 @@
 package io.github.cnsukidayo.wword.controller.u;
 
 import io.github.cnsukidayo.wword.dto.UserProfileDTO;
-import io.github.cnsukidayo.wword.exception.BadRequestException;
 import io.github.cnsukidayo.wword.params.LoginParam;
+import io.github.cnsukidayo.wword.params.UpdatePasswordParam;
+import io.github.cnsukidayo.wword.params.UpdateUserParam;
 import io.github.cnsukidayo.wword.params.UserRegisterParam;
 import io.github.cnsukidayo.wword.pojo.User;
-import io.github.cnsukidayo.wword.security.authentication.Authentication;
-import io.github.cnsukidayo.wword.security.context.SecurityContextHolder;
 import io.github.cnsukidayo.wword.service.UserService;
 import io.github.cnsukidayo.wword.token.AuthToken;
 import io.swagger.v3.oas.annotations.Operation;
@@ -32,27 +31,38 @@ public class UserController {
     }
 
     @Operation(summary = "用户注册接口")
-    @PostMapping("/register")
+    @PostMapping("register")
     public void register(@RequestBody @Valid UserRegisterParam userRegisterParam) {
         userService.register(userRegisterParam);
     }
 
     @Operation(summary = "用户登录接口")
-    @PostMapping("/login")
+    @PostMapping("login")
     public AuthToken login(@RequestBody @Valid LoginParam loginParam) {
         return userService.login(loginParam);
     }
 
     @Operation(summary = "获取用户个人信息接口")
-    @GetMapping("/getProfile")
-    public UserProfileDTO getProfile() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null) throw new BadRequestException("未登录,请登录后访问");
-        User user = authentication.user();
+    @GetMapping("getProfile")
+    public UserProfileDTO getProfile(User user) {
         UserProfileDTO userProfileDTO = new UserProfileDTO();
         BeanUtils.copyProperties(user, userProfileDTO);
         userProfileDTO.setSexString(user.getSex().value());
         return userProfileDTO;
+    }
+
+    @Operation(summary = "更新密码")
+    @PostMapping("updatePassword")
+    public void updatePassword(@RequestBody @Valid UpdatePasswordParam updatePasswordParam,
+                               User user) {
+        userService.updatePassword(user, updatePasswordParam);
+    }
+
+    @Operation(summary = "更新用户个人信息")
+    @PostMapping("update")
+    public void update(@RequestBody @Valid UpdateUserParam updateUserParam,
+                       User user) {
+        userService.update(updateUserParam, user);
     }
 
     @Operation(summary = "刷新客户端令牌")

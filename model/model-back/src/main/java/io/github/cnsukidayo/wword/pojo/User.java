@@ -11,7 +11,7 @@ import java.io.Serial;
  * @author sukidayo
  * @date 2023/5/17 19:30
  */
-@TableName(value = "user", autoResultMap = true)
+@TableName(value = "user")
 public class User extends BaseEntity {
 
     @Serial

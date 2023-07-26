@@ -1,7 +1,7 @@
 package io.github.cnsukidayo.wword.controller.error;
 
-import io.github.cnsukidayo.wword.support.BaseResponse;
-import io.github.cnsukidayo.wword.vo.ErrorVo;
+import io.github.cnsukidayo.wword.model.support.BaseResponse;
+import io.github.cnsukidayo.wword.model.vo.ErrorVo;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.boot.autoconfigure.web.ServerProperties;
 import org.springframework.boot.autoconfigure.web.servlet.error.BasicErrorController;

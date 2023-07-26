@@ -1,8 +1,8 @@
 package io.github.cnsukidayo.wword.security.core;
 
 import io.github.cnsukidayo.wword.exception.AbstractWWordException;
-import io.github.cnsukidayo.wword.support.BaseResponse;
-import io.github.cnsukidayo.wword.vo.ErrorVo;
+import io.github.cnsukidayo.wword.model.support.BaseResponse;
+import io.github.cnsukidayo.wword.model.vo.ErrorVo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;

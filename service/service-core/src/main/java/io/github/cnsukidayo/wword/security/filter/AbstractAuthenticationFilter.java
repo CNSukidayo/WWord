@@ -4,7 +4,7 @@ import io.github.cnsukidayo.wword.exception.AbstractWWordException;
 import io.github.cnsukidayo.wword.security.context.SecurityContextHolder;
 import io.github.cnsukidayo.wword.security.handler.AuthenticationFailureHandler;
 import io.github.cnsukidayo.wword.security.handler.DefaultAuthenticationFailureHandler;
-import io.github.cnsukidayo.wword.support.WWordConst;
+import io.github.cnsukidayo.wword.model.support.WWordConst;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

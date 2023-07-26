@@ -6,7 +6,7 @@ import io.github.cnsukidayo.wword.security.context.SecurityContextHolder;
 import io.github.cnsukidayo.wword.security.context.SecurityContextImpl;
 import io.github.cnsukidayo.wword.security.util.SecurityUtils;
 import io.github.cnsukidayo.wword.service.UserService;
-import io.github.cnsukidayo.wword.pojo.User;
+import io.github.cnsukidayo.wword.model.pojo.User;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

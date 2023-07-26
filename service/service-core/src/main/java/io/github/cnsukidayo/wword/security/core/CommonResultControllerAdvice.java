@@ -1,6 +1,6 @@
 package io.github.cnsukidayo.wword.security.core;
 
-import io.github.cnsukidayo.wword.support.BaseResponse;
+import io.github.cnsukidayo.wword.model.support.BaseResponse;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpStatus;

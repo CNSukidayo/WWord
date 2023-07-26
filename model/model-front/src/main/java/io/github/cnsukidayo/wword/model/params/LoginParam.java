@@ -1,17 +1,17 @@
-package io.github.cnsukidayo.wword.params;
+package io.github.cnsukidayo.wword.model.params;
+
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Size;
 
 /**
- * 流程应该是先创建账号->后端生成默认信息->用户登录->登录之后更新个人信息.
+ * 登陆参数
  *
- * @author sukidayo
- * @date 2023/7/25 10:55
+ * @author cnsukidayo
+ * @date 2023/5/17 20:14
  */
-@Schema(description = "注册用户账号的请求参数")
-public class UserRegisterParam {
-
+@Schema(description = "用户登录请求体")
+public class LoginParam {
     @Schema(description = "用户名参数")
     @Size(min = 6, max = 128, message = "用户名或邮箱长度不小于 {min} 且长度不超过 {max} ")
     private String account;
@@ -20,11 +20,7 @@ public class UserRegisterParam {
     @Size(min = 8, max = 128, message = "密码长度不能小于 {min} 且长度不超过 {max} ")
     private String password;
 
-    @Schema(description = "确认密码参数")
-    @Size(min = 8, max = 128, message = "确认密码长度不能小于 {min} 且长度不超过 {max} ")
-    private String confirmPassword;
-
-    public UserRegisterParam() {
+    public LoginParam() {
     }
 
     public String getAccount() {
@@ -41,13 +37,5 @@ public class UserRegisterParam {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public String getConfirmPassword() {
-        return confirmPassword;
-    }
-
-    public void setConfirmPassword(String confirmPassword) {
-        this.confirmPassword = confirmPassword;
     }
 }

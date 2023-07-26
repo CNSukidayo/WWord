@@ -1,4 +1,4 @@
-package io.github.cnsukidayo.wword.support;
+package io.github.cnsukidayo.wword.model.support;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.http.HttpStatus;

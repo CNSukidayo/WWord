@@ -1,7 +1,7 @@
-package io.github.cnsukidayo.wword.params;
+package io.github.cnsukidayo.wword.model.params;
 
 
-import io.github.cnsukidayo.wword.enums.SexType;
+import io.github.cnsukidayo.wword.model.enums.SexType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;
 

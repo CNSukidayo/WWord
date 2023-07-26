@@ -3,7 +3,7 @@ package io.github.cnsukidayo.wword.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import io.github.cnsukidayo.wword.dao.UniversityMapper;
-import io.github.cnsukidayo.wword.pojo.University;
+import io.github.cnsukidayo.wword.model.pojo.University;
 import io.github.cnsukidayo.wword.service.UniversityService;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;

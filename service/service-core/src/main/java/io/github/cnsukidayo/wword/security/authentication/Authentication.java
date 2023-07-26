@@ -1,7 +1,7 @@
 package io.github.cnsukidayo.wword.security.authentication;
 
 
-import io.github.cnsukidayo.wword.pojo.User;
+import io.github.cnsukidayo.wword.model.pojo.User;
 
 /**
  * Authentication.

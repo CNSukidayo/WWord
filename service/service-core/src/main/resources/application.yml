@@ -44,7 +44,7 @@ mybatis-plus:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
     map-underscore-to-camel-case: true
   #  mapper-locations: classpath*:/mapper/**/*.xml
-  type-aliases-package: io.github.cnsukidayo.wword.pojo
+  type-aliases-package: io.github.cnsukidayo.wword.model.pojo
 
 # springdoc-openapi项目配置
 #springdoc:
@@ -64,6 +64,7 @@ knife4j:
   enable: true
   setting:
     language: zh_cn
+
 
 wword:
   resource-locations: D:/Program/Java Project/WWord/wwordResources/

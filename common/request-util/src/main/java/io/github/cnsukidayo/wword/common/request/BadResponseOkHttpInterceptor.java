@@ -2,8 +2,8 @@ package io.github.cnsukidayo.wword.common.request;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import io.github.cnsukidayo.wword.support.BaseResponse;
-import io.github.cnsukidayo.wword.vo.ErrorVo;
+import io.github.cnsukidayo.wword.model.support.BaseResponse;
+import io.github.cnsukidayo.wword.model.vo.ErrorVo;
 import okhttp3.Interceptor;
 import okhttp3.Request;
 import okhttp3.Response;

@@ -1,4 +1,4 @@
-package io.github.cnsukidayo.wword.support;
+package io.github.cnsukidayo.wword.model.support;
 
 import org.springframework.http.HttpHeaders;
 

@@ -1,7 +1,7 @@
 package io.github.cnsukidayo.wword.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import io.github.cnsukidayo.wword.pojo.University;
+import io.github.cnsukidayo.wword.model.pojo.University;
 
 import java.util.List;
 

@@ -1,6 +1,6 @@
 package io.github.cnsukidayo.wword.common.request;
 
-import io.github.cnsukidayo.wword.token.AuthToken;
+import io.github.cnsukidayo.wword.model.token.AuthToken;
 
 import java.util.NoSuchElementException;
 import java.util.Optional;

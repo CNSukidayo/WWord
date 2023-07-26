@@ -1,7 +1,7 @@
 package io.github.cnsukidayo.wword.security.resolver;
 
 import io.github.cnsukidayo.wword.exception.AuthenticationException;
-import io.github.cnsukidayo.wword.pojo.User;
+import io.github.cnsukidayo.wword.model.pojo.User;
 import io.github.cnsukidayo.wword.security.authentication.Authentication;
 import io.github.cnsukidayo.wword.security.context.SecurityContextHolder;
 import lombok.extern.slf4j.Slf4j;

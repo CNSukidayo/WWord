@@ -1,4 +1,4 @@
-package io.github.cnsukidayo.wword.enums;
+package io.github.cnsukidayo.wword.model.enums;
 
 /**
  * @author sukidayo

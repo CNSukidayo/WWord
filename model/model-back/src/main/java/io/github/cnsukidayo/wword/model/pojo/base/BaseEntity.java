@@ -1,4 +1,4 @@
-package io.github.cnsukidayo.wword.pojo.base;
+package io.github.cnsukidayo.wword.model.pojo.base;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableLogic;

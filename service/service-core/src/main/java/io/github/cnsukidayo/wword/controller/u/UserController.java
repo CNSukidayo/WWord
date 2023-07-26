@@ -1,13 +1,13 @@
 package io.github.cnsukidayo.wword.controller.u;
 
-import io.github.cnsukidayo.wword.dto.UserProfileDTO;
-import io.github.cnsukidayo.wword.params.LoginParam;
-import io.github.cnsukidayo.wword.params.UpdatePasswordParam;
-import io.github.cnsukidayo.wword.params.UpdateUserParam;
-import io.github.cnsukidayo.wword.params.UserRegisterParam;
-import io.github.cnsukidayo.wword.pojo.User;
+import io.github.cnsukidayo.wword.model.dto.UserProfileDTO;
+import io.github.cnsukidayo.wword.model.params.LoginParam;
+import io.github.cnsukidayo.wword.model.params.UpdatePasswordParam;
+import io.github.cnsukidayo.wword.model.params.UpdateUserParam;
+import io.github.cnsukidayo.wword.model.params.UserRegisterParam;
+import io.github.cnsukidayo.wword.model.pojo.User;
 import io.github.cnsukidayo.wword.service.UserService;
-import io.github.cnsukidayo.wword.token.AuthToken;
+import io.github.cnsukidayo.wword.model.token.AuthToken;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;

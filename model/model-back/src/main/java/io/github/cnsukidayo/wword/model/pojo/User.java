@@ -1,10 +1,14 @@
-package io.github.cnsukidayo.wword.pojo;
+package io.github.cnsukidayo.wword.model.pojo;
 
-import com.baomidou.mybatisplus.annotation.*;
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import io.github.cnsukidayo.wword.enums.AccountCreateProgress;
-import io.github.cnsukidayo.wword.enums.SexType;
-import io.github.cnsukidayo.wword.pojo.base.BaseEntity;
+import io.github.cnsukidayo.wword.model.enums.AccountCreateProgress;
+import io.github.cnsukidayo.wword.model.enums.SexType;
+import io.github.cnsukidayo.wword.model.pojo.base.BaseEntity;
+import io.swagger.v3.oas.annotations.Hidden;
 
 import java.io.Serial;
 import java.time.LocalDate;
@@ -14,6 +18,7 @@ import java.time.LocalDate;
  * @date 2023/5/17 19:30
  */
 @TableName(value = "user")
+@Hidden
 public class User extends BaseEntity {
 
     @Serial

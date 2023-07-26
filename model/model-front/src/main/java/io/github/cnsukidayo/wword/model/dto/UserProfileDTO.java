@@ -1,7 +1,7 @@
-package io.github.cnsukidayo.wword.dto;
+package io.github.cnsukidayo.wword.model.dto;
 
-import io.github.cnsukidayo.wword.enums.AccountCreateProgress;
-import io.github.cnsukidayo.wword.enums.SexType;
+import io.github.cnsukidayo.wword.model.enums.AccountCreateProgress;
+import io.github.cnsukidayo.wword.model.enums.SexType;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.time.LocalDate;

@@ -1,4 +1,4 @@
-package io.github.cnsukidayo.wword.token;
+package io.github.cnsukidayo.wword.model.token;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 

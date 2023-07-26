@@ -1,8 +1,8 @@
 package io.github.cnsukidayo.wword.common.request;
 
 import io.github.cnsukidayo.wword.common.request.implement.core.UserRequestUtil;
-import io.github.cnsukidayo.wword.support.WWordConst;
-import io.github.cnsukidayo.wword.token.AuthToken;
+import io.github.cnsukidayo.wword.model.support.WWordConst;
+import io.github.cnsukidayo.wword.model.token.AuthToken;
 import okhttp3.Interceptor;
 import okhttp3.Request;
 import okhttp3.Response;

@@ -1,12 +1,12 @@
 package io.github.cnsukidayo.wword.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import io.github.cnsukidayo.wword.params.LoginParam;
-import io.github.cnsukidayo.wword.params.UpdatePasswordParam;
-import io.github.cnsukidayo.wword.params.UpdateUserParam;
-import io.github.cnsukidayo.wword.params.UserRegisterParam;
-import io.github.cnsukidayo.wword.pojo.User;
-import io.github.cnsukidayo.wword.token.AuthToken;
+import io.github.cnsukidayo.wword.model.params.LoginParam;
+import io.github.cnsukidayo.wword.model.params.UpdatePasswordParam;
+import io.github.cnsukidayo.wword.model.params.UpdateUserParam;
+import io.github.cnsukidayo.wword.model.params.UserRegisterParam;
+import io.github.cnsukidayo.wword.model.pojo.User;
+import io.github.cnsukidayo.wword.model.token.AuthToken;
 
 /**
  * @author sukidayo

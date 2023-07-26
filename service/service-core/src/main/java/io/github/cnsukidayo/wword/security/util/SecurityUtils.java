@@ -1,6 +1,6 @@
 package io.github.cnsukidayo.wword.security.util;
 
-import io.github.cnsukidayo.wword.pojo.User;
+import io.github.cnsukidayo.wword.model.pojo.User;
 import org.springframework.lang.NonNull;
 import org.springframework.util.Assert;
 

@@ -3,8 +3,8 @@ package io.github.cnsukidayo.wword.request.test.core;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import io.github.cnsukidayo.wword.common.request.*;
-import io.github.cnsukidayo.wword.dto.UserProfileDTO;
-import io.github.cnsukidayo.wword.support.BaseResponse;
+import io.github.cnsukidayo.wword.model.dto.UserProfileDTO;
+import io.github.cnsukidayo.wword.model.support.BaseResponse;
 import okhttp3.*;
 import org.junit.Test;
 

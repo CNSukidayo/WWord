@@ -31,9 +31,6 @@ public class UserProfileDTO {
     @Schema(description = "个人简介")
     private String describeInfo;
 
-    @Schema(description = "性别")
-    private String sexString;
-
     @Schema(description = "性别的类型")
     private SexType sex;
 
@@ -98,14 +95,6 @@ public class UserProfileDTO {
 
     public void setDescribeInfo(String describeInfo) {
         this.describeInfo = describeInfo;
-    }
-
-    public String getSexString() {
-        return sexString;
-    }
-
-    public void setSexString(String sexString) {
-        this.sexString = sexString;
     }
 
     public SexType getSex() {

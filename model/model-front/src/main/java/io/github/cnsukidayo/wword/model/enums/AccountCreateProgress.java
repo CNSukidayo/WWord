@@ -7,6 +7,6 @@ package io.github.cnsukidayo.wword.model.enums;
 public enum AccountCreateProgress {
 
     INIT,
-    UPDATE_PROFILE;
+    UPDATE_PROFILE
 
 }

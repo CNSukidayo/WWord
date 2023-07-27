@@ -31,11 +31,9 @@ public class UpdateUserParam {
     private String describeInfo;
 
     @Schema(description = "个人性别")
-    @NotNull(message = "性别字段不能为空,并且格式必须匹配")
     private SexType sex;
 
     @Schema(description = "生日")
-    @Past
     private LocalDate birthday;
 
     @Schema(description = "大学")

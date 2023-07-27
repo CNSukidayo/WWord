@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import io.github.cnsukidayo.wword.model.dto.UserProfileDTO;
 import io.github.cnsukidayo.wword.model.enums.AccountCreateProgress;
 import io.github.cnsukidayo.wword.model.enums.SexType;
 import io.github.cnsukidayo.wword.model.pojo.base.BaseEntity;
@@ -19,7 +20,7 @@ import java.time.LocalDate;
  */
 @TableName(value = "user")
 @Hidden
-public class User extends BaseEntity {
+public class User extends BaseEntity<UserProfileDTO> {
 
     @Serial
     private static final long serialVersionUID = 1L;

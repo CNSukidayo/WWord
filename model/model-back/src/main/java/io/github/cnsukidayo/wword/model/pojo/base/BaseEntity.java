@@ -4,13 +4,14 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.springframework.beans.BeanUtils;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
-public class BaseEntity implements Serializable {
+public abstract class BaseEntity<DTO> implements Serializable {
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @TableField("create_time")
@@ -59,4 +60,10 @@ public class BaseEntity implements Serializable {
     public void setParam(Map<String, Object> param) {
         this.param = param;
     }
+
+    public final <T extends DTO> T convertToDTO(DTO dto) {
+        BeanUtils.copyProperties(this, dto);
+        return (T) dto;
+    }
+
 }

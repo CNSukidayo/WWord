@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import io.github.cnsukidayo.wword.model.dto.UniversityDTO;
 import io.github.cnsukidayo.wword.model.pojo.base.BaseEntity;
 
 import java.io.Serial;
@@ -13,7 +14,7 @@ import java.io.Serial;
  * @date 2023/7/26 15:45
  */
 @TableName("university")
-public class University extends BaseEntity {
+public class University extends BaseEntity<UniversityDTO> {
 
     @Serial
     private static final long serialVersionUID = 1L;

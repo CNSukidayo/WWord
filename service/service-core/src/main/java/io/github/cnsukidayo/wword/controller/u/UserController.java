@@ -1,18 +1,17 @@
 package io.github.cnsukidayo.wword.controller.u;
 
-import io.github.cnsukidayo.wword.model.dto.UserProfileDTO;
 import io.github.cnsukidayo.wword.model.params.LoginParam;
 import io.github.cnsukidayo.wword.model.params.UpdatePasswordParam;
 import io.github.cnsukidayo.wword.model.params.UpdateUserParam;
 import io.github.cnsukidayo.wword.model.params.UserRegisterParam;
 import io.github.cnsukidayo.wword.model.pojo.User;
-import io.github.cnsukidayo.wword.service.UserService;
 import io.github.cnsukidayo.wword.model.token.AuthToken;
+import io.github.cnsukidayo.wword.model.vo.UserProfileVO;
+import io.github.cnsukidayo.wword.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -44,11 +43,10 @@ public class UserController {
 
     @Operation(summary = "获取用户个人信息接口")
     @GetMapping("getProfile")
-    public UserProfileDTO getProfile(User user) {
-        UserProfileDTO userProfileDTO = new UserProfileDTO();
-        BeanUtils.copyProperties(user, userProfileDTO);
-        userProfileDTO.setSexString(user.getSex().value());
-        return userProfileDTO;
+    public UserProfileVO getProfile(User user) {
+        UserProfileVO userProfileVO = user.convertToDTO(new UserProfileVO());
+        userProfileVO.setSexString(user.getSex().value());
+        return userProfileVO;
     }
 
     @Operation(summary = "更新密码")

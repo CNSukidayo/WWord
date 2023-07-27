@@ -20,7 +20,7 @@ public class BaseResponse<T> {
     @Schema(description = "响应信息")
     private String message;
 
-    @Schema(description = "响应数据", name = "Object", type = "Object")
+    @Schema(description = "响应数据", name = "data", type = "Object")
     private T data;
 
     public BaseResponse() {

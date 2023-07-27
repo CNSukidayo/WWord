@@ -1,12 +1,14 @@
 package io.github.cnsukidayo.wword.model.vo;
 
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * @author sukidayo
  * @date 2023/7/23 13:33
  */
-@Schema(description = "异常信息")
+//@Schema(description = "异常信息")
+@Hidden
 public class ErrorVo {
 
     @Schema(description = "时间戳")

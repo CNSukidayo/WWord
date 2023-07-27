@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.github.cnsukidayo.wword.model.dto.PostCategoryDTO;
-import io.github.cnsukidayo.wword.model.enums.PublicNess;
+import io.github.cnsukidayo.wword.model.enums.CategoryAttribute;
 import io.github.cnsukidayo.wword.model.pojo.base.BaseEntity;
 
 import java.io.Serial;
@@ -34,11 +34,8 @@ public class PostCategory extends BaseEntity<PostCategoryDTO> {
     @TableField("describe_info")
     private String describeInfo;
 
-    @TableField("public_ness")
-    private PublicNess publicNess;
-
-    @TableField("like_count")
-    private Integer likeCount;
+    @TableField("category_attribute")
+    private CategoryAttribute categoryAttribute;
 
     public Long getId() {
         return id;
@@ -80,20 +77,11 @@ public class PostCategory extends BaseEntity<PostCategoryDTO> {
         this.describeInfo = describeInfo;
     }
 
-    public PublicNess getPublicNess() {
-        return publicNess;
+    public CategoryAttribute getCategoryAttribute() {
+        return categoryAttribute;
     }
 
-    public void setPublicNess(PublicNess publicNess) {
-        this.publicNess = publicNess;
+    public void setCategoryAttribute(CategoryAttribute categoryAttribute) {
+        this.categoryAttribute = categoryAttribute;
     }
-
-    public Integer getLikeCount() {
-        return likeCount;
-    }
-
-    public void setLikeCount(Integer likeCount) {
-        this.likeCount = likeCount;
-    }
-
 }

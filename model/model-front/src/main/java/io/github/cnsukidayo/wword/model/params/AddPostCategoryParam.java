@@ -1,6 +1,6 @@
 package io.github.cnsukidayo.wword.model.params;
 
-import io.github.cnsukidayo.wword.model.enums.PublicNess;
+import io.github.cnsukidayo.wword.model.enums.CategoryAttribute;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -26,7 +26,7 @@ public class AddPostCategoryParam {
     private String describeInfo;
 
     @Schema(description = "收藏夹的公开类型", defaultValue = "PRIVATE")
-    private PublicNess publicNess;
+    private CategoryAttribute categoryAttribute;
     
     public AddPostCategoryParam() {
     }
@@ -55,11 +55,11 @@ public class AddPostCategoryParam {
         this.describeInfo = describeInfo;
     }
 
-    public PublicNess getPublicNess() {
-        return publicNess;
+    public CategoryAttribute getPublicNess() {
+        return categoryAttribute;
     }
 
-    public void setPublicNess(PublicNess publicNess) {
-        this.publicNess = publicNess;
+    public void setPublicNess(CategoryAttribute categoryAttribute) {
+        this.categoryAttribute = categoryAttribute;
     }
 }

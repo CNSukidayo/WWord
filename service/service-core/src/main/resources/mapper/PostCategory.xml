@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.github.cnsukidayo.wword.dao.PostCategoryMapper">
+
+    <insert id="insertLike">
+        INSERT IGNORE INTO post_category_like (post_category_id, uuid)
+        select #{postCategoryId}, #{uuid}
+        from post_category
+        WHERE id = #{postCategoryId}
+          AND uuid = #{uuid}
+          AND is_deleted = 0
+          AND category_attribute != 'LINK'
+    </insert>
+
+    <delete id="deleteLike">
+        update post_category_like
+        set is_deleted = 1
+        WHERE post_category_id = #{postCategoryId}
+          and uuid = #{uuid}
+          and is_deleted = 0
+    </delete>
+
+    <select id="likeCount" resultType="integer">
+        SELECT count(1)
+        FROM `post_category_like`
+        WHERE post_category_id = #{postCategoryId}
+          and is_deleted = 0
+    </select>
+
+    <select id="selectTargetPostCategory" resultType="postCategory">
+        SELECT * FROM post_category WHERE
+        <where>
+            id in
+            <foreach collection="categoryIdList" item="categoryId" index="index" open="(" separator="," close=")">
+                #{categoryId}
+            </foreach>
+        </where>
+        and category_attribute!= 'LINK' and category_attribute!= 'PRIVATE' and is_deleted = 0
+    </select>
+
+</mapper>

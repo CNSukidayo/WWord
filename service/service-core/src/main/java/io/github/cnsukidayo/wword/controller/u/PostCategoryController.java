@@ -5,9 +5,11 @@ import io.github.cnsukidayo.wword.model.params.AddPostCategoryParam;
 import io.github.cnsukidayo.wword.model.params.UpdatePostCategoryParam;
 import io.github.cnsukidayo.wword.model.pojo.PostCategory;
 import io.github.cnsukidayo.wword.model.pojo.User;
+import io.github.cnsukidayo.wword.model.vo.PostCategoryVO;
 import io.github.cnsukidayo.wword.service.PostCategoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.util.Assert;
@@ -63,9 +65,25 @@ public class PostCategoryController {
 
     @Operation(summary = "点赞某个收藏夹")
     @GetMapping("like")
-    public Boolean like(@Parameter(description = "收藏夹的id") @RequestParam("id") Long id, User user) {
-        postCategoryService.like(id, user.getUUID());
-        return true;
+    public @ApiResponse(responseCode = "200", description = "返回值为布尔值,true代表成功.false代表失败") Boolean
+    like(@Parameter(description = "收藏夹的id") @RequestParam("id") Long id, User user) {
+        return postCategoryService.like(id, user.getUUID());
+    }
+
+    @Operation(summary = "取消点赞某个收藏夹")
+    @GetMapping("dislike")
+    public @ApiResponse(responseCode = "200", description = "返回值为布尔值,true代表成功.false代表失败") Boolean
+    dislike(@Parameter(description = "收藏夹的id") @RequestParam("id") Long id, User user) {
+        return postCategoryService.dislike(id, user.getUUID());
+    }
+
+    @Operation(summary = "查询某个收藏夹的详细信息")
+    @GetMapping("getById")
+    public PostCategoryVO getById(@Parameter(description = "收藏夹的id") @RequestParam("id") Long id, User user) {
+        PostCategory postCategory = postCategoryService.getById(id, user.getUUID());
+        PostCategoryVO postCategoryVO = postCategory.convertToDTO(new PostCategoryVO());
+        postCategoryVO.setLikeCount(postCategoryService.likeCount(id));
+        return postCategoryVO;
     }
 
 

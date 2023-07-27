@@ -1,6 +1,6 @@
 package io.github.cnsukidayo.wword.model.dto;
 
-import io.github.cnsukidayo.wword.model.enums.PublicNess;
+import io.github.cnsukidayo.wword.model.enums.CategoryAttribute;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
@@ -26,10 +26,7 @@ public class PostCategoryDTO {
     private String describeInfo;
 
     @Schema(description = "收藏夹的公开类型", defaultValue = "PRIVATE")
-    private PublicNess publicNess;
-
-    @Schema(description = "当前收藏夹的点赞数")
-    private Integer likeCount;
+    private CategoryAttribute categoryAttribute;
 
     @Schema(description = "发起查询的用户是否已经点赞了")
     private Boolean liked;
@@ -77,21 +74,14 @@ public class PostCategoryDTO {
         this.describeInfo = describeInfo;
     }
 
-    public PublicNess getPublicNess() {
-        return publicNess;
+    public CategoryAttribute getPublicNess() {
+        return categoryAttribute;
     }
 
-    public void setPublicNess(PublicNess publicNess) {
-        this.publicNess = publicNess;
+    public void setPublicNess(CategoryAttribute categoryAttribute) {
+        this.categoryAttribute = categoryAttribute;
     }
 
-    public Integer getLikeCount() {
-        return likeCount;
-    }
-
-    public void setLikeCount(Integer likeCount) {
-        this.likeCount = likeCount;
-    }
 
     public Boolean getLiked() {
         return liked;
@@ -101,17 +91,4 @@ public class PostCategoryDTO {
         this.liked = liked;
     }
 
-    @Override
-    public String toString() {
-        return "PostCategoryDTO{" +
-                "id=" + id +
-                ", uuid=" + UUID +
-                ", coverImage='" + coverImage + '\'' +
-                ", name='" + name + '\'' +
-                ", describeInfo='" + describeInfo + '\'' +
-                ", publicNess=" + publicNess +
-                ", likeCount=" + likeCount +
-                ", liked=" + liked +
-                '}';
-    }
 }

@@ -1,7 +1,7 @@
 package io.github.cnsukidayo.wword.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import io.github.cnsukidayo.wword.model.enums.PublicNess;
+import io.github.cnsukidayo.wword.model.enums.CategoryAttribute;
 import io.github.cnsukidayo.wword.model.params.AddPostCategoryParam;
 import io.github.cnsukidayo.wword.model.params.UpdatePostCategoryParam;
 import io.github.cnsukidayo.wword.model.pojo.PostCategory;
@@ -35,7 +35,7 @@ public interface PostCategoryService extends IService<PostCategory> {
      *
      * @param uuid 用户的UUID不为空
      * @return 返回用户所有帖子收藏夹集合
-     * @see PublicNess
+     * @see CategoryAttribute
      */
     List<PostCategory> listPublic(Long uuid);
 
@@ -57,5 +57,39 @@ public interface PostCategoryService extends IService<PostCategory> {
      */
     void removeById(Long id, Long uuid);
 
-    void like(Long id, Long uuid);
+    /**
+     * 点赞收藏夹
+     *
+     * @param id   收藏夹id不为null
+     * @param uuid 用户id不为null
+     * @return 是否点赞成功
+     */
+
+    Boolean like(Long id, Long uuid);
+
+    /**
+     * 取消点赞
+     *
+     * @param id   收藏夹id不为null
+     * @param uuid 用户id不为null
+     * @return 是否取消点赞成功
+     */
+    Boolean dislike(Long id, Long uuid);
+
+    /**
+     * 查询某个收藏夹的点赞数量
+     *
+     * @param id 收藏夹id不为nul
+     * @return 点赞数量
+     */
+    Integer likeCount(Long id);
+
+    /**
+     * 查询某个收藏夹的详细信息
+     *
+     * @param id   收藏夹id不为null
+     * @param uuid 用户id不为null
+     * @return 返回收藏夹内的详细信息
+     */
+    PostCategory getById(Long id, Long uuid);
 }

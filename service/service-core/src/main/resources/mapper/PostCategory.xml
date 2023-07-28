@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="io.github.cnsukidayo.wword.dao.PostCategoryMapper">
+<mapper namespace="io.github.cnsukidayo.wword.core.dao.PostCategoryMapper">
 
     <insert id="insertLike">
         INSERT IGNORE INTO post_category_like (post_category_id, uuid)

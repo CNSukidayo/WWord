@@ -55,11 +55,11 @@ public class AddPostCategoryParam {
         this.describeInfo = describeInfo;
     }
 
-    public CategoryAttribute getPublicNess() {
+    public CategoryAttribute getCategoryAttribute() {
         return categoryAttribute;
     }
 
-    public void setPublicNess(CategoryAttribute categoryAttribute) {
+    public void setCategoryAttribute(CategoryAttribute categoryAttribute) {
         this.categoryAttribute = categoryAttribute;
     }
 }

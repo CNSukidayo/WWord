@@ -28,8 +28,8 @@ public class PostCategoryDTO {
     @Schema(description = "收藏夹的公开类型", defaultValue = "PRIVATE")
     private CategoryAttribute categoryAttribute;
 
-    @Schema(description = "发起查询的用户是否已经点赞了")
-    private Boolean liked;
+    @Schema(description = "创建者名称")
+    private String createName;
 
     public PostCategoryDTO() {
     }
@@ -74,21 +74,19 @@ public class PostCategoryDTO {
         this.describeInfo = describeInfo;
     }
 
-    public CategoryAttribute getPublicNess() {
+    public CategoryAttribute getCategoryAttribute() {
         return categoryAttribute;
     }
 
-    public void setPublicNess(CategoryAttribute categoryAttribute) {
+    public void setCategoryAttribute(CategoryAttribute categoryAttribute) {
         this.categoryAttribute = categoryAttribute;
     }
 
-
-    public Boolean getLiked() {
-        return liked;
+    public String getCreateName() {
+        return createName;
     }
 
-    public void setLiked(Boolean liked) {
-        this.liked = liked;
+    public void setCreateName(String createName) {
+        this.createName = createName;
     }
-
 }

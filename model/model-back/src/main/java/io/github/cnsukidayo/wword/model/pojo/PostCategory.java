@@ -37,6 +37,9 @@ public class PostCategory extends BaseEntity<PostCategoryDTO> {
     @TableField("category_attribute")
     private CategoryAttribute categoryAttribute;
 
+    @TableField(exist = false)
+    private String createName;
+
     public Long getId() {
         return id;
     }
@@ -83,5 +86,13 @@ public class PostCategory extends BaseEntity<PostCategoryDTO> {
 
     public void setCategoryAttribute(CategoryAttribute categoryAttribute) {
         this.categoryAttribute = categoryAttribute;
+    }
+
+    public String getCreateName() {
+        return createName;
+    }
+
+    public void setCreateName(String createName) {
+        this.createName = createName;
     }
 }

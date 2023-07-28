@@ -9,9 +9,8 @@
         select #{postCategoryId}, #{uuid}
         from post_category
         WHERE id = #{postCategoryId}
-          AND uuid = #{uuid}
           AND is_deleted = 0
-          AND category_attribute != 'LINK'
+          AND (category_attribute = 'PUBLIC' OR (uuid = #{uuid} and category_attribute = 'PRIVATE'))
     </insert>
 
     <delete id="deleteLike">
@@ -22,7 +21,7 @@
           and is_deleted = 0
     </delete>
 
-    <select id="likeCount" resultType="integer">
+    <select id="likeCount" resultType="long">
         SELECT count(1)
         FROM `post_category_like`
         WHERE post_category_id = #{postCategoryId}
@@ -30,10 +29,10 @@
     </select>
 
     <select id="selectTargetPostCategory" resultType="postCategory">
-        SELECT * FROM post_category WHERE
+        SELECT * FROM post_category
         <where>
-            id in
-            <foreach collection="categoryIdList" item="categoryId" index="index" open="(" separator="," close=")">
+            and id in
+            <foreach collection="idList" item="categoryId" index="index" open="(" separator="," close=")">
                 #{categoryId}
             </foreach>
         </where>

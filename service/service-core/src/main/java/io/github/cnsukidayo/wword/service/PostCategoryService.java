@@ -5,6 +5,7 @@ import io.github.cnsukidayo.wword.model.enums.CategoryAttribute;
 import io.github.cnsukidayo.wword.model.params.AddPostCategoryParam;
 import io.github.cnsukidayo.wword.model.params.UpdatePostCategoryParam;
 import io.github.cnsukidayo.wword.model.pojo.PostCategory;
+import io.github.cnsukidayo.wword.model.vo.PostCategoryVO;
 
 import java.util.List;
 
@@ -50,7 +51,8 @@ public interface PostCategoryService extends IService<PostCategory> {
 
     /**
      * 删除用户的收藏夹,不能只通过收藏夹的id去删除.<br>
-     * 用户只能删除自已的收藏夹
+     * 用户只能删除自已的收藏夹<br>
+     * 该方法同样可用作取消收藏一个收藏夹,即{@link PostCategoryService#star(Long, Long)}方法的逆操作.
      *
      * @param id   收藏夹id 参数不为null
      * @param uuid 用户id 参数不为null
@@ -77,19 +79,19 @@ public interface PostCategoryService extends IService<PostCategory> {
     Boolean dislike(Long id, Long uuid);
 
     /**
-     * 查询某个收藏夹的点赞数量
-     *
-     * @param id 收藏夹id不为nul
-     * @return 点赞数量
-     */
-    Integer likeCount(Long id);
-
-    /**
      * 查询某个收藏夹的详细信息
      *
      * @param id   收藏夹id不为null
      * @param uuid 用户id不为null
      * @return 返回收藏夹内的详细信息
      */
-    PostCategory getById(Long id, Long uuid);
+    PostCategoryVO getById(Long id, Long uuid);
+
+    /**
+     * 收藏某个收藏夹
+     *
+     * @param id   收藏夹id不为null
+     * @param uuid 用户id不为null
+     */
+    void star(Long id, Long uuid);
 }

@@ -57,7 +57,7 @@ public class PostCategoryController {
         postCategoryService.updateByUUID(updatePostCategoryParam, user.getUUID());
     }
 
-    @Operation(summary = "删除某个收藏夹")
+    @Operation(summary = "删除某个收藏夹&取消收藏某个收藏夹")
     @GetMapping("remove")
     public void remove(@Parameter(description = "收藏夹的id") @RequestParam("id") Long id, User user) {
         postCategoryService.removeById(id, user.getUUID());
@@ -80,10 +80,13 @@ public class PostCategoryController {
     @Operation(summary = "查询某个收藏夹的详细信息")
     @GetMapping("getById")
     public PostCategoryVO getById(@Parameter(description = "收藏夹的id") @RequestParam("id") Long id, User user) {
-        PostCategory postCategory = postCategoryService.getById(id, user.getUUID());
-        PostCategoryVO postCategoryVO = postCategory.convertToDTO(new PostCategoryVO());
-        postCategoryVO.setLikeCount(postCategoryService.likeCount(id));
-        return postCategoryVO;
+        return postCategoryService.getById(id, user.getUUID());
+    }
+
+    @Operation(summary = "收藏某个收藏夹")
+    @GetMapping("star")
+    public void star(@Parameter(description = "收藏夹id") @RequestParam("id") Long id, User user) {
+        postCategoryService.star(id, user.getUUID());
     }
 
 

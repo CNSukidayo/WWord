@@ -13,18 +13,36 @@ import java.util.List;
 public class PostCategoryVO extends PostCategoryDTO {
 
     @Schema(description = "当前收藏夹的点赞数")
-    private Integer likeCount;
+    private Long likeCount;
+
+    @Schema(description = "当前收藏夹的被收藏数")
+    private Long starCount;
+
+    @Schema(description = "发起查询的用户是否已经点赞了")
+    private Boolean liked;
+
+    @Schema(description = "发起查询的用户是否已经收藏了")
+    private Boolean star;
 
     @Schema(description = "收藏的帖子列表")
     // todo 待做
     private List<Object> postList;
 
-    public Integer getLikeCount() {
+
+    public Long getLikeCount() {
         return likeCount;
     }
 
-    public void setLikeCount(Integer likeCount) {
+    public void setLikeCount(Long likeCount) {
         this.likeCount = likeCount;
+    }
+
+    public Long getStarCount() {
+        return starCount;
+    }
+
+    public void setStarCount(Long starCount) {
+        this.starCount = starCount;
     }
 
     public List<Object> getPostList() {
@@ -33,5 +51,21 @@ public class PostCategoryVO extends PostCategoryDTO {
 
     public void setPostList(List<Object> postList) {
         this.postList = postList;
+    }
+
+    public Boolean getLiked() {
+        return liked;
+    }
+
+    public void setLiked(Boolean liked) {
+        this.liked = liked;
+    }
+
+    public Boolean getStar() {
+        return star;
+    }
+
+    public void setStar(Boolean star) {
+        this.star = star;
     }
 }

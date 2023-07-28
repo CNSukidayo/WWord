@@ -35,7 +35,7 @@ public interface PostCategoryMapper extends BaseMapper<PostCategory> {
      *
      * @param id 收藏夹id不能为nul
      */
-    Integer likeCount(@Param("postCategoryId") Long postCategoryId);
+    Long likeCount(@Param("postCategoryId") Long postCategoryId);
 
     /**
      * 查询所有目标帖子收藏夹

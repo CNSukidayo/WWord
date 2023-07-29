@@ -1,13 +1,14 @@
 package io.github.cnsukidayo.wword.core.dao;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import io.github.cnsukidayo.wword.model.pojo.WordDivide;
+import io.github.cnsukidayo.wword.model.pojo.DivideWord;
 import org.springframework.stereotype.Repository;
 
 /**
  * @author sukidayo
- * @date 2023/7/28 16:16
+ * @date 2023/7/29 16:41
  */
 @Repository
-public interface WordDivideMapper extends BaseMapper<WordDivide> {
+public interface DivideWordMapper extends BaseMapper<DivideWord> {
+
 }

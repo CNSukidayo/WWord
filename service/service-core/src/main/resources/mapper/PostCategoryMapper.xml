@@ -13,13 +13,13 @@
           AND (category_attribute = 'PUBLIC' OR (uuid = #{uuid} and category_attribute = 'PRIVATE'))
     </insert>
 
-    <delete id="deleteLike">
+    <update id="deleteLike">
         update post_category_like
         set is_deleted = 1
         WHERE post_category_id = #{postCategoryId}
           and uuid = #{uuid}
           and is_deleted = 0
-    </delete>
+    </update>
 
     <select id="likeCount" resultType="long">
         SELECT count(1)

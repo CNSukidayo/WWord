@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import io.github.cnsukidayo.wword.model.dto.WordDivideDTO;
+import io.github.cnsukidayo.wword.model.dto.DivideDTO;
 import io.github.cnsukidayo.wword.model.enums.DivideType;
 import io.github.cnsukidayo.wword.model.pojo.base.BaseEntity;
 
@@ -12,36 +12,28 @@ import io.github.cnsukidayo.wword.model.pojo.base.BaseEntity;
  * @author sukidayo
  * @date 2023/7/28 16:06
  */
-@TableName("word_divide")
-public class WordDivide extends BaseEntity<WordDivideDTO> {
-
-    @TableField("uuid")
-    private Long uuid;
+@TableName("divide")
+public class Divide extends BaseEntity<DivideDTO> {
 
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
+    @TableField("uuid")
+    private Long UUID;
+
+    @TableField("language_id")
+    private Long languageId;
+
     @TableField("name")
     private String name;
 
-    @TableField("element_count")
-    private Long elementCount;
+    @TableField("parent_id")
+    private Long parentId;
 
     @TableField("divide_type")
     private DivideType divideType;
 
-    @TableField("child_id")
-    private Long childId;
-
-    public WordDivide() {
-    }
-
-    public Long getUuid() {
-        return uuid;
-    }
-
-    public void setUuid(Long uuid) {
-        this.uuid = uuid;
+    public Divide() {
     }
 
     public Long getId() {
@@ -52,6 +44,22 @@ public class WordDivide extends BaseEntity<WordDivideDTO> {
         this.id = id;
     }
 
+    public Long getUUID() {
+        return UUID;
+    }
+
+    public void setUUID(Long UUID) {
+        this.UUID = UUID;
+    }
+
+    public Long getLanguageId() {
+        return languageId;
+    }
+
+    public void setLanguageId(Long languageId) {
+        this.languageId = languageId;
+    }
+
     public String getName() {
         return name;
     }
@@ -60,12 +68,12 @@ public class WordDivide extends BaseEntity<WordDivideDTO> {
         this.name = name;
     }
 
-    public Long getElementCount() {
-        return elementCount;
+    public Long getParentId() {
+        return parentId;
     }
 
-    public void setElementCount(Long elementCount) {
-        this.elementCount = elementCount;
+    public void setParentId(Long parentId) {
+        this.parentId = parentId;
     }
 
     public DivideType getDivideType() {
@@ -74,13 +82,5 @@ public class WordDivide extends BaseEntity<WordDivideDTO> {
 
     public void setDivideType(DivideType divideType) {
         this.divideType = divideType;
-    }
-
-    public Long getChildId() {
-        return childId;
-    }
-
-    public void setChildId(Long childId) {
-        this.childId = childId;
     }
 }

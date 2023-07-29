@@ -1,18 +1,18 @@
 package io.github.cnsukidayo.wword.admin.controller;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
  * @author sukidayo
- * @date 2023/7/28 18:17
+ * @date 2023/7/29 10:15
  */
+@Tag(name = "语种管理接口")
 @RestController
-public class Hello {
+@RequestMapping("/api/admin/language")
+public class LanguageController {
 
-    @RequestMapping("ping")
-    public String ping() {
-        return "pong";
-    }
+
 
 }

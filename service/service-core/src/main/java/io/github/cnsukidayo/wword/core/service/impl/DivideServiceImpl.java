@@ -45,6 +45,9 @@ public class DivideServiceImpl extends ServiceImpl<DivideMapper, Divide> impleme
 
     @Override
     public List<DivideDTO> listDivide(Long languageId, Long UUID) {
+        Assert.notNull(languageId,"languageId must not be null");
+        Assert.notNull(UUID,"UUID must not be null");
+
         // 根据languageId和uuid查询到所有的父划分
         List<Divide> parentDivideList = Optional.ofNullable(baseMapper.selectList(new LambdaQueryWrapper<Divide>().eq(Divide::getUUID, UUID)
                         .eq(Divide::getLanguageId, languageId)

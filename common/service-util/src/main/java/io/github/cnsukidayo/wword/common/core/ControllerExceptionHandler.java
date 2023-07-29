@@ -23,7 +23,8 @@ import java.util.List;
  *
  * @author cnsukidayo
  */
-@RestControllerAdvice(value = {"io.github.cnsukidayo.wword.core.controller"})
+@RestControllerAdvice(value = {"io.github.cnsukidayo.wword.core.controller",
+        "io.github.cnsukidayo.wword.admin.controller"})
 public class ControllerExceptionHandler {
 
     private final Logger log = LoggerFactory.getLogger(getClass());

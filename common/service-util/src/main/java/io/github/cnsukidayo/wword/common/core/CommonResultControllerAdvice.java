@@ -21,7 +21,8 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
  *
  * @author cnsukidayo
  */
-@ControllerAdvice(value = {"io.github.cnsukidayo.wword.core.controller"})
+@ControllerAdvice(value = {"io.github.cnsukidayo.wword.core.controller",
+        "io.github.cnsukidayo.wword.admin.controller"})
 public class CommonResultControllerAdvice implements ResponseBodyAdvice<Object> {
 
     @Override

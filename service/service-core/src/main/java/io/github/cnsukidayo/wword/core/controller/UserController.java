@@ -44,7 +44,7 @@ public class UserController {
     @Operation(summary = "获取用户个人信息接口")
     @GetMapping("getProfile")
     public UserProfileVO getProfile(User user) {
-        UserProfileVO userProfileVO = user.convertToDTO(new UserProfileVO());
+        UserProfileVO userProfileVO = new UserProfileVO().convertFrom(user);
         userProfileVO.setSexString(user.getSex().value());
         return userProfileVO;
     }

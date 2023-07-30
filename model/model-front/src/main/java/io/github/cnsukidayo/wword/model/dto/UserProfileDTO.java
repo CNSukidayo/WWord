@@ -1,7 +1,9 @@
 package io.github.cnsukidayo.wword.model.dto;
 
+import io.github.cnsukidayo.wword.model.base.OutputConverter;
 import io.github.cnsukidayo.wword.model.enums.AccountCreateProgress;
 import io.github.cnsukidayo.wword.model.enums.SexType;
+import io.github.cnsukidayo.wword.model.pojo.User;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.time.LocalDate;
@@ -11,7 +13,7 @@ import java.time.LocalDate;
  * @date 2023/7/23 15:25
  */
 @Schema(description = "用户个人信息")
-public class UserProfileDTO {
+public class UserProfileDTO implements OutputConverter<UserProfileDTO, User> {
 
     @Schema(description = "用户唯一标识")
     private Long UUID;

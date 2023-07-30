@@ -11,8 +11,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * @author sukidayo
@@ -32,12 +33,11 @@ public class UniversityController {
     @Operation(summary = "根据名称查询学校")
     @GetMapping("getByName/{school_name}")
     public List<UniversityDTO> getByName(@Parameter(description = "学校的名称", required = true) @PathVariable("school_name") String schoolName) {
-        List<University> universityList = universityService.getByName(schoolName);
-        List<UniversityDTO> universityDTOList = new ArrayList<>(universityList.size());
-        universityList.forEach(university -> universityDTOList.add(university.convertToDTO(new UniversityDTO())));
-        return universityDTOList;
+        return universityService.getByName(schoolName)
+                .stream()
+                .map((Function<University, UniversityDTO>) university -> new UniversityDTO().convertFrom(university))
+                .collect(Collectors.toList());
     }
-
 
 
 }

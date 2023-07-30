@@ -12,11 +12,11 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * @author sukidayo
@@ -42,13 +42,19 @@ public class PostCategoryController {
     @Operation(summary = "查询当前用户的所有收藏夹")
     @GetMapping("list")
     public List<PostCategoryDTO> list(User user) {
-        return convertPostCategoryDTOList(postCategoryService.list(user.getUUID()));
+        return postCategoryService.list(user.getUUID())
+                .stream()
+                .map((Function<PostCategory, PostCategoryDTO>) postCategory -> new PostCategoryVO().convertFrom(postCategory))
+                .collect(Collectors.toList());
     }
 
     @Operation(summary = "根据id查询某个用户所有公开的帖子收藏夹")
     @GetMapping("listPublic")
     public List<PostCategoryDTO> listPublic(@Parameter(description = "目标用户的UUID") @RequestParam("UUID") Long UUID) {
-        return convertPostCategoryDTOList(postCategoryService.listPublic(UUID));
+        return postCategoryService.listPublic(UUID)
+                .stream()
+                .map((Function<PostCategory, PostCategoryDTO>) postCategory -> new PostCategoryVO().convertFrom(postCategory))
+                .collect(Collectors.toList());
     }
 
     @Operation(summary = "更新某个收藏夹的信息")
@@ -89,18 +95,5 @@ public class PostCategoryController {
         postCategoryService.star(id, user.getUUID());
     }
 
-
-    /**
-     * 将PostCategory集合转换为PostCategoryDTO集合
-     *
-     * @param postCategoryList 参数不为null
-     * @return 返回PostCategoryDTO集合
-     */
-    private List<PostCategoryDTO> convertPostCategoryDTOList(List<PostCategory> postCategoryList) {
-        Assert.notNull(postCategoryList, "postCategoryList must not be null");
-        List<PostCategoryDTO> postCategoryDTOList = new ArrayList<>(postCategoryList.size());
-        postCategoryList.forEach(postCategory -> postCategoryDTOList.add(postCategory.convertToDTO(new PostCategoryDTO())));
-        return postCategoryDTOList;
-    }
 
 }

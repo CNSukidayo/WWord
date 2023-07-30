@@ -29,6 +29,7 @@
             <artifactId>service-util</artifactId>
             <version>0.1-SNAPSHOT</version>
         </dependency>
+
         <dependency>
             <groupId>io.github.cnsukidayo.wword</groupId>
             <artifactId>model-front</artifactId>
@@ -71,6 +72,12 @@
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-boot-starter</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-crypto</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>

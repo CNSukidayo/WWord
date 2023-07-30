@@ -15,8 +15,9 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * @author sukidayo
@@ -36,10 +37,10 @@ public class DivideController {
     @Operation(summary = "查询所有语种")
     @GetMapping("listLanguage")
     public List<LanguageClassDTO> listLanguage() {
-        List<LanguageClass> languageClassList = divideService.listLanguage();
-        List<LanguageClassDTO> result = new ArrayList<>(languageClassList.size());
-        languageClassList.forEach(languageClass -> result.add(languageClass.convertToDTO(new LanguageClassDTO())));
-        return result;
+        return divideService.listLanguage()
+                .stream()
+                .map((Function<LanguageClass, LanguageClassDTO>) languageClass -> new LanguageClassDTO().convertFrom(languageClass))
+                .collect(Collectors.toList());
     }
 
     @Operation(summary = "查询某个人的所有划分")
@@ -52,10 +53,10 @@ public class DivideController {
     @Operation(summary = "查询某个子划分下中定义的所有单词")
     @GetMapping("listWord")
     public List<DivideWordDTO> listDivideWord(@Parameter(description = "划分id") @RequestParam("divideId") Long divideId) {
-        List<DivideWord> divideWordList = divideService.listDivideWord(divideId);
-        List<DivideWordDTO> divideWordDTOList = new ArrayList<>(divideWordList.size());
-        divideWordList.forEach(divideWord -> divideWordDTOList.add(divideWord.convertToDTO(new DivideWordDTO())));
-        return divideWordDTOList;
+        return divideService.listDivideWord(divideId)
+                .stream()
+                .map((Function<DivideWord, DivideWordDTO>) divideWord -> new DivideWordDTO().convertFrom(divideWord))
+                .collect(Collectors.toList());
     }
 
     @Operation(summary = "添加一个划分")

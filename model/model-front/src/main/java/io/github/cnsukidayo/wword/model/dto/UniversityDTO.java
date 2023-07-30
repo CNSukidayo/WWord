@@ -1,5 +1,7 @@
 package io.github.cnsukidayo.wword.model.dto;
 
+import io.github.cnsukidayo.wword.model.base.OutputConverter;
+import io.github.cnsukidayo.wword.model.pojo.University;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
@@ -7,7 +9,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
  * @date 2023/7/23 15:25
  */
 @Schema(description = "学校信息")
-public class UniversityDTO  {
+public class UniversityDTO implements OutputConverter<UniversityDTO, University> {
 
     @Schema(description = "学校名称")
     private String schoolName;

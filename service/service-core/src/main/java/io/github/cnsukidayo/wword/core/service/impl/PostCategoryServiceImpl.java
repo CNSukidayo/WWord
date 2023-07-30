@@ -153,7 +153,7 @@ public class PostCategoryServiceImpl extends ServiceImpl<PostCategoryMapper, Pos
         }
         // 封装收藏夹创建者信息
         postCategory.setCreateName(userService.getById(postCategory.getUUID()).getNick());
-        PostCategoryVO postCategoryVO = postCategory.convertToDTO(new PostCategoryVO());
+        PostCategoryVO postCategoryVO = new PostCategoryVO().convertFrom(postCategory);
         // 查询收藏夹的点赞数
         postCategoryVO.setLikeCount(baseMapper.likeCount(id));
         // 查询收藏夹的被收藏数

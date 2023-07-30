@@ -1,6 +1,8 @@
 package io.github.cnsukidayo.wword.model.dto;
 
+import io.github.cnsukidayo.wword.model.base.OutputConverter;
 import io.github.cnsukidayo.wword.model.enums.DivideType;
+import io.github.cnsukidayo.wword.model.pojo.Divide;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.util.List;
@@ -10,7 +12,7 @@ import java.util.List;
  * @date 2023/7/28 16:30
  */
 @Schema(description = "单词划分的树状层次展示")
-public class DivideDTO {
+public class DivideDTO implements OutputConverter<DivideDTO, Divide> {
 
     @Schema(description = "划分的id")
     private Long id;

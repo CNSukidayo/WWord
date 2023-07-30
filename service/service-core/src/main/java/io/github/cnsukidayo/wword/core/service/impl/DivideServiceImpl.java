@@ -56,14 +56,14 @@ public class DivideServiceImpl extends ServiceImpl<DivideMapper, Divide> impleme
                 .orElseGet(ArrayList::new);
         List<DivideDTO> result = new ArrayList<>(parentDivideList.size());
         parentDivideList.forEach(parentDivide -> {
-            DivideDTO divideDTO = parentDivide.convertToDTO(new DivideDTO());
+            DivideDTO divideDTO = new DivideDTO().convertFrom(parentDivide);
             result.add(divideDTO);
             List<Divide> childDivideList = Optional.ofNullable(baseMapper.selectList(new LambdaQueryWrapper<Divide>()
                             .eq(Divide::getParentId, parentDivide.getId())))
                     .orElseGet(ArrayList::new);
             List<DivideDTO> childResult = new ArrayList<>(childDivideList.size());
             childDivideList.forEach(childDivide -> {
-                DivideDTO e = childDivide.convertToDTO(new DivideDTO());
+                DivideDTO e = new DivideDTO().convertFrom(childDivide);
                 // 查询当前子分类下有多少单词数量
                 e.setElementCount(divideWordMapper.selectCount(new LambdaQueryWrapper<DivideWord>().eq(DivideWord::getDivideId, e.getId())));
                 childResult.add(e);

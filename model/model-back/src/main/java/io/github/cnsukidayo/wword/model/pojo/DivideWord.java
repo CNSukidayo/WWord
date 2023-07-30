@@ -3,7 +3,6 @@ package io.github.cnsukidayo.wword.model.pojo;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import io.github.cnsukidayo.wword.model.dto.DivideWordDTO;
 import io.github.cnsukidayo.wword.model.pojo.base.BaseEntity;
 
 /**
@@ -11,7 +10,7 @@ import io.github.cnsukidayo.wword.model.pojo.base.BaseEntity;
  * @date 2023/7/29 14:24
  */
 @TableName("divide_word")
-public class DivideWord extends BaseEntity<DivideWordDTO> {
+public class DivideWord extends BaseEntity {
 
     @TableId("divide_id")
     private Long divideId;

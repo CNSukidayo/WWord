@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import io.github.cnsukidayo.wword.model.dto.LanguageClassDTO;
 import io.github.cnsukidayo.wword.model.pojo.base.BaseEntity;
 
 /**
@@ -14,7 +13,7 @@ import io.github.cnsukidayo.wword.model.pojo.base.BaseEntity;
  * @date 2023/7/28 15:04
  */
 @TableName("language_class")
-public class LanguageClass extends BaseEntity<LanguageClassDTO> {
+public class LanguageClass extends BaseEntity {
 
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;

@@ -10,7 +10,7 @@ import java.util.List;
  * @date 2023/7/27 18:21
  */
 @Schema(description = "用户帖子收藏夹详细信息")
-public class PostCategoryVO extends PostCategoryDTO {
+public class PostCategoryVO extends PostCategoryDTO  {
 
     @Schema(description = "当前收藏夹的点赞数")
     private Long likeCount;

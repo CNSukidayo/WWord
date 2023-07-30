@@ -1,5 +1,7 @@
 package io.github.cnsukidayo.wword.model.dto;
 
+import io.github.cnsukidayo.wword.model.base.OutputConverter;
+import io.github.cnsukidayo.wword.model.pojo.LanguageClass;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
@@ -7,7 +9,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
  * @date 2023/7/28 15:06
  */
 @Schema(description = "语种分类对象,用于展示当前平台支持的语种类别")
-public class LanguageClassDTO {
+public class LanguageClassDTO implements OutputConverter<LanguageClassDTO,LanguageClass> {
 
     @Schema(description = "语种的id")
     private Long id;

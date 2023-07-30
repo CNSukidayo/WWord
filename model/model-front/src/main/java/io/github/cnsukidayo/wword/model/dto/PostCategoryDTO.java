@@ -1,6 +1,8 @@
 package io.github.cnsukidayo.wword.model.dto;
 
+import io.github.cnsukidayo.wword.model.base.OutputConverter;
 import io.github.cnsukidayo.wword.model.enums.CategoryAttribute;
+import io.github.cnsukidayo.wword.model.pojo.PostCategory;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
@@ -8,7 +10,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
  * @date 2023/7/27 10:10
  */
 @Schema(description = "用户帖子收藏夹")
-public class PostCategoryDTO {
+public class PostCategoryDTO implements OutputConverter<PostCategoryDTO, PostCategory> {
 
     @Schema(description = "当前收藏夹的id")
     private Long id;

@@ -1,5 +1,7 @@
 package io.github.cnsukidayo.wword.model.dto;
 
+import io.github.cnsukidayo.wword.model.base.OutputConverter;
+import io.github.cnsukidayo.wword.model.pojo.DivideWord;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
@@ -7,7 +9,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
  * @date 2023/7/29 17:02
  */
 @Schema(description = "划分下的单词")
-public class DivideWordDTO {
+public class DivideWordDTO implements OutputConverter<DivideWordDTO, DivideWord> {
 
     @Schema(description = "子划分的id")
     private Long divideId;

@@ -1,15 +1,14 @@
 package io.github.cnsukidayo.wword.admin.controller;
 
 import io.github.cnsukidayo.wword.admin.service.WordStructureService;
+import io.github.cnsukidayo.wword.model.base.InputConverter;
 import io.github.cnsukidayo.wword.model.dto.WordStructureDTO;
+import io.github.cnsukidayo.wword.model.params.UpdateWordStructureParam;
 import io.github.cnsukidayo.wword.model.pojo.WordStructure;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.function.Function;
@@ -37,6 +36,20 @@ public class WordStructureController {
                 .stream()
                 .map((Function<WordStructure, WordStructureDTO>) wordStructure -> new WordStructureDTO().convertFrom(wordStructure))
                 .collect(Collectors.toList());
+    }
+
+    @Operation(summary = "添加或更新语种字段")
+    @GetMapping("saveOrUpdate")
+    public void saveOrUpdate(@RequestBody List<UpdateWordStructureParam> updateWordStructureParam) {
+        wordStructureService.saveOrUpdateBatch(updateWordStructureParam.stream()
+                .map(InputConverter::convertTo)
+                .collect(Collectors.toList()));
+    }
+
+    @Operation(summary = "删除语种字段")
+    @GetMapping("remove")
+    public void remove(@RequestParam Long id) {
+        wordStructureService.removeById(id);
     }
 
 

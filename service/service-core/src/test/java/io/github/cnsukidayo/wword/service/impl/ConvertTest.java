@@ -9,11 +9,7 @@ import org.junit.Test;
 public class ConvertTest {
 
     @Test
-    public void convertToDTO() {
-    }
-
-    @Test
-    public void convert() {
+    public void time() {
     }
 
 }

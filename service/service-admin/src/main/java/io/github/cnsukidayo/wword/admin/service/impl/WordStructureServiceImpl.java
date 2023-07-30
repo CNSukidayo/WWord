@@ -6,6 +6,7 @@ import io.github.cnsukidayo.wword.admin.dao.WordStructureMapper;
 import io.github.cnsukidayo.wword.admin.service.WordStructureService;
 import io.github.cnsukidayo.wword.model.pojo.WordStructure;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +22,8 @@ public class WordStructureServiceImpl extends ServiceImpl<WordStructureMapper, W
 
     @Override
     public List<WordStructure> get(Long languageId) {
+        Assert.notNull(languageId, "languageId must not be null");
+
         return Optional.ofNullable(baseMapper.selectList(new LambdaQueryWrapper<WordStructure>().eq(WordStructure::getLanguageId, languageId))).orElseGet(ArrayList::new);
     }
 }

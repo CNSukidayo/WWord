@@ -1,10 +1,11 @@
 package io.github.cnsukidayo.wword.core.security.resolver;
 
 import io.github.cnsukidayo.wword.common.exception.AuthenticationException;
-import io.github.cnsukidayo.wword.model.pojo.User;
 import io.github.cnsukidayo.wword.common.security.authentication.Authentication;
 import io.github.cnsukidayo.wword.common.security.context.SecurityContextHolder;
-import lombok.extern.slf4j.Slf4j;
+import io.github.cnsukidayo.wword.model.pojo.User;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.core.MethodParameter;
 import org.springframework.lang.Nullable;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -20,11 +21,13 @@ import java.util.Optional;
  * @author sukidayo
  * @date 2023/7/26 12:06
  */
-@Slf4j
 public class AuthenticationArgumentResolver implements HandlerMethodArgumentResolver {
 
+    private final Log logger = LogFactory.getLog(getClass());
+
+
     public AuthenticationArgumentResolver() {
-        log.debug("初始化AuthenticationArgumentResolver");
+        logger.debug("初始化AuthenticationArgumentResolver");
     }
 
     @Override
@@ -39,7 +42,7 @@ public class AuthenticationArgumentResolver implements HandlerMethodArgumentReso
     public Object resolveArgument(MethodParameter parameter,
                                   @Nullable ModelAndViewContainer mavContainer, NativeWebRequest webRequest,
                                   @Nullable WebDataBinderFactory binderFactory) {
-        log.debug("处理权限参数");
+        logger.debug("处理权限参数");
 
         Class<?> parameterType = parameter.getParameterType();
 

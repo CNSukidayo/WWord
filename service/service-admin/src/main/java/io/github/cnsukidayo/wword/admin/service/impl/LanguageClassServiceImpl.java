@@ -6,7 +6,6 @@ import io.github.cnsukidayo.wword.admin.service.LanguageClassService;
 import io.github.cnsukidayo.wword.model.params.AddLanguageClassParam;
 import io.github.cnsukidayo.wword.model.params.UpdateLanguageClassParam;
 import io.github.cnsukidayo.wword.model.pojo.LanguageClass;
-import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
@@ -21,8 +20,7 @@ public class LanguageClassServiceImpl extends ServiceImpl<LanguageClassMapper, L
     public void save(AddLanguageClassParam addLanguageClassParam) {
         Assert.notNull(addLanguageClassParam, "addLanguageClassParam must not be null");
 
-        LanguageClass languageClass = new LanguageClass();
-        BeanUtils.copyProperties(addLanguageClassParam, languageClass);
+        LanguageClass languageClass = addLanguageClassParam.convertTo();
         baseMapper.insert(languageClass);
     }
 
@@ -30,8 +28,7 @@ public class LanguageClassServiceImpl extends ServiceImpl<LanguageClassMapper, L
     public void update(UpdateLanguageClassParam updateLanguageClassParam) {
         Assert.notNull(updateLanguageClassParam, "updateLanguageClassParam must not be null");
 
-        LanguageClass languageClass = new LanguageClass();
-        BeanUtils.copyProperties(updateLanguageClassParam, languageClass);
+        LanguageClass languageClass = updateLanguageClassParam.convertTo();
         baseMapper.updateById(languageClass);
     }
 

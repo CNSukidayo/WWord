@@ -43,8 +43,7 @@ public class PostCategoryServiceImpl extends ServiceImpl<PostCategoryMapper, Pos
         Assert.notNull(addPostCategoryParam, "AddPostCategoryParam must not be null");
         Assert.notNull(UUID, "UUID must not be null");
 
-        PostCategory postCategory = new PostCategory();
-        BeanUtils.copyProperties(addPostCategoryParam, postCategory);
+        PostCategory postCategory = addPostCategoryParam.convertTo();
         postCategory.setUUID(UUID);
 
         baseMapper.insert(postCategory);
@@ -95,8 +94,7 @@ public class PostCategoryServiceImpl extends ServiceImpl<PostCategoryMapper, Pos
         Assert.notNull(updatePostCategoryParam, "updatePostCategoryParam must not be null");
         Assert.notNull(uuid, "uuid must not be null");
 
-        PostCategory postCategory = new PostCategory();
-        BeanUtils.copyProperties(updatePostCategoryParam, postCategory);
+        PostCategory postCategory = updatePostCategoryParam.convertTo();
         postCategory.setUUID(uuid);
 
         baseMapper.update(postCategory, new LambdaQueryWrapper<PostCategory>()

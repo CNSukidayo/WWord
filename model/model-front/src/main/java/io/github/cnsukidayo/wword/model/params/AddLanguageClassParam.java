@@ -1,5 +1,7 @@
 package io.github.cnsukidayo.wword.model.params;
 
+import io.github.cnsukidayo.wword.model.base.InputConverter;
+import io.github.cnsukidayo.wword.model.pojo.LanguageClass;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotEmpty;
 
@@ -8,7 +10,7 @@ import jakarta.validation.constraints.NotEmpty;
  * @date 2023/7/29 20:12
  */
 @Schema(description = "添加语种请求参数")
-public class AddLanguageClassParam {
+public class AddLanguageClassParam implements InputConverter<LanguageClass> {
 
     @Schema(description = "语种名称")
     @NotEmpty(message = "语言名称不为空")

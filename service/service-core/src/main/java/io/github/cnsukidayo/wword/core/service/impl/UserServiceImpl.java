@@ -3,23 +3,22 @@ package io.github.cnsukidayo.wword.core.service.impl;
 import cn.hutool.crypto.digest.BCrypt;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import io.github.cnsukidayo.wword.core.service.UniversityService;
-import io.github.cnsukidayo.wword.core.service.UserService;
-import io.github.cnsukidayo.wword.core.dao.UserMapper;
 import io.github.cnsukidayo.wword.common.exception.AlreadyExistsException;
 import io.github.cnsukidayo.wword.common.exception.BadRequestException;
 import io.github.cnsukidayo.wword.common.exception.NonExistsException;
+import io.github.cnsukidayo.wword.common.security.authentication.Authentication;
+import io.github.cnsukidayo.wword.common.security.context.SecurityContextHolder;
+import io.github.cnsukidayo.wword.common.utils.SecurityUtils;
+import io.github.cnsukidayo.wword.core.dao.UserMapper;
+import io.github.cnsukidayo.wword.core.service.UniversityService;
+import io.github.cnsukidayo.wword.core.service.UserService;
 import io.github.cnsukidayo.wword.model.params.LoginParam;
 import io.github.cnsukidayo.wword.model.params.UpdatePasswordParam;
 import io.github.cnsukidayo.wword.model.params.UpdateUserParam;
 import io.github.cnsukidayo.wword.model.params.UserRegisterParam;
 import io.github.cnsukidayo.wword.model.pojo.User;
-import io.github.cnsukidayo.wword.common.security.authentication.Authentication;
-import io.github.cnsukidayo.wword.common.security.context.SecurityContextHolder;
-import io.github.cnsukidayo.wword.common.utils.SecurityUtils;
 import io.github.cnsukidayo.wword.model.support.WWordConst;
 import io.github.cnsukidayo.wword.model.token.AuthToken;
-import org.springframework.beans.BeanUtils;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
@@ -57,8 +56,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
                 .ifPresent(user -> {
                     throw new AlreadyExistsException("用户名已存在!");
                 });
-        User user = new User();
-        BeanUtils.copyProperties(userRegisterParam, user);
+        User user = userRegisterParam.convertTo();
         // 加密密码
         user.setPassword(BCrypt.hashpw(userRegisterParam.getPassword()));
         // 设置默认用户名
@@ -128,8 +126,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             throw new NonExistsException("学校:" + updateUserParam.getUniversity() + "不存在!");
         }
         // 为null的字段mybatis默认是不会更新的
-        User update = new User();
-        BeanUtils.copyProperties(updateUserParam, update);
+        User update = updateUserParam.convertTo();
         update.setUUID(user.getUUID());
         baseMapper.updateById(update);
     }

@@ -14,7 +14,6 @@ import io.github.cnsukidayo.wword.model.params.AddDivideParam;
 import io.github.cnsukidayo.wword.model.pojo.Divide;
 import io.github.cnsukidayo.wword.model.pojo.DivideWord;
 import io.github.cnsukidayo.wword.model.pojo.LanguageClass;
-import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
@@ -83,8 +82,7 @@ public class DivideServiceImpl extends ServiceImpl<DivideMapper, Divide> impleme
             throw new AddFailException();
         }
 
-        Divide divide = new Divide();
-        BeanUtils.copyProperties(addDivideParam, divide);
+        Divide divide = addDivideParam.convertTo();
         divide.setUUID(uuid);
         baseMapper.insert(divide);
 

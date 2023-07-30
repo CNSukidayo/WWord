@@ -1,6 +1,8 @@
 package io.github.cnsukidayo.wword.model.params;
 
+import io.github.cnsukidayo.wword.model.base.InputConverter;
 import io.github.cnsukidayo.wword.model.enums.CategoryAttribute;
+import io.github.cnsukidayo.wword.model.pojo.PostCategory;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -10,7 +12,7 @@ import jakarta.validation.constraints.Size;
  * @date 2023/7/27 9:45
  */
 @Schema(description = "添加收藏夹请求体参数")
-public class AddPostCategoryParam {
+public class AddPostCategoryParam implements InputConverter<PostCategory> {
 
     @Schema(description = "收藏夹封面URL")
     @Size(max = 255, message = "收藏夹封面地址长度不超过 {max}")

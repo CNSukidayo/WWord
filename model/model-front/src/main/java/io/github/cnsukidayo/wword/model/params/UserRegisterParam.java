@@ -1,5 +1,7 @@
 package io.github.cnsukidayo.wword.model.params;
 
+import io.github.cnsukidayo.wword.model.base.InputConverter;
+import io.github.cnsukidayo.wword.model.pojo.User;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Size;
 
@@ -10,7 +12,7 @@ import jakarta.validation.constraints.Size;
  * @date 2023/7/25 10:55
  */
 @Schema(description = "注册用户账号的请求参数")
-public class UserRegisterParam {
+public class UserRegisterParam implements InputConverter<User> {
 
     @Schema(description = "用户名参数")
     @Size(min = 6, max = 128, message = "用户名或邮箱长度不小于 {min} 且长度不超过 {max} ")

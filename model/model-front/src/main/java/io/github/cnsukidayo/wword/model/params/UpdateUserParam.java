@@ -1,7 +1,9 @@
 package io.github.cnsukidayo.wword.model.params;
 
 
+import io.github.cnsukidayo.wword.model.base.InputConverter;
 import io.github.cnsukidayo.wword.model.enums.SexType;
+import io.github.cnsukidayo.wword.model.pojo.User;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;
 
@@ -14,7 +16,7 @@ import java.time.LocalDate;
  * @date 2023/5/17 20:14
  */
 @Schema(description = "更新用户个人信息请求体")
-public class UpdateUserParam {
+public class UpdateUserParam implements InputConverter<User> {
 
     @Schema(description = "绑定邮箱")
     @Email(message = "邮箱格式不正确")

@@ -12,11 +12,12 @@ import io.github.cnsukidayo.wword.core.service.DivideService;
 import io.github.cnsukidayo.wword.model.dto.DivideDTO;
 import io.github.cnsukidayo.wword.model.params.AddDivideParam;
 import io.github.cnsukidayo.wword.model.pojo.Divide;
-import io.github.cnsukidayo.wword.model.pojo.LanguageClass;
 import io.github.cnsukidayo.wword.model.pojo.DivideWord;
+import io.github.cnsukidayo.wword.model.pojo.LanguageClass;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
+import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,8 +46,8 @@ public class DivideServiceImpl extends ServiceImpl<DivideMapper, Divide> impleme
 
     @Override
     public List<DivideDTO> listDivide(Long languageId, Long UUID) {
-        Assert.notNull(languageId,"languageId must not be null");
-        Assert.notNull(UUID,"UUID must not be null");
+        Assert.notNull(languageId, "languageId must not be null");
+        Assert.notNull(UUID, "UUID must not be null");
 
         // 根据languageId和uuid查询到所有的父划分
         List<Divide> parentDivideList = Optional.ofNullable(baseMapper.selectList(new LambdaQueryWrapper<Divide>().eq(Divide::getUUID, UUID)
@@ -100,12 +101,23 @@ public class DivideServiceImpl extends ServiceImpl<DivideMapper, Divide> impleme
         }
         // 如果当前是父划分则删除父划分和所有子划分
         if (divide.getParentId() == -1) {
-            baseMapper.delete(new LambdaQueryWrapper<Divide>()
-                    .eq(Divide::getId, id)
-                    .or()
-                    .eq(Divide::getParentId, id));
+            // 查询出所有的子划分的id
+            List<Long> divideIdList = new ArrayList<>(Optional.ofNullable(baseMapper.selectList(new LambdaQueryWrapper<Divide>()
+                            .eq(Divide::getParentId, id)))
+                    .orElseGet(ArrayList::new)
+                    .stream()
+                    .map(Divide::getId)
+                    .toList());
+            // 删除所有子划分下面的所有单词
+            if (!CollectionUtils.isEmpty(divideIdList)) {
+                divideWordMapper.deleteBatchIds(divideIdList);
+            }
+            // 删除所有划分
+            divideIdList.add(id);
+            baseMapper.deleteBatchIds(divideIdList);
         } else {
             baseMapper.delete(new LambdaQueryWrapper<Divide>().eq(Divide::getId, id));
+            divideWordMapper.deleteById(id);
         }
 
     }
@@ -133,7 +145,7 @@ public class DivideServiceImpl extends ServiceImpl<DivideMapper, Divide> impleme
         list.add(divideWord0);
         list.add(divideWord1);
 
-        baseMapper.insertBatchDivideWord(divideId, list, UUID);
+        divideWordMapper.insertBatchDivideWord(divideId, list, UUID);
     }
 
     @Override
@@ -142,7 +154,7 @@ public class DivideServiceImpl extends ServiceImpl<DivideMapper, Divide> impleme
         Assert.notNull(wordIdList, "wordIdList must not be null");
         Assert.notNull(UUID, "UUID must not be null");
 
-        baseMapper.deleteDivideWord(divideId, wordIdList, UUID);
+        divideWordMapper.deleteDivideWord(divideId, wordIdList, UUID);
     }
 
     @Override
@@ -150,6 +162,26 @@ public class DivideServiceImpl extends ServiceImpl<DivideMapper, Divide> impleme
         Assert.notNull(divideId, "divideId must not be null");
 
         return Optional.ofNullable(divideWordMapper.selectList(new LambdaQueryWrapper<DivideWord>().eq(DivideWord::getDivideId, divideId))).orElseGet(ArrayList::new);
+    }
+
+    @Override
+    public void copyDivide(Long divideId, Long uuid) {
+        Assert.notNull(divideId, "divideId must not be null");
+        Assert.notNull(uuid, "uuid must not be null");
+
+        Divide parentDivide = Optional.ofNullable(baseMapper.selectById(divideId)).filter(divide -> divide.getParentId() == -1 && divide.getUUID() != 1).orElseThrow(() -> new NonExistsException("收藏失败"));
+        // 拷贝父划分
+        baseMapper.copy(parentDivide, uuid, -1L);
+        // 查询出所有待拷贝的划分id
+        List<Divide> childDivideList = Optional.ofNullable(baseMapper.selectList(new LambdaQueryWrapper<Divide>().eq(Divide::getParentId, divideId))).orElseGet(ArrayList::new);
+        if (!CollectionUtils.isEmpty(childDivideList)) {
+            // 拷贝所有子划分
+            childDivideList.forEach(childDivide -> {
+                Long sourceId = childDivide.getId();
+                baseMapper.copy(childDivide, uuid, parentDivide.getId());
+                divideWordMapper.copy(sourceId, childDivide.getId(), uuid);
+            });
+        }
     }
 
     /**

@@ -72,4 +72,12 @@ public interface DivideService extends IService<Divide> {
      * @return 单词集合
      */
     List<DivideWord> listDivideWord(Long divideId);
+
+    /**
+     * 拷贝一个划分
+     *
+     * @param divideId 收藏夹id不为null
+     * @param uuid     拷贝的目标用户id不为null
+     */
+    void copyDivide(Long divideId, Long uuid);
 }

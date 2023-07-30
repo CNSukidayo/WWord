@@ -4,24 +4,9 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="io.github.cnsukidayo.wword.core.dao.DivideMapper">
 
-    <insert id="insertBatchDivideWord">
-        INSERT IGNORE INTO divide_word (divide_id, word_id, word_name,uuid) values
-        <foreach collection="divideWordList" item="divideWord" index="index" separator=",">
-            (#{divideId},#{divideWord.wordId},#{divideWord.wordName},#{uuid})
-        </foreach>
+    <insert id="copy" useGeneratedKeys="true" keyProperty="source.id">
+        INSERT into divide(uuid, language_id, name, divide_type, parent_id)
+        values (#{uuid}, #{source.languageId}, #{source.name}, #{source.divideType}, #{parentId})
     </insert>
-
-    <update id="deleteDivideWord">
-        update divide_word
-        set is_deleted = 1
-        <where>
-            and word_id in
-            <foreach collection="wordIdList" item="wordId" index="index" open="(" separator="," close=")">
-                #{wordId}
-            </foreach>
-        </where>
-        and divide_id = #{divideId} and uuid = #{uuid} and is_deleted = 0
-    </update>
-
 
 </mapper>

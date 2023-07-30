@@ -86,5 +86,12 @@ public class DivideController {
         divideService.deleteDivideWord(divideId, wordIdList, user.getUUID());
     }
 
+    @Operation(summary = "拷贝一个划分")
+    @PostMapping("copyDivide")
+    public void copyDivide(@Parameter(description = "划分的id") @RequestParam("divideId") Long divideId,
+                           User user) {
+        divideService.copyDivide(divideId, user.getUUID());
+    }
+
 
 }

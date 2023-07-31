@@ -30,6 +30,8 @@ public class WordHandleController {
     @PostMapping("saveWord")
     public void saveWord(@RequestBody @Valid AddOrUpdateWordParam addOrUpdateWordParam) {
         System.out.println(addOrUpdateWordParam);
+
+
     }
 
     @Operation(summary = "处理EnWords")

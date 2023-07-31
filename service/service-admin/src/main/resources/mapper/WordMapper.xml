@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.github.cnsukidayo.wword.admin.dao.WordMapper">
+
+    <insert id="save">
+        INSERT IGNORE INTO word(`id`, `word_structure_id`,`language_id`, `value`) values
+        <foreach collection="wordCollection" item="word" index="index" separator=",">
+            (#{word.id},#{word.wordStructureId},#{word.languageId},#{word.value})
+        </foreach>
+    </insert>
+
+    <insert id="saveWordId">
+        INSERT IGNORE INTO word_id(word, language_id, word_id) value (#{word}, #{languageId}, #{wordId})
+    </insert>
+
+
+</mapper>

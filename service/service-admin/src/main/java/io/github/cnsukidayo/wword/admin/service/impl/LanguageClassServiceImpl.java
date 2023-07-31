@@ -22,6 +22,8 @@ public class LanguageClassServiceImpl extends ServiceImpl<LanguageClassMapper, L
 
         LanguageClass languageClass = addLanguageClassParam.convertTo();
         baseMapper.insert(languageClass);
+
+        // todo 当创建一个语种的时候自动添加一些语种的默认单词结构.包括音标和another(即无法划分的)
     }
 
     @Override

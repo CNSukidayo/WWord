@@ -1,4 +1,4 @@
-package io.github.cnsukidayo.wword.model.pojo;
+package io.github.cnsukidayo.wword.model.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
@@ -7,7 +7,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.github.cnsukidayo.wword.model.enums.AccountCreateProgress;
 import io.github.cnsukidayo.wword.model.enums.SexType;
-import io.github.cnsukidayo.wword.model.pojo.base.BaseEntity;
+import io.github.cnsukidayo.wword.model.entity.base.BaseEntity;
 import io.swagger.v3.oas.annotations.Hidden;
 
 import java.io.Serial;

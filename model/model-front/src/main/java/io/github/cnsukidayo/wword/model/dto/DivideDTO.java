@@ -2,7 +2,7 @@ package io.github.cnsukidayo.wword.model.dto;
 
 import io.github.cnsukidayo.wword.model.base.OutputConverter;
 import io.github.cnsukidayo.wword.model.enums.DivideType;
-import io.github.cnsukidayo.wword.model.pojo.Divide;
+import io.github.cnsukidayo.wword.model.entity.Divide;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.util.List;

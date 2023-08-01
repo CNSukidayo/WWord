@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import io.github.cnsukidayo.wword.admin.dao.WordStructureMapper;
 import io.github.cnsukidayo.wword.admin.service.WordStructureService;
-import io.github.cnsukidayo.wword.model.pojo.WordStructure;
+import io.github.cnsukidayo.wword.model.entity.WordStructure;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 

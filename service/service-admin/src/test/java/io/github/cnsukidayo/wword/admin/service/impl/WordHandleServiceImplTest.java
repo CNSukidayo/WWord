@@ -1,14 +1,11 @@
 package io.github.cnsukidayo.wword.admin.service.impl;
 
-import io.github.cnsukidayo.wword.model.pojo.Word;
+import io.github.cnsukidayo.wword.model.entity.Word;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author sukidayo
@@ -97,6 +94,4 @@ public class WordHandleServiceImplTest {
         }
         return weight;
     }
-
-
 }

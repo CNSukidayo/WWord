@@ -1,7 +1,7 @@
 package io.github.cnsukidayo.wword.admin.dao;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import io.github.cnsukidayo.wword.model.pojo.EnWords;
+import io.github.cnsukidayo.wword.model.entity.EnWords;
 import org.springframework.stereotype.Repository;
 
 /**

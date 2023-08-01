@@ -1,7 +1,7 @@
 package io.github.cnsukidayo.wword.model.params;
 
 import io.github.cnsukidayo.wword.model.base.InputConverter;
-import io.github.cnsukidayo.wword.model.pojo.Divide;
+import io.github.cnsukidayo.wword.model.entity.Divide;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;

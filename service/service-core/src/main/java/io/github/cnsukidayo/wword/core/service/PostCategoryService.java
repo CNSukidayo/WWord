@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import io.github.cnsukidayo.wword.model.enums.CategoryAttribute;
 import io.github.cnsukidayo.wword.model.params.AddPostCategoryParam;
 import io.github.cnsukidayo.wword.model.params.UpdatePostCategoryParam;
-import io.github.cnsukidayo.wword.model.pojo.PostCategory;
+import io.github.cnsukidayo.wword.model.entity.PostCategory;
 import io.github.cnsukidayo.wword.model.vo.PostCategoryVO;
 
 import java.util.List;

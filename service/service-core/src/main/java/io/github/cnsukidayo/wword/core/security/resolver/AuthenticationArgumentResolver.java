@@ -3,7 +3,7 @@ package io.github.cnsukidayo.wword.core.security.resolver;
 import io.github.cnsukidayo.wword.common.exception.AuthenticationException;
 import io.github.cnsukidayo.wword.common.security.authentication.Authentication;
 import io.github.cnsukidayo.wword.common.security.context.SecurityContextHolder;
-import io.github.cnsukidayo.wword.model.pojo.User;
+import io.github.cnsukidayo.wword.model.entity.User;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.core.MethodParameter;

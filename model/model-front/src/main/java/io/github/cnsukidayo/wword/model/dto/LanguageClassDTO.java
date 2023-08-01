@@ -1,7 +1,7 @@
 package io.github.cnsukidayo.wword.model.dto;
 
 import io.github.cnsukidayo.wword.model.base.OutputConverter;
-import io.github.cnsukidayo.wword.model.pojo.LanguageClass;
+import io.github.cnsukidayo.wword.model.entity.LanguageClass;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 /**

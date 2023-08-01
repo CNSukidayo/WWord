@@ -7,7 +7,7 @@ import io.github.cnsukidayo.wword.common.security.filter.AbstractAuthenticationF
 import io.github.cnsukidayo.wword.core.service.UserService;
 import io.github.cnsukidayo.wword.common.security.context.SecurityContextHolder;
 import io.github.cnsukidayo.wword.common.utils.SecurityUtils;
-import io.github.cnsukidayo.wword.model.pojo.User;
+import io.github.cnsukidayo.wword.model.entity.User;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

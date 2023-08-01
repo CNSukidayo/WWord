@@ -3,7 +3,7 @@ package io.github.cnsukidayo.wword.model.dto;
 import io.github.cnsukidayo.wword.model.base.OutputConverter;
 import io.github.cnsukidayo.wword.model.enums.AccountCreateProgress;
 import io.github.cnsukidayo.wword.model.enums.SexType;
-import io.github.cnsukidayo.wword.model.pojo.User;
+import io.github.cnsukidayo.wword.model.entity.User;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.time.LocalDate;

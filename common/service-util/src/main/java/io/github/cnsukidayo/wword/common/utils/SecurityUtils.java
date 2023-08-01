@@ -1,6 +1,6 @@
 package io.github.cnsukidayo.wword.common.utils;
 
-import io.github.cnsukidayo.wword.model.pojo.User;
+import io.github.cnsukidayo.wword.model.entity.User;
 import org.springframework.lang.NonNull;
 import org.springframework.util.Assert;
 

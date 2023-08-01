@@ -2,7 +2,7 @@ package io.github.cnsukidayo.wword.core.controller;
 
 import io.github.cnsukidayo.wword.core.service.UniversityService;
 import io.github.cnsukidayo.wword.model.dto.UniversityDTO;
-import io.github.cnsukidayo.wword.model.pojo.University;
+import io.github.cnsukidayo.wword.model.entity.University;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;

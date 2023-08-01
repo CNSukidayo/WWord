@@ -2,7 +2,7 @@ package io.github.cnsukidayo.wword.model.params;
 
 import io.github.cnsukidayo.wword.model.base.InputConverter;
 import io.github.cnsukidayo.wword.model.enums.CategoryAttribute;
-import io.github.cnsukidayo.wword.model.pojo.PostCategory;
+import io.github.cnsukidayo.wword.model.entity.PostCategory;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;

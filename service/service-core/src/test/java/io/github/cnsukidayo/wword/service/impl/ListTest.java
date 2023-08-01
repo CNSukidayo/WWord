@@ -1,6 +1,6 @@
 package io.github.cnsukidayo.wword.service.impl;
 
-import io.github.cnsukidayo.wword.model.pojo.PostCategory;
+import io.github.cnsukidayo.wword.model.entity.PostCategory;
 import org.junit.Test;
 
 import java.util.ArrayList;

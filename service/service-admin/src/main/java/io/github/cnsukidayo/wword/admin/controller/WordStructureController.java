@@ -4,7 +4,7 @@ import io.github.cnsukidayo.wword.admin.service.WordStructureService;
 import io.github.cnsukidayo.wword.model.base.InputConverter;
 import io.github.cnsukidayo.wword.model.dto.WordStructureDTO;
 import io.github.cnsukidayo.wword.model.params.UpdateWordStructureParam;
-import io.github.cnsukidayo.wword.model.pojo.WordStructure;
+import io.github.cnsukidayo.wword.model.entity.WordStructure;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;

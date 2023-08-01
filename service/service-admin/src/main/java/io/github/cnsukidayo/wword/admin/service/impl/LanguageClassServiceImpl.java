@@ -5,7 +5,7 @@ import io.github.cnsukidayo.wword.admin.dao.LanguageClassMapper;
 import io.github.cnsukidayo.wword.admin.service.LanguageClassService;
 import io.github.cnsukidayo.wword.model.params.AddLanguageClassParam;
 import io.github.cnsukidayo.wword.model.params.UpdateLanguageClassParam;
-import io.github.cnsukidayo.wword.model.pojo.LanguageClass;
+import io.github.cnsukidayo.wword.model.entity.LanguageClass;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 

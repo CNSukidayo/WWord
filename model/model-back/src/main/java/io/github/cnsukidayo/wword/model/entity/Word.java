@@ -1,9 +1,9 @@
-package io.github.cnsukidayo.wword.model.pojo;
+package io.github.cnsukidayo.wword.model.entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import io.github.cnsukidayo.wword.model.pojo.base.BaseEntity;
+import io.github.cnsukidayo.wword.model.entity.base.BaseEntity;
 
 /**
  * @author sukidayo
@@ -18,8 +18,8 @@ public class Word extends BaseEntity {
     @TableField("word_structure_id")
     private Long wordStructureId;
 
-    @TableField("language_id")
-    private Long languageId;
+    @TableField("divide_id")
+    private Long divideId;
 
     @TableField("value")
     private String value;
@@ -43,12 +43,12 @@ public class Word extends BaseEntity {
         this.wordStructureId = wordStructureId;
     }
 
-    public Long getLanguageId() {
-        return languageId;
+    public Long getDivideId() {
+        return divideId;
     }
 
-    public void setLanguageId(Long languageId) {
-        this.languageId = languageId;
+    public void setDivideId(Long divideId) {
+        this.divideId = divideId;
     }
 
     public String getValue() {

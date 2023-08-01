@@ -4,15 +4,15 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="io.github.cnsukidayo.wword.admin.dao.WordMapper">
 
-    <insert id="save">
-        INSERT IGNORE INTO word(`id`, `word_structure_id`,`language_id`, `value`) values
+    <insert id="replaceWord">
+        replace INTO word(`id`, `word_structure_id`,`divide_id`, `value`,is_deleted) values
         <foreach collection="wordCollection" item="word" index="index" separator=",">
-            (#{word.id},#{word.wordStructureId},#{word.languageId},#{word.value})
+            (#{word.id},#{word.wordStructureId},#{word.divideId},#{word.value},#{word.isDeleted})
         </foreach>
     </insert>
 
-    <insert id="saveWordId">
-        INSERT IGNORE INTO word_id(word, language_id, word_id) value (#{word}, #{languageId}, #{wordId})
+    <insert id="replaceWordId">
+        replace INTO word_id(word, divide_id, word_id) value (#{word}, #{divideId}, #{wordId})
     </insert>
 
 

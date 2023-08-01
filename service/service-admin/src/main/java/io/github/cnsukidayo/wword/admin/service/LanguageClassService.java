@@ -3,7 +3,7 @@ package io.github.cnsukidayo.wword.admin.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import io.github.cnsukidayo.wword.model.params.AddLanguageClassParam;
 import io.github.cnsukidayo.wword.model.params.UpdateLanguageClassParam;
-import io.github.cnsukidayo.wword.model.pojo.LanguageClass;
+import io.github.cnsukidayo.wword.model.entity.LanguageClass;
 
 /**
  * @author sukidayo

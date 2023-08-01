@@ -16,7 +16,7 @@ import io.github.cnsukidayo.wword.model.params.LoginParam;
 import io.github.cnsukidayo.wword.model.params.UpdatePasswordParam;
 import io.github.cnsukidayo.wword.model.params.UpdateUserParam;
 import io.github.cnsukidayo.wword.model.params.UserRegisterParam;
-import io.github.cnsukidayo.wword.model.pojo.User;
+import io.github.cnsukidayo.wword.model.entity.User;
 import io.github.cnsukidayo.wword.model.support.WWordConst;
 import io.github.cnsukidayo.wword.model.token.AuthToken;
 import org.springframework.data.redis.core.RedisTemplate;

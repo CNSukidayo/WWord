@@ -1,7 +1,7 @@
 package io.github.cnsukidayo.wword.core.dao;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import io.github.cnsukidayo.wword.model.pojo.DivideWord;
+import io.github.cnsukidayo.wword.model.entity.DivideWord;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 

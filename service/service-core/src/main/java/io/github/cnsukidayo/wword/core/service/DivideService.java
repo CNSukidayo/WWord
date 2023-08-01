@@ -3,9 +3,9 @@ package io.github.cnsukidayo.wword.core.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import io.github.cnsukidayo.wword.model.dto.DivideDTO;
 import io.github.cnsukidayo.wword.model.params.AddDivideParam;
-import io.github.cnsukidayo.wword.model.pojo.Divide;
-import io.github.cnsukidayo.wword.model.pojo.DivideWord;
-import io.github.cnsukidayo.wword.model.pojo.LanguageClass;
+import io.github.cnsukidayo.wword.model.entity.Divide;
+import io.github.cnsukidayo.wword.model.entity.DivideWord;
+import io.github.cnsukidayo.wword.model.entity.LanguageClass;
 
 import java.util.List;
 

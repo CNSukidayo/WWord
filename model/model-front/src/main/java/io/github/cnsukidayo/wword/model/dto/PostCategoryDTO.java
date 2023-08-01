@@ -2,7 +2,7 @@ package io.github.cnsukidayo.wword.model.dto;
 
 import io.github.cnsukidayo.wword.model.base.OutputConverter;
 import io.github.cnsukidayo.wword.model.enums.CategoryAttribute;
-import io.github.cnsukidayo.wword.model.pojo.PostCategory;
+import io.github.cnsukidayo.wword.model.entity.PostCategory;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 /**

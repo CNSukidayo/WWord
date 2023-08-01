@@ -1,10 +1,10 @@
-package io.github.cnsukidayo.wword.model.pojo;
+package io.github.cnsukidayo.wword.model.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import io.github.cnsukidayo.wword.model.pojo.base.BaseEntity;
+import io.github.cnsukidayo.wword.model.entity.base.BaseEntity;
 
 import java.io.Serial;
 

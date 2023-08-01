@@ -1,5 +1,7 @@
 package io.github.cnsukidayo.wword.model.params;
 
+import io.github.cnsukidayo.wword.model.base.InputConverter;
+import io.github.cnsukidayo.wword.model.entity.Word;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
@@ -16,9 +18,9 @@ import java.util.List;
 @Schema(description = "添加或更新一个单词的请求体")
 public class AddOrUpdateWordParam {
 
-    @Schema(description = "语种id")
-    @NotNull(message = "语种id不为null")
-    private Long languageId;
+    @Schema(description = "划分id")
+    @NotNull(message = "划分id不为null")
+    private Long divideId;
 
     @Schema(description = "单词内容")
     @NotEmpty(message = "单词内容不能为null")
@@ -29,7 +31,7 @@ public class AddOrUpdateWordParam {
     List<WordValueParam> wordValueParamList;
 
     @Schema(description = "单词包含信息设置")
-    private static class WordValueParam {
+    public static class WordValueParam implements InputConverter<Word> {
 
         @Schema(description = "单词结构体对应属性id")
         @NotNull(message = "单词指定的属性字段不能为空")
@@ -40,9 +42,9 @@ public class AddOrUpdateWordParam {
         private String value;
 
         @Schema(description = "是否删除该属性值,1代表删除")
-        @Max(value = 1,message = "属性值必须为1代表删除,否则指定为null即可.")
-        @Min(value = 1,message = "属性值必须为1代表删除,否则指定为null即可.")
-        private Integer isDelete;
+        @Max(value = 1, message = "属性值必须为1代表删除,0代表添加或修改.")
+        @Min(value = 0, message = "属性值必须为1代表删除,0代表添加或修改.")
+        private Integer isDeleted = 0;
 
 
         public WordValueParam() {
@@ -64,21 +66,21 @@ public class AddOrUpdateWordParam {
             this.value = value;
         }
 
-        public Integer getIsDelete() {
-            return isDelete;
+        public Integer getIsDeleted() {
+            return isDeleted;
         }
 
-        public void setIsDelete(Integer isDelete) {
-            this.isDelete = isDelete;
+        public void setIsDeleted(Integer isDeleted) {
+            this.isDeleted = isDeleted;
         }
     }
 
-    public Long getLanguageId() {
-        return languageId;
+    public Long getDivideId() {
+        return divideId;
     }
 
-    public void setLanguageId(Long languageId) {
-        this.languageId = languageId;
+    public void setDivideId(Long divideId) {
+        this.divideId = divideId;
     }
 
     public String getWord() {

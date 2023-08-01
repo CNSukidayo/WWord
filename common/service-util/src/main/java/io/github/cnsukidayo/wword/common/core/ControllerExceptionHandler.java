@@ -8,8 +8,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.Assert;
+import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -50,9 +50,9 @@ public class ControllerExceptionHandler {
      * @param e 捕获到的参数校验失败异常
      * @return 返回响应信息
      */
-    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ExceptionHandler(BindException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public BaseResponse<?> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
+    public BaseResponse<?> handleMethodArgumentNotValidException(BindException e) {
         List<FieldError> fieldErrors = e.getBindingResult().getFieldErrors();
         BaseResponse<ErrorVo> baseResponse = handleBaseException(e);
         HttpStatus status = HttpStatus.BAD_REQUEST;
@@ -63,6 +63,7 @@ public class ControllerExceptionHandler {
         baseResponse.getData().setPath(e.getBindingResult().getNestedPath());
         return baseResponse;
     }
+
 
     /**
      * 处理全局的异常,拦截器捕获异常的最后兜底的方法

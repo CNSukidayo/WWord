@@ -1,4 +1,4 @@
-package io.github.cnsukidayo.wword.model.pojo;
+package io.github.cnsukidayo.wword.model.entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;

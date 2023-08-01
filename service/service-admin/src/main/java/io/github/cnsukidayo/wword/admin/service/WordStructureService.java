@@ -1,7 +1,7 @@
 package io.github.cnsukidayo.wword.admin.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import io.github.cnsukidayo.wword.model.pojo.WordStructure;
+import io.github.cnsukidayo.wword.model.entity.WordStructure;
 
 import java.util.List;
 

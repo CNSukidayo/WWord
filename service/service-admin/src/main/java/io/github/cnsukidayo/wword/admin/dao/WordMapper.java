@@ -1,7 +1,7 @@
 package io.github.cnsukidayo.wword.admin.dao;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import io.github.cnsukidayo.wword.model.pojo.Word;
+import io.github.cnsukidayo.wword.model.entity.Word;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -19,16 +19,16 @@ public interface WordMapper extends BaseMapper<Word> {
      *
      * @param wordCollection 单词集合不为null
      */
-    void save(@Param("wordCollection") Collection<Word> wordCollection);
+    void replaceWord(@Param("wordCollection") Collection<Word> wordCollection);
 
     /**
      * 插入单词id对照表
      *
-     * @param word       单词内容
-     * @param languageId 语种id
-     * @param wordId     单词id
+     * @param word       单词内容不为null
+     * @param languageId 语种id不为null
+     * @param wordId     单词id不为null
      */
-    void saveWordId(@Param("word") String word, @Param("languageId") Long languageId, @Param("wordId") Long wordId);
+    void replaceWordId(@Param("word") String word, @Param("divideId") Long divideId, @Param("wordId") Long wordId);
 
 
 }

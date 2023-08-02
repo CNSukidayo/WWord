@@ -63,6 +63,9 @@ public class JsonWordBO {
                  */
                 private Exam[] exam;
 
+                /**
+                 * 例句相关内容
+                 */
                 private Sentence sentence;
 
                 /**
@@ -70,6 +73,7 @@ public class JsonWordBO {
                  */
                 private String usphone;
 
+                // todo
                 /**
                  * 近义词
                  */
@@ -85,8 +89,15 @@ public class JsonWordBO {
                  */
                 private String ukspeech;
 
+                /**
+                 * 短语
+                 */
                 private Phrase phrase;
 
+                // todo
+                /**
+                 * 同根词
+                 */
                 private RelWord relWord;
 
                 /**
@@ -99,7 +110,7 @@ public class JsonWordBO {
                  */
                 private Tran[] trans;
 
-                private static class Exam {
+                public static class Exam {
 
                     /**
                      * 问题
@@ -221,7 +232,7 @@ public class JsonWordBO {
                     }
                 }
 
-                private static class Sentence {
+                public static class Sentence {
 
                     /**
                      * 例句数组
@@ -284,7 +295,7 @@ public class JsonWordBO {
                     }
                 }
 
-                private static class Syno {
+                public static class Syno {
                     /**
                      * 近义词数组
                      */

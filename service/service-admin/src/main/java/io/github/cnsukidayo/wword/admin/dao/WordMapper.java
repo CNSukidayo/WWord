@@ -21,14 +21,4 @@ public interface WordMapper extends BaseMapper<Word> {
      */
     void replaceWord(@Param("wordCollection") Collection<Word> wordCollection);
 
-    /**
-     * 插入单词id对照表
-     *
-     * @param word       单词内容不为null
-     * @param languageId 语种id不为null
-     * @param wordId     单词id不为null
-     */
-    void replaceWordId(@Param("word") String word, @Param("divideId") Long divideId, @Param("wordId") Long wordId);
-
-
 }

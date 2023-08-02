@@ -1,5 +1,6 @@
 package io.github.cnsukidayo.wword.model.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -12,17 +13,20 @@ import io.github.cnsukidayo.wword.model.entity.base.BaseEntity;
 @TableName("word")
 public class Word extends BaseEntity {
 
-    @TableId(value = "id")
+    @TableId(value = "id", type = IdType.AUTO)
     private Long id;
+
+    @TableField("word_id")
+    private Long wordId;
 
     @TableField("word_structure_id")
     private Long wordStructureId;
 
-    @TableField("divide_id")
-    private Long divideId;
-
     @TableField("value")
     private String value;
+
+    @TableField("group_id")
+    private Long groupId;
 
     public Word() {
     }
@@ -35,6 +39,14 @@ public class Word extends BaseEntity {
         this.id = id;
     }
 
+    public Long getWordId() {
+        return wordId;
+    }
+
+    public void setWordId(Long wordId) {
+        this.wordId = wordId;
+    }
+
     public Long getWordStructureId() {
         return wordStructureId;
     }
@@ -43,19 +55,22 @@ public class Word extends BaseEntity {
         this.wordStructureId = wordStructureId;
     }
 
-    public Long getDivideId() {
-        return divideId;
-    }
-
-    public void setDivideId(Long divideId) {
-        this.divideId = divideId;
-    }
-
     public String getValue() {
         return value;
     }
 
     public void setValue(String value) {
-        this.value = value;
+        this.value = value.replace('；', ';')
+                .replace('，', ',')
+                .replace('。', '.')
+                .replace('：', ':');
+    }
+
+    public Long getGroupId() {
+        return groupId;
+    }
+
+    public void setGroupId(Long groupId) {
+        this.groupId = groupId;
     }
 }

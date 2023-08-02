@@ -39,7 +39,7 @@ public class WordStructureController {
     }
 
     @Operation(summary = "添加或更新语种字段")
-    @GetMapping("saveOrUpdate")
+    @PostMapping("saveOrUpdate")
     public void saveOrUpdate(@RequestBody List<UpdateWordStructureParam> updateWordStructureParam) {
         wordStructureService.saveOrUpdateBatch(updateWordStructureParam.stream()
                 .map(InputConverter::convertTo)

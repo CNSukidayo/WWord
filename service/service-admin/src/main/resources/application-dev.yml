@@ -1,0 +1,59 @@
+server:
+  port: 8202
+  servlet:
+    encoding:
+      charset: UTF-8
+      force: true
+      enabled: true
+  tomcat:
+    uri-encoding: UTF-8
+  ssl:
+    key-store: classpath:ssl/httpsKey.p12
+    key-store-password: abc123456789
+    key-store-type: PKCS12
+    key-alias: wword
+
+spring:
+  datasource:
+    username: root
+    password: 123456
+    url: jdbc:mysql://localhost:3306/wword?serverTimezone=UTC
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      # password:
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+  servlet:
+    multipart:
+      max-file-size: 1024MB
+      max-request-size: 1024MB
+
+logging:
+  file:
+    path: logs/
+  level:
+    io.github.cnsukidayo: info
+#mybatis-plus相关配置
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    map-underscore-to-camel-case: true
+  #  mapper-locations: classpath*:/mapper/**/*.xml
+  type-aliases-package: io.github.cnsukidayo.wword.model.pojo
+
+# knife4j的增强配置,不需要增强可以不配
+knife4j:
+  enable: true
+  setting:
+    language: zh_cn
+
+
+wword:
+  resource-locations: D:/Program/Java Project/WWord/wwordResources/

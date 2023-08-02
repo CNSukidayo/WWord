@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <!--导入springboot日志框架的默认配置-->
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+    <!--如果是dev开发则会产生debug日志-->
+    <springProfile name="dev">
+        <appender name="DEBUG_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <encoder>
+                <pattern>${FILE_LOG_PATTERN}</pattern>
+                <charset>${FILE_LOG_CHARSET}</charset>
+            </encoder>
+            <file>${LOG_PATH}\debug\debug.log</file>
+            <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+                <fileNamePattern>
+                    ${LOGBACK_ROLLINGPOLICY_FILE_NAME_PATTERN:-${LOG_PATH}\debug\debug.%d{yyyy-MM-dd}.%i.gz}
+                </fileNamePattern>
+                <cleanHistoryOnStart>${LOGBACK_ROLLINGPOLICY_CLEAN_HISTORY_ON_START:-false}</cleanHistoryOnStart>
+                <maxFileSize>${LOGBACK_ROLLINGPOLICY_MAX_FILE_SIZE:-10MB}</maxFileSize>
+                <totalSizeCap>${LOGBACK_ROLLINGPOLICY_TOTAL_SIZE_CAP:-0}</totalSizeCap>
+                <maxHistory>${LOGBACK_ROLLINGPOLICY_MAX_HISTORY:-7}</maxHistory>
+            </rollingPolicy>
+            <filter class="ch.qos.logback.classic.filter.LevelFilter">
+                <level>DEBUG</level>
+                <onMatch>ACCEPT</onMatch>
+                <onMismatch>DENY</onMismatch>
+            </filter>
+        </appender>
+    </springProfile>
+
+    <!--springboot的默认控制台输出配置-->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${CONSOLE_LOG_PATTERN}</pattern>
+            <charset>${CONSOLE_LOG_CHARSET}</charset>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>INFO</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+    <!--info日志单独输出到一个文件夹-->
+    <appender name="INFO_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <encoder>
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+            <charset>${FILE_LOG_CHARSET}</charset>
+        </encoder>
+        <file>${LOG_PATH}\info\info.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOGBACK_ROLLINGPOLICY_FILE_NAME_PATTERN:-${LOG_PATH}\info\info.%d{yyyy-MM-dd}.%i.gz}
+            </fileNamePattern>
+            <cleanHistoryOnStart>${LOGBACK_ROLLINGPOLICY_CLEAN_HISTORY_ON_START:-false}</cleanHistoryOnStart>
+            <maxFileSize>${LOGBACK_ROLLINGPOLICY_MAX_FILE_SIZE:-10MB}</maxFileSize>
+            <totalSizeCap>${LOGBACK_ROLLINGPOLICY_TOTAL_SIZE_CAP:-0}</totalSizeCap>
+            <maxHistory>${LOGBACK_ROLLINGPOLICY_MAX_HISTORY:-7}</maxHistory>
+        </rollingPolicy>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>INFO</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+
+    <!--warn日志单独输出到一个文件夹-->
+    <appender name="WARN_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <encoder>
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+            <charset>${FILE_LOG_CHARSET}</charset>
+        </encoder>
+        <file>${LOG_PATH}\warn\warn.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOGBACK_ROLLINGPOLICY_FILE_NAME_PATTERN:-${LOG_PATH}\warn\warn.log.%d{yyyy-MM-dd}.%i.gz}
+            </fileNamePattern>
+            <cleanHistoryOnStart>${LOGBACK_ROLLINGPOLICY_CLEAN_HISTORY_ON_START:-false}</cleanHistoryOnStart>
+            <maxFileSize>${LOGBACK_ROLLINGPOLICY_MAX_FILE_SIZE:-10MB}</maxFileSize>
+            <totalSizeCap>${LOGBACK_ROLLINGPOLICY_TOTAL_SIZE_CAP:-0}</totalSizeCap>
+            <maxHistory>${LOGBACK_ROLLINGPOLICY_MAX_HISTORY:-7}</maxHistory>
+        </rollingPolicy>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>WARN</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+    <!--error日志单独输出到一个文件夹-->
+    <appender name="ERROR_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <encoder>
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+            <charset>${FILE_LOG_CHARSET}</charset>
+        </encoder>
+        <file>${LOG_PATH}\error\error.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>
+                ${LOGBACK_ROLLINGPOLICY_FILE_NAME_PATTERN:-${LOG_PATH}\error\error.log.%d{yyyy-MM-dd}.%i.gz}
+            </fileNamePattern>
+            <cleanHistoryOnStart>${LOGBACK_ROLLINGPOLICY_CLEAN_HISTORY_ON_START:-false}</cleanHistoryOnStart>
+            <maxFileSize>${LOGBACK_ROLLINGPOLICY_MAX_FILE_SIZE:-10MB}</maxFileSize>
+            <totalSizeCap>${LOGBACK_ROLLINGPOLICY_TOTAL_SIZE_CAP:-0}</totalSizeCap>
+            <maxHistory>${LOGBACK_ROLLINGPOLICY_MAX_HISTORY:-7}</maxHistory>
+        </rollingPolicy>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+    <!--dev环境-->
+    <springProfile name="dev">
+        <root level="debug">
+            <appender-ref ref="CONSOLE"/>
+            <!--这里就不开了,debug日志实在太多了-->
+            <!--<appender-ref ref="DEBUG_FILE"/>-->
+            <appender-ref ref="INFO_FILE"/>
+            <appender-ref ref="ERROR_FILE"/>
+            <appender-ref ref="WARN_FILE"/>
+        </root>
+    </springProfile>
+    <!--prod环境-->
+    <springProfile name="prod">
+        <root level="info">
+            <appender-ref ref="CONSOLE"/>
+            <appender-ref ref="INFO_FILE"/>
+            <appender-ref ref="ERROR_FILE"/>
+            <appender-ref ref="WARN_FILE"/>
+        </root>
+    </springProfile>
+
+
+</configuration>

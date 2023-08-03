@@ -5,7 +5,11 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author sukidayo
@@ -81,6 +85,11 @@ public class WordHandleServiceImplTest {
                 log.info("{}----{}", word.getWordStructureId(), word.getValue());
             });
         }
+    }
+
+    @Test
+    public void testIO() throws IOException {
+
     }
 
     private Long parseLong(String str) {

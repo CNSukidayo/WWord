@@ -19,6 +19,9 @@ public class UpLoadWordJson {
     @NotNull(message = "必须指定一个划分id")
     private Long divideId;
 
+    @Schema(description = "处理其余的json信息")
+    private boolean isAnother;
+
     public UpLoadWordJson() {
     }
 
@@ -36,5 +39,13 @@ public class UpLoadWordJson {
 
     public void setDivideId(Long divideId) {
         this.divideId = divideId;
+    }
+
+    public boolean isAnother() {
+        return isAnother;
+    }
+
+    public void setAnother(boolean another) {
+        isAnother = another;
     }
 }

@@ -49,7 +49,7 @@ mybatis-plus:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
     map-underscore-to-camel-case: true
   #  mapper-locations: classpath*:/mapper/**/*.xml
-  type-aliases-package: io.github.cnsukidayo.wword.model.pojo
+  type-aliases-package: io.github.cnsukidayo.wword.model.entity
 
 # springdoc-openapi项目配置
 #springdoc:

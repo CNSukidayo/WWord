@@ -34,6 +34,14 @@ spring:
     multipart:
       max-file-size: 1024MB
       max-request-size: 1024MB
+  # 配置异步执行任务
+  task:
+    execution:
+      pool:
+        core-size: 4
+        max-size: 8
+        queue-capacity: 100
+      thread-name-prefix: "async-"
 
 logging:
   file:

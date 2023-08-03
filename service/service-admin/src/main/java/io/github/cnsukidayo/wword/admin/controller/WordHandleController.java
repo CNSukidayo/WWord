@@ -1,6 +1,5 @@
 package io.github.cnsukidayo.wword.admin.controller;
 
-import io.github.cnsukidayo.wword.admin.dao.WordMapper;
 import io.github.cnsukidayo.wword.admin.service.WordHandleService;
 import io.github.cnsukidayo.wword.model.params.AddOrUpdateWordParam;
 import io.github.cnsukidayo.wword.model.params.UpLoadWordJson;
@@ -8,7 +7,14 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.apache.ibatis.annotations.Param;
+import org.apache.tomcat.util.http.fileupload.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 
 /**
  * @author sukidayo
@@ -20,12 +26,11 @@ import org.springframework.web.bind.annotation.*;
 public class WordHandleController {
 
     private final WordHandleService wordHandleService;
-    private final WordMapper wordMapper;
 
-    public WordHandleController(WordHandleService wordHandleService,
-                                WordMapper wordMapper) {
+    private Logger log = LoggerFactory.getLogger(getClass());
+
+    public WordHandleController(WordHandleService wordHandleService) {
         this.wordHandleService = wordHandleService;
-        this.wordMapper = wordMapper;
     }
 
     @Operation(summary = "手动添加一个单词")
@@ -37,13 +42,30 @@ public class WordHandleController {
     @Operation(summary = "处理json丰富信息")
     @PostMapping("handleJson")
     public void handleJson(@Param("上传单词Json文件") @Valid UpLoadWordJson upLoadWordJson) {
-        wordHandleService.handleJson(upLoadWordJson);
+        String fileName = upLoadWordJson.getFile().getOriginalFilename();
+        log.info("receive request file{},await Async handler.", fileName);
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        try {
+            IOUtils.copy(upLoadWordJson.getFile().getInputStream(), byteArrayOutputStream);
+        } catch (IOException e) {
+            log.error("copy file [{}] fail", fileName);
+            throw new RuntimeException(e);
+        }
+        wordHandleService.handleJson(upLoadWordJson, new ByteArrayInputStream(byteArrayOutputStream.toByteArray()));
     }
 
     @Operation(summary = "处理EnWords")
     @GetMapping("handleEnWords")
     public void handleEnWords() {
         wordHandleService.handleEnWords();
+    }
+
+    @Operation(summary = "日志")
+    @GetMapping("log")
+    public void log() {
+        log.info("info");
+        log.warn("warn");
+        log.error("error");
     }
 
 

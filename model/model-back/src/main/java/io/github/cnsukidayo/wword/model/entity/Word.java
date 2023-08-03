@@ -60,6 +60,7 @@ public class Word extends BaseEntity {
     }
 
     public void setValue(String value) {
+        if (value == null) return;
         this.value = value.replace('；', ';')
                 .replace('，', ',')
                 .replace('。', '.')

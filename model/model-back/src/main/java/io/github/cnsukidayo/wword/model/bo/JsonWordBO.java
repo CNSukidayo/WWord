@@ -69,6 +69,11 @@ public class JsonWordBO {
                 private Sentence sentence;
 
                 /**
+                 * 真题例句
+                 */
+                private RealExamSentence realExamSentence;
+
+                /**
                  * 美式音标
                  */
                 private String usphone;
@@ -94,6 +99,11 @@ public class JsonWordBO {
                  */
                 private Phrase phrase;
 
+                /**
+                 * 记忆方法
+                 */
+                private RemMethod remMethod;
+
                 // todo
                 /**
                  * 同根词
@@ -109,6 +119,11 @@ public class JsonWordBO {
                  * 翻译,注意这是一个数组
                  */
                 private Tran[] trans;
+
+                /**
+                 * 单词记忆图片
+                 */
+                private String picture;
 
                 public static class Exam {
 
@@ -618,6 +633,156 @@ public class JsonWordBO {
                     }
                 }
 
+                public static class RealExamSentence {
+                    /**
+                     * 真实例句
+                     */
+                    private InternalRealSentence[] sentences;
+
+                    /**
+                     * 真题例句描述
+                     */
+                    private String desc;
+
+                    public static class InternalRealSentence {
+                        /**
+                         * 例句内容
+                         */
+                        private String sContent;
+
+                        /**
+                         * 例句源信息
+                         */
+                        private SourceInfo sourceInfo;
+
+                        public static class SourceInfo {
+                            /**
+                             * 哪一套
+                             */
+                            private String paper;
+
+                            /**
+                             * 测试等级,例如CET4或CET6等
+                             */
+                            private String level;
+
+                            /**
+                             * 真题年份
+                             */
+                            private String year;
+
+                            /**
+                             * 真题的类型
+                             */
+                            private String type;
+
+                            public SourceInfo() {
+                            }
+
+                            public String getPaper() {
+                                return paper;
+                            }
+
+                            public void setPaper(String paper) {
+                                this.paper = paper;
+                            }
+
+                            public String getLevel() {
+                                return level;
+                            }
+
+                            public void setLevel(String level) {
+                                this.level = level;
+                            }
+
+                            public String getYear() {
+                                return year;
+                            }
+
+                            public void setYear(String year) {
+                                this.year = year;
+                            }
+
+                            public String getType() {
+                                return type;
+                            }
+
+                            public void setType(String type) {
+                                this.type = type;
+                            }
+                        }
+
+                        public InternalRealSentence() {
+                        }
+
+                        public String getsContent() {
+                            return sContent;
+                        }
+
+                        public void setsContent(String sContent) {
+                            this.sContent = sContent;
+                        }
+
+                        public SourceInfo getSourceInfo() {
+                            return sourceInfo;
+                        }
+
+                        public void setSourceInfo(SourceInfo sourceInfo) {
+                            this.sourceInfo = sourceInfo;
+                        }
+                    }
+
+                    public RealExamSentence() {
+                    }
+
+                    public InternalRealSentence[] getSentences() {
+                        return sentences;
+                    }
+
+                    public void setSentences(InternalRealSentence[] sentences) {
+                        this.sentences = sentences;
+                    }
+
+                    public String getDesc() {
+                        return desc;
+                    }
+
+                    public void setDesc(String desc) {
+                        this.desc = desc;
+                    }
+                }
+
+                public static class RemMethod {
+                    /**
+                     * 记忆方法(value)
+                     */
+                    private String val;
+
+                    /**
+                     * 记忆描述
+                     */
+                    private String desc;
+
+                    public RemMethod() {
+                    }
+
+                    public String getVal() {
+                        return val;
+                    }
+
+                    public void setVal(String val) {
+                        this.val = val;
+                    }
+
+                    public String getDesc() {
+                        return desc;
+                    }
+
+                    public void setDesc(String desc) {
+                        this.desc = desc;
+                    }
+                }
+
                 public InternalContent() {
                 }
 
@@ -699,6 +864,30 @@ public class JsonWordBO {
 
                 public void setTrans(Tran[] trans) {
                     this.trans = trans;
+                }
+
+                public RealExamSentence getRealExamSentence() {
+                    return realExamSentence;
+                }
+
+                public void setRealExamSentence(RealExamSentence realExamSentence) {
+                    this.realExamSentence = realExamSentence;
+                }
+
+                public RemMethod getRemMethod() {
+                    return remMethod;
+                }
+
+                public void setRemMethod(RemMethod remMethod) {
+                    this.remMethod = remMethod;
+                }
+
+                public String getPicture() {
+                    return picture;
+                }
+
+                public void setPicture(String picture) {
+                    this.picture = picture;
                 }
             }
 

@@ -1,5 +1,6 @@
 package io.github.cnsukidayo.wword.admin.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.cnsukidayo.wword.admin.dao.DivideMapper;
 import io.github.cnsukidayo.wword.admin.dao.EnWordsMapper;
@@ -19,14 +20,14 @@ import io.github.cnsukidayo.wword.model.params.AddOrUpdateWordParam;
 import io.github.cnsukidayo.wword.model.params.UpLoadWordJson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -156,9 +157,12 @@ public class WordHandleServiceImpl implements WordHandleService {
 
     }
 
+    @Async
+    @Transactional
     @Override
-    public void handleJson(UpLoadWordJson upLoadWordJson) {
+    public void handleJson(UpLoadWordJson upLoadWordJson, InputStream jsonInputStream) {
         Assert.notNull(upLoadWordJson, "upLoadWordJson must not be null");
+        Assert.notNull(jsonInputStream, "jsonInputStream must not be null");
 
         // 先获得单词对应的父划分,划分必须是父划分不能是子划分
         Divide divide = Optional.ofNullable(divideMapper.selectById(upLoadWordJson.getDivideId()))
@@ -176,13 +180,18 @@ public class WordHandleServiceImpl implements WordHandleService {
         // 得到当前expand字段对应的id
         hasFields(wordStructureMap, EXPAND, "wordOrigin");
         Long expandId = wordStructureMap.get(EXPAND);
-        // 读取单词
+        long startTime = System.currentTimeMillis();
+        log.info("start compute divide [{}] ;admin upload file is [{}]", divide.getName(), upLoadWordJson.getFile().getOriginalFilename());
+
+        StringBuilder copy = new StringBuilder();
+        // 读取单词,必须使用拷贝流
         try (BufferedReader reader = new BufferedReader(
                 new InputStreamReader(
-                        new BufferedInputStream(upLoadWordJson.getFile().getInputStream()), StandardCharsets.UTF_8))) {
+                        new BufferedInputStream(jsonInputStream), StandardCharsets.UTF_8))) {
             // 循环读取
             String signalJson;
             while (null != (signalJson = reader.readLine())) {
+                copy.append(signalJson).append('\n');
                 // 转换单词对象
                 JsonWordBO jsonWordBO = objectMapper.readValue(signalJson, JsonWordBO.class);
                 // 首先插入单词到word_id表中
@@ -192,7 +201,6 @@ public class WordHandleServiceImpl implements WordHandleService {
                 wordId.setDivideId(divideId);
                 wordIdMapper.insert(wordId);
                 Long wordIdValue = wordId.getId();
-                // 联系id
                 Word tempWord = null;
                 // 得到单词的原内容
                 tempWord = createWord(wordIdValue);
@@ -212,113 +220,329 @@ public class WordHandleServiceImpl implements WordHandleService {
                 tempWord.setValue(ukphone);
                 wordMapper.insert(tempWord);
                 // 封装单词相关测试
-                for (JsonWordBO.Content.Word.InternalContent.Exam exam : jsonWordBO.getContent().getWord().getContent().getExam()) {
-                    Long groupId;
-                    // 得到测试的问题
-                    tempWord = createWord(wordIdValue);
-                    String question = exam.getQuestion();
-                    tempWord.setWordStructureId(wordStructureMap.getOrDefault("question", expandId));
-                    tempWord.setValue(question);
-                    wordMapper.insert(tempWord);
-                    groupId = tempWord.getId();
-                    // 得到测试的答案的解释
-                    tempWord = createWord(wordIdValue);
-                    tempWord.setGroupId(groupId);
-                    String explain = exam.getAnswer().getExplain();
-                    tempWord.setWordStructureId(wordStructureMap.getOrDefault("questionExplain", expandId));
-                    tempWord.setValue(explain);
-                    wordMapper.insert(tempWord);
-                    // 得到测试的正确答案的索引号
-                    tempWord = createWord(wordIdValue);
-                    tempWord.setGroupId(groupId);
-                    Integer rightIndex = exam.getAnswer().getRightIndex();
-                    tempWord.setWordStructureId(wordStructureMap.getOrDefault("rightIndex", expandId));
-                    tempWord.setValue(String.valueOf(rightIndex));
-                    wordMapper.insert(tempWord);
-                    // 得到所有的选项
-                    for (JsonWordBO.Content.Word.InternalContent.Exam.Choice choice : exam.getChoices()) {
-                        // 得到选项对应的索引,选项索引和测试问题之间是绑定的
+                try {
+                    for (JsonWordBO.Content.Word.InternalContent.Exam exam :
+                            Optional.ofNullable(jsonWordBO.getContent()
+                                    .getWord()
+                                    .getContent()
+                                    .getExam()).orElseGet(() -> new JsonWordBO.Content.Word.InternalContent.Exam[0])) {
+                        Long groupId;
+                        // 得到测试的问题
+                        tempWord = createWord(wordIdValue);
+                        String question = exam.getQuestion();
+                        tempWord.setWordStructureId(wordStructureMap.getOrDefault("question", expandId));
+                        tempWord.setValue(question);
+                        wordMapper.insert(tempWord);
+                        groupId = tempWord.getId();
+                        // 得到测试的答案的解释
                         tempWord = createWord(wordIdValue);
                         tempWord.setGroupId(groupId);
-                        String choiceIndex = choice.getChoiceIndex();
-                        tempWord.setWordStructureId(wordStructureMap.getOrDefault("choiceIndex", expandId));
-                        tempWord.setValue(choiceIndex);
+                        String explain = exam.getAnswer().getExplain();
+                        tempWord.setWordStructureId(wordStructureMap.getOrDefault("questionExplain", expandId));
+                        tempWord.setValue(explain);
                         wordMapper.insert(tempWord);
-                        Long choiceIndexId = tempWord.getId();
-                        // 得到选项对应的值,选项内容和选项索引是绑定的
+                        // 得到测试的正确答案的索引号
                         tempWord = createWord(wordIdValue);
-                        tempWord.setGroupId(choiceIndexId);
-                        String choiceValue = choice.getChoice();
-                        tempWord.setWordStructureId(wordStructureMap.getOrDefault("choiceValue", expandId));
-                        tempWord.setValue(choiceValue);
+                        tempWord.setGroupId(groupId);
+                        Integer rightIndex = exam.getAnswer().getRightIndex();
+                        tempWord.setWordStructureId(wordStructureMap.getOrDefault("rightIndex", expandId));
+                        tempWord.setValue(String.valueOf(rightIndex));
+                        wordMapper.insert(tempWord);
+                        try {
+                            // 得到所有的选项
+                            for (JsonWordBO.Content.Word.InternalContent.Exam.Choice choice :
+                                    Optional.ofNullable(exam.getChoices()).orElseGet(() -> new JsonWordBO.Content.Word.InternalContent.Exam.Choice[0])) {
+                                // 得到选项对应的索引,选项索引和测试问题之间是绑定的
+                                tempWord = createWord(wordIdValue);
+                                tempWord.setGroupId(groupId);
+                                String choiceIndex = choice.getChoiceIndex();
+                                tempWord.setWordStructureId(wordStructureMap.getOrDefault("choiceIndex", expandId));
+                                tempWord.setValue(choiceIndex);
+                                wordMapper.insert(tempWord);
+                                Long choiceIndexId = tempWord.getId();
+                                // 得到选项对应的值,选项内容和选项索引是绑定的
+                                tempWord = createWord(wordIdValue);
+                                tempWord.setGroupId(choiceIndexId);
+                                String choiceValue = choice.getChoice();
+                                tempWord.setWordStructureId(wordStructureMap.getOrDefault("choiceValue", expandId));
+                                tempWord.setValue(choiceValue);
+                                wordMapper.insert(tempWord);
+                            }
+                        } catch (NullPointerException e) {
+                            log.info("单词 [{}] 没有选项信息", wordOrigin);
+                        }
+                    }
+                } catch (NullPointerException e) {
+                    log.info("单词 [{}] 没有相关例题信息", wordOrigin);
+                }
+                try {
+                    // 封装例句相关内容
+                    for (JsonWordBO.Content.Word.InternalContent.Sentence.InternalSentence internalSentence :
+                            Optional.ofNullable(jsonWordBO.getContent()
+                                    .getWord()
+                                    .getContent()
+                                    .getSentence()
+                                    .getSentences()).orElseGet(() -> new JsonWordBO.Content.Word.InternalContent.Sentence.InternalSentence[0])) {
+                        // 得到例句的英文
+                        tempWord = createWord(wordIdValue);
+                        String sentenceValue = internalSentence.getsContent();
+                        tempWord.setWordStructureId(wordStructureMap.getOrDefault("sentence", expandId));
+                        tempWord.setValue(sentenceValue);
+                        wordMapper.insert(tempWord);
+                        Long groupId = tempWord.getId();
+                        // 得到例句英文的翻译,例句的英文翻译需要和例句英文进行绑定
+                        tempWord = createWord(wordIdValue);
+                        tempWord.setGroupId(groupId);
+                        String sentenceTranslation = internalSentence.getsCn();
+                        tempWord.setWordStructureId(wordStructureMap.getOrDefault("sentenceTranslation", expandId));
+                        tempWord.setValue(sentenceTranslation);
                         wordMapper.insert(tempWord);
                     }
-                }
-                // 封装例句相关内容
-                for (JsonWordBO.Content.Word.InternalContent.Sentence.InternalSentence internalSentence : jsonWordBO.getContent().getWord().getContent().getSentence().getSentences()) {
-                    // 得到例句的英文
-                    tempWord = createWord(wordIdValue);
-                    String sentenceValue = internalSentence.getsContent();
-                    tempWord.setWordStructureId(wordStructureMap.getOrDefault("sentence", expandId));
-                    tempWord.setValue(sentenceValue);
-                    wordMapper.insert(tempWord);
-                    Long groupId = tempWord.getId();
-                    // 得到例句英文的翻译,例句的英文翻译需要和例句英文进行绑定
-                    tempWord = createWord(wordIdValue);
-                    tempWord.setGroupId(groupId);
-                    String sentenceTranslation = internalSentence.getsCn();
-                    tempWord.setWordStructureId(wordStructureMap.getOrDefault("sentenceTranslation", expandId));
-                    tempWord.setValue(sentenceTranslation);
-                    wordMapper.insert(tempWord);
+                } catch (NullPointerException e) {
+                    log.info("单词 [{}] 没有例句信息", wordOrigin);
                 }
                 // todo 封装近义词相关,等单词先录入一遍之后再处理近义词相关内容
-                // 封装短语相关内容
-                for (JsonWordBO.Content.Word.InternalContent.Phrase.InternalPhrase phrase : jsonWordBO.getContent().getWord().getContent().getPhrase().getPhrases()) {
-                    // 得到短语的英文
-                    tempWord = createWord(wordIdValue);
-                    String phraseValue = phrase.getpContent();
-                    // 得到短语的中文翻译
-                    String phraseTranslation = phrase.getpCn();
-                    tempWord.setWordStructureId(wordStructureMap.getOrDefault("phrase", expandId));
-                    tempWord.setValue(phraseValue);
-                    wordMapper.insert(tempWord);
-                    Long groupId = tempWord.getId();
-                    // 得到短语对应的中文
-                    tempWord = createWord(wordIdValue);
-                    tempWord.setGroupId(groupId);
-                    tempWord.setWordStructureId(wordStructureMap.getOrDefault("phraseTranslation", expandId));
-                    tempWord.setValue(phraseTranslation);
-                    wordMapper.insert(tempWord);
+                try {
+                    // 封装短语相关内容
+                    for (JsonWordBO.Content.Word.InternalContent.Phrase.InternalPhrase phrase :
+                            Optional.ofNullable(jsonWordBO.getContent()
+                                    .getWord()
+                                    .getContent()
+                                    .getPhrase()
+                                    .getPhrases()).orElseGet(() -> new JsonWordBO.Content.Word.InternalContent.Phrase.InternalPhrase[0])) {
+                        // 得到短语的英文
+                        tempWord = createWord(wordIdValue);
+                        String phraseValue = phrase.getpContent();
+                        // 得到短语的中文翻译
+                        String phraseTranslation = phrase.getpCn();
+                        tempWord.setWordStructureId(wordStructureMap.getOrDefault("phrase", expandId));
+                        tempWord.setValue(phraseValue);
+                        wordMapper.insert(tempWord);
+                        Long groupId = tempWord.getId();
+                        // 得到短语对应的中文
+                        tempWord = createWord(wordIdValue);
+                        tempWord.setGroupId(groupId);
+                        tempWord.setWordStructureId(wordStructureMap.getOrDefault("phraseTranslation", expandId));
+                        tempWord.setValue(phraseTranslation);
+                        wordMapper.insert(tempWord);
+                    }
+                } catch (NullPointerException e) {
+                    log.info("单词 [{}] 没有短语信息", wordOrigin);
                 }
                 // todo 封装同根词,等单词先录入一遍之后再处理同根词
-                // 封装单词的中文翻译
-                for (JsonWordBO.Content.Word.InternalContent.Tran tran : jsonWordBO.getContent().getWord().getContent().getTrans()) {
-                    tempWord = createWord(wordIdValue);
-                    String pos;
-                    if (!(pos = tran.getPos().trim()).endsWith(".")) {
-                        pos += ".";
+                try {
+                    // 封装单词的中文翻译
+                    for (JsonWordBO.Content.Word.InternalContent.Tran tran :
+                            jsonWordBO.getContent().getWord().getContent().getTrans()) {
+                        tempWord = createWord(wordIdValue);
+                        String pos;
+                        if (!(pos = tran.getPos().trim()).endsWith(".")) {
+                            pos += ".";
+                        }
+                        // 得到当前词性的中文翻译
+                        String translationValue = tran.getTranCn();
+                        tempWord.setWordStructureId(wordStructureMap.getOrDefault(pos, expandId));
+                        tempWord.setValue(translationValue);
+                        wordMapper.insert(tempWord);
+                        Long groupId = tempWord.getId();
+                        // 得到单词的英文解释;英文的格式就直接采用 词性.英文描述
+                        tempWord = createWord(wordIdValue);
+                        tempWord.setGroupId(groupId);
+                        String describeEnglish = tran.getTranOther();
+                        tempWord.setWordStructureId(wordStructureMap.getOrDefault("describeEnglish", expandId));
+                        tempWord.setValue(describeEnglish);
+                        wordMapper.insert(tempWord);
                     }
-                    // 得到当前词性的中文翻译
-                    String translationValue = tran.getTranCn();
-                    tempWord.setWordStructureId(wordStructureMap.getOrDefault(pos, expandId));
-                    tempWord.setValue(translationValue);
-                    wordMapper.insert(tempWord);
-                    Long groupId = tempWord.getId();
-                    // 得到单词的英文解释;英文的格式就直接采用 词性.英文描述
+                } catch (NullPointerException e) {
+                    log.info("单词 [{}] 没有中文翻译信息", wordOrigin);
+                }
+                try {
+                    // 得到单词的图片信息
                     tempWord = createWord(wordIdValue);
-                    tempWord.setGroupId(groupId);
-                    String describeEnglish = tran.getTranOther();
-                    tempWord.setWordStructureId(wordStructureMap.getOrDefault("describeEnglish", expandId));
-                    tempWord.setValue(describeEnglish);
+                    String picture = jsonWordBO.getContent().getWord().getContent().getPicture();
+                    tempWord.setWordStructureId(wordStructureMap.getOrDefault("picture", expandId));
+                    tempWord.setValue(picture);
                     wordMapper.insert(tempWord);
+                } catch (NullPointerException e) {
+                    log.info("单词 [{}] 没有图片信息", wordOrigin);
+                }
+                try {
+                    // 封装单词的真题例句信息
+                    for (JsonWordBO.Content.Word.InternalContent.RealExamSentence.InternalRealSentence realSentence :
+                            jsonWordBO.getContent().getWord().getContent().getRealExamSentence().getSentences()) {
+                        // 得到例句英文
+                        tempWord = createWord(wordIdValue);
+                        String realSentenceValue = realSentence.getsContent();
+                        tempWord.setWordStructureId(wordStructureMap.getOrDefault("realExamSentence", expandId));
+                        tempWord.setValue(realSentenceValue);
+                        wordMapper.insert(tempWord);
+                        Long groupId = tempWord.getId();
+                        // 得到例句的paper信息(是哪一套试卷)
+                        tempWord = createWord(wordIdValue);
+                        tempWord.setGroupId(groupId);
+                        String paper = Optional.ofNullable(realSentence.getSourceInfo().getPaper()).orElse("");
+                        tempWord.setWordStructureId(wordStructureMap.getOrDefault("sourcePaper", expandId));
+                        tempWord.setValue(paper);
+                        wordMapper.insert(tempWord);
+                        // 得到例句的level信息(是哪个等级)
+                        tempWord = createWord(wordIdValue);
+                        tempWord.setGroupId(groupId);
+                        String level = Optional.ofNullable(realSentence.getSourceInfo().getLevel()).orElse("");
+                        tempWord.setWordStructureId(wordStructureMap.getOrDefault("sourceLevel", expandId));
+                        tempWord.setValue(level);
+                        wordMapper.insert(tempWord);
+                        // 得到例句年份信息
+                        tempWord = createWord(wordIdValue);
+                        tempWord.setGroupId(groupId);
+                        String year = Optional.ofNullable(realSentence.getSourceInfo().getYear()).orElse("");
+                        tempWord.setWordStructureId(wordStructureMap.getOrDefault("sourceYear", expandId));
+                        tempWord.setValue(year);
+                        wordMapper.insert(tempWord);
+                        // 得到例句的类型信息
+                        tempWord = createWord(wordIdValue);
+                        tempWord.setGroupId(groupId);
+                        String type = Optional.ofNullable(realSentence.getSourceInfo().getType()).orElse("");
+                        tempWord.setWordStructureId(wordStructureMap.getOrDefault("sourceType", expandId));
+                        tempWord.setValue(type);
+                        wordMapper.insert(tempWord);
+                    }
+                } catch (NullPointerException e) {
+                    log.info("单词 [{}] 没有真题例句信息", wordOrigin);
+                }
+                try {
+                    // 封装单词的记忆方法信息
+                    tempWord = createWord(wordIdValue);
+                    String remMethod = jsonWordBO.getContent().getWord().getContent().getRemMethod().getVal();
+                    tempWord.setWordStructureId(wordStructureMap.getOrDefault("rememberMethod", expandId));
+                    tempWord.setValue(remMethod);
+                    wordMapper.insert(tempWord);
+                } catch (NullPointerException e) {
+                    log.info("单词 [{}] 没有记忆方法信息", wordOrigin);
+                }
+            }
+        } catch (Exception e) {
+            log.error("json handle fail", e);
+            throw new FileOperationException("json文件处理异常")
+                    .setErrorData(upLoadWordJson.getFile().getOriginalFilename() + "划分名称:" + divide.getName());
+        }
+
+        // 读取单词,必须使用拷贝流
+        try (BufferedReader reader = new BufferedReader(
+                new InputStreamReader(
+                        new ByteArrayInputStream(copy.toString().getBytes()), StandardCharsets.UTF_8))) {
+            // 循环读取
+            String signalJson;
+            while (null != (signalJson = reader.readLine())) {
+                if (!StringUtils.hasText(signalJson)) return;
+
+                JsonWordBO jsonWordBO = objectMapper.readValue(signalJson, JsonWordBO.class);
+                String wordOrigin = jsonWordBO.getHeadWord();
+                // 首先要得到当前单词在word_id表中的id
+                LambdaQueryWrapper<WordId> wordIdQuery = new LambdaQueryWrapper<>();
+                wordIdQuery.eq(WordId::getDivideId, divide.getId())
+                        .eq(WordId::getWord, wordOrigin);
+                Long wordIdValue = Optional.ofNullable(wordIdMapper.selectOne(wordIdQuery)).orElseThrow(() -> new IllegalStateException("can not find word" + wordOrigin)).getId();
+                Word tempWord = null;
+                // 得到同根词
+                try {
+                    for (JsonWordBO.Content.Word.InternalContent.Syno.InternalSyno syno : jsonWordBO.getContent().getWord().getContent().getSyno().getSynos()) {
+                        // 得到单词的联想词的词性
+                        String synoPos = syno.getPos();
+                        tempWord = createWord(wordIdValue);
+                        tempWord.setWordStructureId(wordStructureMap.get("synoPos"));
+                        tempWord.setValue(synoPos);
+                        wordMapper.insert(tempWord);
+                        Long groupId = tempWord.getId();
+                        // 得到联想词的翻译
+                        String synoTran = syno.getTran();
+                        tempWord = createWord(wordIdValue);
+                        tempWord.setGroupId(groupId);
+                        tempWord.setWordStructureId(wordStructureMap.get("synoTranslation"));
+                        tempWord.setValue(synoTran);
+                        wordMapper.insert(tempWord);
+                        // 得到当前词性对应的联想词
+                        for (JsonWordBO.Content.Word.InternalContent.Syno.InternalSyno.HWD hwd : syno.getHwds()) {
+                            String w = hwd.getW();
+                            tempWord = createWord(wordIdValue);
+                            tempWord.setGroupId(groupId);
+                            tempWord.setWordStructureId(wordStructureMap.get("synoWord"));
+                            tempWord.setValue(w);
+                            wordMapper.insert(tempWord);
+                            Long internalGroupId = tempWord.getId();
+                            // 根据联想词从当前单词本中找出对应单词的id
+                            LambdaQueryWrapper<WordId> originIdLambdaQueryWrapper = new LambdaQueryWrapper<>();
+                            originIdLambdaQueryWrapper.eq(WordId::getDivideId, divideId)
+                                    .eq(WordId::getWord, w);
+                            WordId wordId = wordIdMapper.selectOne(originIdLambdaQueryWrapper);
+                            if (wordId != null) {
+                                // 封装id信息
+                                tempWord = createWord(wordIdValue);
+                                tempWord.setGroupId(internalGroupId);
+                                tempWord.setWordStructureId(wordStructureMap.get("synoWordId"));
+                                tempWord.setValue(String.valueOf(wordId.getId()));
+                                wordMapper.insert(tempWord);
+                            }
+                        }
+                    }
+
+                } catch (NullPointerException e) {
+                    log.info("word [{}] don't have syno field", wordOrigin);
+                }
+                try {
+                    // 封装单词的同根词
+                    for (JsonWordBO.Content.Word.InternalContent.RelWord.InternalRelWord relWord : jsonWordBO.getContent().getWord().getContent().getRelWord().getRels()) {
+                        // 得到同根词的词性
+                        String relPos = relWord.getPos();
+                        tempWord = createWord(wordIdValue);
+                        tempWord.setWordStructureId(wordStructureMap.get("relPos"));
+                        tempWord.setValue(relPos);
+                        wordMapper.insert(tempWord);
+                        Long groupId = tempWord.getId();
+                        // 得到同根词的内容
+                        for (JsonWordBO.Content.Word.InternalContent.RelWord.InternalRelWord.InternalWord relWordInfo : relWord.getWords()) {
+                            String hwd = relWordInfo.getHwd();
+                            tempWord = createWord(wordIdValue);
+                            tempWord.setGroupId(groupId);
+                            tempWord.setWordStructureId(wordStructureMap.get("relWord"));
+                            tempWord.setValue(hwd);
+                            wordMapper.insert(tempWord);
+                            Long internalGroupId = tempWord.getId();
+                            // 得到对应的翻译
+                            String tran = relWordInfo.getTran();
+                            tempWord = createWord(wordIdValue);
+                            tempWord.setGroupId(internalGroupId);
+                            tempWord.setWordStructureId(wordStructureMap.get("relWordTranslation"));
+                            tempWord.setValue(tran);
+                            wordMapper.insert(tempWord);
+                            // 根据同根词从当前单词本中找出对应单词的id
+                            LambdaQueryWrapper<WordId> originIdLambdaQueryWrapper = new LambdaQueryWrapper<>();
+                            originIdLambdaQueryWrapper.eq(WordId::getDivideId, divideId)
+                                    .eq(WordId::getWord, hwd);
+                            WordId wordId = wordIdMapper.selectOne(originIdLambdaQueryWrapper);
+                            if (wordId != null) {
+                                // 封装id信息
+                                tempWord = createWord(wordIdValue);
+                                tempWord.setGroupId(internalGroupId);
+                                tempWord.setWordStructureId(wordStructureMap.get("relWordId"));
+                                tempWord.setValue(String.valueOf(wordId.getId()));
+                                wordMapper.insert(tempWord);
+                            }
+
+                        }
+                    }
+                } catch (NullPointerException e) {
+                    log.info("word [{}] don't have rel field", wordOrigin);
                 }
             }
 
-        } catch (IOException e) {
+
+        } catch (Exception e) {
             log.error("json handle fail", e);
-            throw new FileOperationException("json文件处理异常").setErrorData(upLoadWordJson.getFile().getOriginalFilename());
+            throw new FileOperationException("json文件处理异常")
+                    .setErrorData(upLoadWordJson.getFile().getOriginalFilename() + "划分名称:" + divide.getName());
         }
 
+        log.info("compute divide [{}] complete; consume time:[{}] ms", divide.getName(), System.currentTimeMillis() - startTime);
     }
 
     @Override

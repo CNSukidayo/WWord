@@ -8,12 +8,11 @@ import io.github.cnsukidayo.wword.common.exception.NonExistsException;
 import io.github.cnsukidayo.wword.core.dao.DivideMapper;
 import io.github.cnsukidayo.wword.core.dao.DivideWordMapper;
 import io.github.cnsukidayo.wword.core.dao.LanguageClassMapper;
+import io.github.cnsukidayo.wword.core.dao.WordIdMapper;
 import io.github.cnsukidayo.wword.core.service.DivideService;
 import io.github.cnsukidayo.wword.model.dto.DivideDTO;
+import io.github.cnsukidayo.wword.model.entity.*;
 import io.github.cnsukidayo.wword.model.params.AddDivideParam;
-import io.github.cnsukidayo.wword.model.entity.Divide;
-import io.github.cnsukidayo.wword.model.entity.DivideWord;
-import io.github.cnsukidayo.wword.model.entity.LanguageClass;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
@@ -30,12 +29,17 @@ import java.util.Optional;
 public class DivideServiceImpl extends ServiceImpl<DivideMapper, Divide> implements DivideService {
 
     private final LanguageClassMapper languageClassMapper;
+
     private final DivideWordMapper divideWordMapper;
 
+    private final WordIdMapper wordIdMapper;
+
     public DivideServiceImpl(LanguageClassMapper languageClassMapper,
-                             DivideWordMapper divideWordMapper) {
+                             DivideWordMapper divideWordMapper,
+                             WordIdMapper wordIdMapper) {
         this.languageClassMapper = languageClassMapper;
         this.divideWordMapper = divideWordMapper;
+        this.wordIdMapper = wordIdMapper;
     }
 
     @Override
@@ -121,29 +125,22 @@ public class DivideServiceImpl extends ServiceImpl<DivideMapper, Divide> impleme
     }
 
     @Override
-    public void saveBatchDivideWord(Long divideId, List<Long> wordIdList, Long UUID) {
-        Assert.notNull(divideId, "divideId must not be null");
+    public void saveBatchDivideWord(Long childDivideId, List<Long> wordIdList, Long UUID) {
+        Assert.notNull(childDivideId, "divideId must not be null");
         Assert.notNull(wordIdList, "wordIdList must not be null");
         Assert.notNull(UUID, "UUID must not be null");
 
-        Divide divide = Optional.ofNullable(baseMapper.selectOne(new LambdaQueryWrapper<Divide>().eq(Divide::getId, divideId))).orElseThrow(() -> new NonExistsException("划分不存在不存在"));
-        if (divide.getParentId() == -1 || !divide.getUUID().equals(UUID)) {
+        Divide divide = Optional.ofNullable(baseMapper.selectOne(new LambdaQueryWrapper<Divide>().eq(Divide::getId, childDivideId))).orElseThrow(() -> new NonExistsException("划分不存在不存在"));
+        Long parentId = divide.getParentId();
+        if (parentId == -1 || !divide.getUUID().equals(UUID)) {
             throw new AddFailException();
         }
-        // todo 根据单词的id查询出所有单词的名称,做进一步的封装.事务、异步
-
-        DivideWord divideWord0 = new DivideWord();
-        divideWord0.setWordId(1L);
-        divideWord0.setWordName("apple");
-        DivideWord divideWord1 = new DivideWord();
-        divideWord1.setWordId(2L);
-        divideWord1.setWordName("banana");
-
-        List<DivideWord> list = new ArrayList<>();
-        list.add(divideWord0);
-        list.add(divideWord1);
-
-        divideWordMapper.insertBatchDivideWord(divideId, list, UUID);
+        // 从父划分中根据单词id查询出所有的单词信息
+        LambdaQueryWrapper<WordId> wordIdLambdaQueryWrapper = new LambdaQueryWrapper<>();
+        wordIdLambdaQueryWrapper.eq(WordId::getDivideId, parentId)
+                .in(WordId::getId, wordIdList);
+        List<WordId> wordIdsList = wordIdMapper.selectList(wordIdLambdaQueryWrapper);
+        divideWordMapper.insertBatchDivideWord(childDivideId, wordIdsList, UUID);
     }
 
     @Override

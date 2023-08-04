@@ -6,8 +6,8 @@
 
     <insert id="insertBatchDivideWord">
         INSERT IGNORE INTO divide_word (divide_id, word_id, word_name,uuid) values
-        <foreach collection="divideWordList" item="divideWord" index="index" separator=",">
-            (#{divideId},#{divideWord.wordId},#{divideWord.wordName},#{uuid})
+        <foreach collection="wordIdList" item="wordId" index="index" separator=",">
+            (#{divideId},#{wordId.id},#{wordId.word},#{uuid})
         </foreach>
     </insert>
 

@@ -111,7 +111,7 @@
         <root level="debug">
             <appender-ref ref="CONSOLE"/>
             <!--这里就不开了,debug日志实在太多了-->
-            <appender-ref ref="DEBUG_FILE"/>
+            <!--<appender-ref ref="DEBUG_FILE"/>-->
             <appender-ref ref="INFO_FILE"/>
             <appender-ref ref="ERROR_FILE"/>
             <appender-ref ref="WARN_FILE"/>

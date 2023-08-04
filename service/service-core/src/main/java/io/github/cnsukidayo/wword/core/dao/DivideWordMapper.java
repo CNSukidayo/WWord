@@ -2,6 +2,7 @@ package io.github.cnsukidayo.wword.core.dao;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import io.github.cnsukidayo.wword.model.entity.DivideWord;
+import io.github.cnsukidayo.wword.model.entity.WordId;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -21,7 +22,7 @@ public interface DivideWordMapper extends BaseMapper<DivideWord> {
      * @param list     单词列表不为null
      * @param UUID     用户id不为null
      */
-    void insertBatchDivideWord(@Param("divideId") Long divideId, @Param("divideWordList") List<DivideWord> list, @Param("uuid") Long UUID);
+    void insertBatchDivideWord(@Param("divideId") Long divideId, @Param("wordIdList") List<WordId> wordIdList, @Param("uuid") Long UUID);
 
     /**
      * 批量删除一个子划分中的所有单词

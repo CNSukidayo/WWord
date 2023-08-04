@@ -1,5 +1,5 @@
 server:
-  port: 8202
+  port: 8201
   servlet:
     encoding:
       charset: UTF-8
@@ -13,6 +13,7 @@ server:
     key-store-type: PKCS12
     key-alias: wword
 
+# spring相关配置
 spring:
   datasource:
     username: root
@@ -30,22 +31,13 @@ spring:
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
     time-zone: GMT+8
-  servlet:
-    multipart:
-      max-file-size: 1024MB
-      max-request-size: 1024MB
-  # 配置异步执行任务
-  task:
-    execution:
-      pool:
-        core-size: 4
-        max-size: 8
-        queue-capacity: 100
-      thread-name-prefix: "async-"
 
+# 日志相关配置
 logging:
   file:
-    path: logs/admin/
+    path: logs/core/
+  level:
+    io.github.cnsukidayo: info
 
 #mybatis-plus相关配置
 mybatis-plus:
@@ -53,14 +45,27 @@ mybatis-plus:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
     map-underscore-to-camel-case: true
   #  mapper-locations: classpath*:/mapper/**/*.xml
-  type-aliases-package: io.github.cnsukidayo.wword.model.pojo
+  type-aliases-package: io.github.cnsukidayo.wword.model.entity
 
+# springdoc-openapi项目配置
+#springdoc:
+#  swagger-ui:
+#    path: /swagger-ui.html
+#    tags-sorter: alpha
+#    operations-sorter: alpha
+#    version: v0.0.1
+#  api-docs:
+#    path: /v3/api-docs
+#  group-configs:
+#    - group: 'user'
+#      display-name: "用户端接口"
+#      packages-to-scan: io.github.cnsukidayo.wword.controller.u
 # knife4j的增强配置,不需要增强可以不配
 knife4j:
   enable: true
   setting:
     language: zh_cn
 
-
+# 自定义配置
 wword:
   resource-locations: D:/Program/Java Project/WWord/wwordResources/

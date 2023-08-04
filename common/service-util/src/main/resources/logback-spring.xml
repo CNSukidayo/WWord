@@ -2,29 +2,22 @@
 <configuration>
     <!--导入springboot日志框架的默认配置-->
     <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
-    <!--如果是dev开发则会产生debug日志-->
+    <!--将任意包中大于info的进行打印,info会同时执行下面的所有appender.每个又有自已的过滤规则-->
+    <root level="info">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="INFO_FILE"/>
+        <appender-ref ref="WARN_FILE"/>
+        <appender-ref ref="ERROR_FILE"/>
+    </root>
+    <!--当前环境是dev环境的时候,所有大于debug等级的日志都走一遍appender,至于不能设置为root是因为别的包不能走debug-->
     <springProfile name="dev">
-        <appender name="DEBUG_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-            <encoder>
-                <pattern>${FILE_LOG_PATTERN}</pattern>
-                <charset>${FILE_LOG_CHARSET}</charset>
-            </encoder>
-            <file>${LOG_PATH}//debug//debug.log</file>
-            <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-                <fileNamePattern>
-                    ${LOGBACK_ROLLINGPOLICY_FILE_NAME_PATTERN:-${LOG_PATH}//debug//%d{yyyy//MM//dd}//debug.%d{yyyy-MM-dd}.%i.gz}
-                </fileNamePattern>
-                <cleanHistoryOnStart>${LOGBACK_ROLLINGPOLICY_CLEAN_HISTORY_ON_START:-false}</cleanHistoryOnStart>
-                <maxFileSize>${LOGBACK_ROLLINGPOLICY_MAX_FILE_SIZE:-10MB}</maxFileSize>
-                <totalSizeCap>${LOGBACK_ROLLINGPOLICY_TOTAL_SIZE_CAP:-0}</totalSizeCap>
-                <maxHistory>${LOGBACK_ROLLINGPOLICY_MAX_HISTORY:-7}</maxHistory>
-            </rollingPolicy>
-            <filter class="ch.qos.logback.classic.filter.LevelFilter">
-                <level>DEBUG</level>
-                <onMatch>ACCEPT</onMatch>
-                <onMismatch>DENY</onMismatch>
-            </filter>
-        </appender>
+        <logger name="io.github.cnsukidayo.wword" level="debug" additivity="false">
+            <appender-ref ref="CONSOLE"/>
+            <appender-ref ref="DEBUG_FILE"/>
+            <appender-ref ref="INFO_FILE"/>
+            <appender-ref ref="WARN_FILE"/>
+            <appender-ref ref="ERROR_FILE"/>
+        </logger>
     </springProfile>
 
     <!--springboot的默认控制台输出配置-->
@@ -33,12 +26,31 @@
             <pattern>${CONSOLE_LOG_PATTERN}</pattern>
             <charset>${CONSOLE_LOG_CHARSET}</charset>
         </encoder>
+    </appender>
+
+    <!--debug日志单独输出到一个文件夹-->
+    <appender name="DEBUG_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <encoder>
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+            <charset>${FILE_LOG_CHARSET}</charset>
+        </encoder>
+        <file>${LOG_PATH}//debug//debug.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>
+                ${LOGBACK_ROLLINGPOLICY_FILE_NAME_PATTERN:-${LOG_PATH}//debug//%d{yyyy//MM//dd}//debug.%d{yyyy-MM-dd}.%i.gz}
+            </fileNamePattern>
+            <cleanHistoryOnStart>${LOGBACK_ROLLINGPOLICY_CLEAN_HISTORY_ON_START:-false}</cleanHistoryOnStart>
+            <maxFileSize>${LOGBACK_ROLLINGPOLICY_MAX_FILE_SIZE:-10MB}</maxFileSize>
+            <totalSizeCap>${LOGBACK_ROLLINGPOLICY_TOTAL_SIZE_CAP:-0}</totalSizeCap>
+            <maxHistory>${LOGBACK_ROLLINGPOLICY_MAX_HISTORY:-7}</maxHistory>
+        </rollingPolicy>
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
-            <level>INFO</level>
+            <level>DEBUG</level>
             <onMatch>ACCEPT</onMatch>
             <onMismatch>DENY</onMismatch>
         </filter>
     </appender>
+
     <!--info日志单独输出到一个文件夹-->
     <appender name="INFO_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <encoder>
@@ -56,7 +68,7 @@
             <maxHistory>${LOGBACK_ROLLINGPOLICY_MAX_HISTORY:-7}</maxHistory>
         </rollingPolicy>
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
-            <level>INFO</level>
+            <level>info</level>
             <onMatch>ACCEPT</onMatch>
             <onMismatch>DENY</onMismatch>
         </filter>
@@ -106,26 +118,5 @@
             <onMismatch>DENY</onMismatch>
         </filter>
     </appender>
-    <!--dev环境-->
-    <springProfile name="dev">
-        <root level="debug">
-            <appender-ref ref="CONSOLE"/>
-            <!--这里就不开了,debug日志实在太多了-->
-            <!--<appender-ref ref="DEBUG_FILE"/>-->
-            <appender-ref ref="INFO_FILE"/>
-            <appender-ref ref="ERROR_FILE"/>
-            <appender-ref ref="WARN_FILE"/>
-        </root>
-    </springProfile>
-    <!--prod环境-->
-    <springProfile name="prod">
-        <root level="info">
-            <appender-ref ref="CONSOLE"/>
-            <appender-ref ref="INFO_FILE"/>
-            <appender-ref ref="ERROR_FILE"/>
-            <appender-ref ref="WARN_FILE"/>
-        </root>
-    </springProfile>
-
 
 </configuration>

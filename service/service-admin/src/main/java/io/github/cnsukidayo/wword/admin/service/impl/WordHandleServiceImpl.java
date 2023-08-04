@@ -269,11 +269,11 @@ public class WordHandleServiceImpl implements WordHandleService {
                                 wordMapper.insert(tempWord);
                             }
                         } catch (NullPointerException e) {
-                            log.info("单词 [{}] 没有选项信息", wordOrigin);
+                            log.debug("单词 [{}] 没有选项信息", wordOrigin);
                         }
                     }
                 } catch (NullPointerException e) {
-                    log.info("单词 [{}] 没有相关例题信息", wordOrigin);
+                    log.debug("单词 [{}] 没有相关例题信息", wordOrigin);
                 }
                 try {
                     // 封装例句相关内容
@@ -299,7 +299,7 @@ public class WordHandleServiceImpl implements WordHandleService {
                         wordMapper.insert(tempWord);
                     }
                 } catch (NullPointerException e) {
-                    log.info("单词 [{}] 没有例句信息", wordOrigin);
+                    log.debug("单词 [{}] 没有例句信息", wordOrigin);
                 }
                 // todo 封装近义词相关,等单词先录入一遍之后再处理近义词相关内容
                 try {
@@ -327,7 +327,7 @@ public class WordHandleServiceImpl implements WordHandleService {
                         wordMapper.insert(tempWord);
                     }
                 } catch (NullPointerException e) {
-                    log.info("单词 [{}] 没有短语信息", wordOrigin);
+                    log.debug("单词 [{}] 没有短语信息", wordOrigin);
                 }
                 // todo 封装同根词,等单词先录入一遍之后再处理同根词
                 try {
@@ -354,7 +354,7 @@ public class WordHandleServiceImpl implements WordHandleService {
                         wordMapper.insert(tempWord);
                     }
                 } catch (NullPointerException e) {
-                    log.info("单词 [{}] 没有中文翻译信息", wordOrigin);
+                    log.debug("单词 [{}] 没有中文翻译信息", wordOrigin);
                 }
                 try {
                     // 得到单词的图片信息
@@ -364,7 +364,7 @@ public class WordHandleServiceImpl implements WordHandleService {
                     tempWord.setValue(picture);
                     wordMapper.insert(tempWord);
                 } catch (NullPointerException e) {
-                    log.info("单词 [{}] 没有图片信息", wordOrigin);
+                    log.debug("单词 [{}] 没有图片信息", wordOrigin);
                 }
                 try {
                     // 封装单词的真题例句信息
@@ -407,7 +407,7 @@ public class WordHandleServiceImpl implements WordHandleService {
                         wordMapper.insert(tempWord);
                     }
                 } catch (NullPointerException e) {
-                    log.info("单词 [{}] 没有真题例句信息", wordOrigin);
+                    log.debug("单词 [{}] 没有真题例句信息", wordOrigin);
                 }
                 try {
                     // 封装单词的记忆方法信息
@@ -417,7 +417,7 @@ public class WordHandleServiceImpl implements WordHandleService {
                     tempWord.setValue(remMethod);
                     wordMapper.insert(tempWord);
                 } catch (NullPointerException e) {
-                    log.info("单词 [{}] 没有记忆方法信息", wordOrigin);
+                    log.debug("单词 [{}] 没有记忆方法信息", wordOrigin);
                 }
             }
         } catch (Exception e) {
@@ -486,7 +486,7 @@ public class WordHandleServiceImpl implements WordHandleService {
                     }
 
                 } catch (NullPointerException e) {
-                    log.info("word [{}] don't have syno field", wordOrigin);
+                    log.debug("word [{}] don't have syno field", wordOrigin);
                 }
                 try {
                     // 封装单词的同根词
@@ -531,7 +531,7 @@ public class WordHandleServiceImpl implements WordHandleService {
                         }
                     }
                 } catch (NullPointerException e) {
-                    log.info("word [{}] don't have rel field", wordOrigin);
+                    log.debug("word [{}] don't have rel field", wordOrigin);
                 }
             }
 

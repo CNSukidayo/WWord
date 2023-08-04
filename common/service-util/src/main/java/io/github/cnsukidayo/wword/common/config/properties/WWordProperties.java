@@ -19,4 +19,5 @@ public class WWordProperties {
     public void setResourceLocations(String resourceLocations) {
         this.resourceLocations = resourceLocations;
     }
+
 }

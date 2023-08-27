@@ -69,3 +69,4 @@ knife4j:
 # 自定义配置
 wword:
   resource-locations: D:/Program/Java Project/WWord/wwordResources/
+  maxLoginLog: 50

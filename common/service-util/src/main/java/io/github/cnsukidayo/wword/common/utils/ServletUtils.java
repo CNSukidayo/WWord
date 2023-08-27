@@ -3,6 +3,10 @@ package io.github.cnsukidayo.wword.common.utils;
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.util.StringUtils;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+
+import java.util.Optional;
 
 /**
  * @author sukidayo
@@ -11,6 +15,27 @@ import org.springframework.util.StringUtils;
 public class ServletUtils {
 
     private ServletUtils() {
+    }
+
+    /**
+     * 得到当前的http servlet request
+     *
+     * @return an optional http servlet request
+     */
+    public static Optional<HttpServletRequest> getCurrentRequest() {
+        return Optional.ofNullable(RequestContextHolder.getRequestAttributes())
+                .filter(requestAttributes -> requestAttributes instanceof ServletRequestAttributes)
+                .map(requestAttributes -> (ServletRequestAttributes) requestAttributes)
+                .map(ServletRequestAttributes::getRequest);
+    }
+
+    /**
+     * 得到请求的IP地址
+     *
+     * @return 返回ip地址或者null
+     */
+    public static String getRequestIp() {
+        return getCurrentRequest().map(ServletUtils::getClientIP).orElse(null);
     }
 
     /**
@@ -31,10 +56,10 @@ public class ServletUtils {
      * 需要注意的是，使用此方法获取的客户IP地址必须在Http服务器（例如Nginx）中配置头信息，否则容易造成IP伪造。
      * </p>
      *
-     * @param request 请求对象{@link HttpServletRequest}
+     * @param request          请求对象{@link HttpServletRequest}
      * @param otherHeaderNames 其他自定义头文件，通常在Http服务器（例如Nginx）中配置
-     * @see <a href="https://github.com/dromara/hutool/blob/v5-master/hutool-extra/src/main/java/cn/hutool/extra/servlet/ServletUtil.java">查看来源</a>
      * @return IP地址
+     * @see <a href="https://github.com/dromara/hutool/blob/v5-master/hutool-extra/src/main/java/cn/hutool/extra/servlet/ServletUtil.java">查看来源</a>
      */
     public static String getClientIP(HttpServletRequest request, String... otherHeaderNames) {
         String[] headers = {"X-Forwarded-For", "X-Real-IP", "Proxy-Client-IP", "WL-Proxy-Client-IP",
@@ -66,10 +91,10 @@ public class ServletUtils {
      * 需要注意的是，使用此方法获取的客户IP地址必须在Http服务器（例如Nginx）中配置头信息，否则容易造成IP伪造。
      * </p>
      *
-     * @param request 请求对象{@link HttpServletRequest}
+     * @param request     请求对象{@link HttpServletRequest}
      * @param headerNames 自定义头，通常在Http服务器（例如Nginx）中配置
-     * @see <a href="https://github.com/dromara/hutool/blob/v5-master/hutool-extra/src/main/java/cn/hutool/extra/servlet/ServletUtil.java">查看来源</a>
      * @return IP地址
+     * @see <a href="https://github.com/dromara/hutool/blob/v5-master/hutool-extra/src/main/java/cn/hutool/extra/servlet/ServletUtil.java">查看来源</a>
      * @since 1.4.13
      */
     public static String getClientIPByHeader(HttpServletRequest request, String... headerNames) {

@@ -9,17 +9,22 @@ import io.github.cnsukidayo.wword.common.exception.NonExistsException;
 import io.github.cnsukidayo.wword.common.security.authentication.Authentication;
 import io.github.cnsukidayo.wword.common.security.context.SecurityContextHolder;
 import io.github.cnsukidayo.wword.common.utils.SecurityUtils;
+import io.github.cnsukidayo.wword.common.utils.ServletUtils;
 import io.github.cnsukidayo.wword.core.dao.UserMapper;
+import io.github.cnsukidayo.wword.core.event.login.LoginEvent;
 import io.github.cnsukidayo.wword.core.service.UniversityService;
 import io.github.cnsukidayo.wword.core.service.UserService;
+import io.github.cnsukidayo.wword.model.entity.User;
+import io.github.cnsukidayo.wword.model.enums.LoginType;
 import io.github.cnsukidayo.wword.model.params.LoginParam;
 import io.github.cnsukidayo.wword.model.params.UpdatePasswordParam;
 import io.github.cnsukidayo.wword.model.params.UpdateUserParam;
 import io.github.cnsukidayo.wword.model.params.UserRegisterParam;
-import io.github.cnsukidayo.wword.model.entity.User;
 import io.github.cnsukidayo.wword.model.support.WWordConst;
 import io.github.cnsukidayo.wword.model.token.AuthToken;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.http.HttpHeaders;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
@@ -40,10 +45,15 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     private final UniversityService universityService;
 
+    private final ApplicationEventPublisher eventPublisher;
+
+
     public UserServiceImpl(RedisTemplate<String, String> redisTemplate,
-                           UniversityService universityService) {
+                           UniversityService universityService,
+                           ApplicationEventPublisher applicationEventPublisher) {
         this.redisTemplate = redisTemplate;
         this.universityService = universityService;
+        this.eventPublisher = applicationEventPublisher;
     }
 
     @Override
@@ -76,7 +86,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         if (user == null || !BCrypt.checkpw(loginParam.getPassword(), user.getPassword())) {
             throw new BadRequestException("用户名或者密码不正确");
         }
-
+        // 记录登陆事件
+        eventPublisher.publishEvent(
+                new LoginEvent(this,
+                        user.getUUID(),
+                        LoginType.LOGIN_IN,
+                        ServletUtils.getCurrentRequest().map(request -> request.getHeader(HttpHeaders.USER_AGENT)).orElse("")));
         return buildAuthToken(user);
     }
 
@@ -93,6 +108,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         user.setPassword(BCrypt.hashpw(updatePasswordParam.getNewPassword()));
         // 更新
         baseMapper.updateById(user);
+        // 记录密码更新事件
+        eventPublisher.publishEvent(
+                new LoginEvent(this,
+                        user.getUUID(),
+                        LoginType.PASSWORD_UPDATE,
+                        ServletUtils.getCurrentRequest().map(request -> request.getHeader(HttpHeaders.USER_AGENT)).orElse("")));
     }
 
     @Override
@@ -153,6 +174,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             redisTemplate.delete(SecurityUtils.buildTokenRefreshKey(refresh_token));
             redisTemplate.delete(SecurityUtils.buildRefreshTokenKey(user));
         });
+        // 记录退出登陆事件
+        eventPublisher.publishEvent(
+                new LoginEvent(this,
+                        user.getUUID(),
+                        LoginType.LOGIN_OUT,
+                        ServletUtils.getCurrentRequest().map(request -> request.getHeader(HttpHeaders.USER_AGENT)).orElse("")));
     }
 
 

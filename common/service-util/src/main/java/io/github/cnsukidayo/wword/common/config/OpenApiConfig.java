@@ -24,7 +24,7 @@ public class OpenApiConfig {
     @Bean
     public GroupedOpenApi userApi() {
         return GroupedOpenApi.builder()
-                .displayName("用户端接口")
+                .displayName("用户服务")
                 .group("user")
                 .packagesToScan("io.github.cnsukidayo.wword.core.controller")
                 .build();
@@ -33,9 +33,18 @@ public class OpenApiConfig {
     @Bean
     public GroupedOpenApi adminApi() {
         return GroupedOpenApi.builder()
-                .displayName("管理员接口")
+                .displayName("管理员服务")
                 .group("admin")
                 .packagesToScan("io.github.cnsukidayo.wword.admin.controller")
+                .build();
+    }
+
+    @Bean
+    public GroupedOpenApi authApi() {
+        return GroupedOpenApi.builder()
+                .displayName("权限管理服务")
+                .group("auth")
+                .packagesToScan("io.github.cnsukidayo.wword.auth.controller")
                 .build();
     }
 

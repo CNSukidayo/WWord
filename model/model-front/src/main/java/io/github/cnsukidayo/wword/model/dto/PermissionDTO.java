@@ -1,34 +1,32 @@
-package io.github.cnsukidayo.wword.model.entity;
+package io.github.cnsukidayo.wword.model.dto;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
-import io.github.cnsukidayo.wword.model.entity.base.BaseEntity;
+import io.github.cnsukidayo.wword.model.base.OutputConverter;
+import io.github.cnsukidayo.wword.model.entity.Permission;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * @author sukidayo
- * @date 2023/8/27 19:10
+ * @date 2023/8/28 12:56
  */
-@TableName("permission")
-public class Permission extends BaseEntity {
+@Schema(description = "接口权限对象,用于展示权限接口的情况")
+public class PermissionDTO implements OutputConverter<PermissionDTO, Permission> {
 
-    @TableId(value = "id", type = IdType.AUTO)
+    @Schema(description = "权限接口对象的id")
     private Long id;
 
-    @TableField("mould")
+    @Schema(description = "模块名称")
     private String mould;
 
-    @TableField("interfaces")
+    @Schema(description = "接口名称")
     private String interfaces;
 
-    @TableField("path")
+    @Schema(description = "接口路径")
     private String path;
 
-    @TableField("interface_describe")
+    @Schema(description = "接口描述信息")
     private String interfaceDescribe;
 
-    public Permission() {
+    public PermissionDTO() {
     }
 
     public Long getId() {

@@ -1,4 +1,4 @@
-package io.github.cnsukidayo.wword.auth.mapper;
+package io.github.cnsukidayo.wword.auth.dao;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import io.github.cnsukidayo.wword.model.entity.Permission;

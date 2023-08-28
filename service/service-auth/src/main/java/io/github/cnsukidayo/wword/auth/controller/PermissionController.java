@@ -3,13 +3,14 @@ package io.github.cnsukidayo.wword.auth.controller;
 import io.github.cnsukidayo.wword.auth.service.PermissionService;
 import io.github.cnsukidayo.wword.model.entity.Permission;
 import io.github.cnsukidayo.wword.model.params.PermissionParam;
+import io.github.cnsukidayo.wword.model.vo.PermissionVO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author sukidayo
@@ -32,5 +33,13 @@ public class PermissionController {
         Permission permission = permissionParam.convertTo();
         permissionService.save(permission);
     }
+
+    @Operation(summary = "分组取得所有跟踪的接口")
+    @GetMapping("getTraceByGroup")
+    public Map<String, Map<String, List<PermissionVO>>> getTraceByGroup() {
+        return permissionService.getTraceByGroup();
+    }
+
+
 
 }

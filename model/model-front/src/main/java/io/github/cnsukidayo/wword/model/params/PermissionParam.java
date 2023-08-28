@@ -18,6 +18,11 @@ public class PermissionParam implements InputConverter<Permission> {
     @Size(max = 255, message = "模块名称不能超过 {max} 个字符")
     private String mould;
 
+    @Schema(description = "接口名称")
+    @NotBlank(message = "接口名称不为空")
+    @Size(max = 255, message = "接口名称不能超过 {max} 个字符")
+    private String interfaces;
+
     // todo 接口的路径匹配是一个问题,需要使用ant组件
     @Schema(description = "接口路径")
     @NotBlank(message = "接口路径不能为空")
@@ -27,7 +32,7 @@ public class PermissionParam implements InputConverter<Permission> {
     @Schema(description = "接口名称")
     @NotBlank(message = "接口名称不能为空")
     @Size(max = 255, message = "接口名称不能超过 {max} 个字符")
-    private String name;
+    private String interfaceDescribe;
 
     public PermissionParam() {
     }
@@ -40,6 +45,14 @@ public class PermissionParam implements InputConverter<Permission> {
         this.mould = mould;
     }
 
+    public String getInterfaces() {
+        return interfaces;
+    }
+
+    public void setInterfaces(String interfaces) {
+        this.interfaces = interfaces;
+    }
+
     public String getPath() {
         return path;
     }
@@ -48,12 +61,12 @@ public class PermissionParam implements InputConverter<Permission> {
         this.path = path;
     }
 
-    public String getName() {
-        return name;
+    public String getInterfaceDescribe() {
+        return interfaceDescribe;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setInterfaceDescribe(String interfaceDescribe) {
+        this.interfaceDescribe = interfaceDescribe;
     }
 }
 

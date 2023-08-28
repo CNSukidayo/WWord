@@ -1,8 +1,8 @@
 package io.github.cnsukidayo.wword.model.params;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 
 /**
  * @author sukidayo
@@ -16,7 +16,8 @@ public class PageQueryParam {
 
     @Schema(description = "每页的数据数量")
     @NotNull(message = "每页数据数必须不为null")
-    @Size(max = 50, message = "每页数量不能超过{max}")
+    @Max(value = 50, message = "每页数量不能超过 {value} ")
+    // todo 后期考虑做一个自定义校验注解,该注解能限制一个属性的值
     private Integer size;
 
     public PageQueryParam() {

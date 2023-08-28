@@ -3,6 +3,7 @@ package io.github.cnsukidayo.wword.auth.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import io.github.cnsukidayo.wword.model.entity.Permission;
 import io.github.cnsukidayo.wword.model.enums.PermissionStatus;
+import io.github.cnsukidayo.wword.model.params.PermissionParam;
 import io.github.cnsukidayo.wword.model.vo.PermissionVO;
 
 import java.util.List;
@@ -29,5 +30,11 @@ public interface PermissionService extends IService<Permission> {
      */
     List<Permission> getTraces();
 
-
+    /**
+     * 更新一个跟踪接口的信息
+     *
+     * @param permissionId    接口的id不为null
+     * @param permissionParam 接口更新信息不为null
+     */
+    void update(Long permissionId, PermissionParam permissionParam);
 }

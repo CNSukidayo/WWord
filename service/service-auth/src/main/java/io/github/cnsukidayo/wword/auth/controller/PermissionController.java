@@ -1,12 +1,15 @@
 package io.github.cnsukidayo.wword.auth.controller;
 
 import io.github.cnsukidayo.wword.auth.service.PermissionService;
+import io.github.cnsukidayo.wword.common.exception.BadRequestException;
 import io.github.cnsukidayo.wword.model.entity.Permission;
 import io.github.cnsukidayo.wword.model.params.PermissionParam;
 import io.github.cnsukidayo.wword.model.vo.PermissionVO;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -40,6 +43,21 @@ public class PermissionController {
         return permissionService.getTraceByGroup();
     }
 
+    @Operation(summary = "批量撤销接口的跟踪")
+    @PostMapping("untrace")
+    public void untrace(@Parameter(description = "待取消跟踪的接口的id") @RequestBody List<Long> permissionIdList) {
+        if (CollectionUtils.isEmpty(permissionIdList)) {
+            throw new BadRequestException("待取消跟踪的接口的id列表不能为空!");
+        }
+        permissionService.removeBatchByIds(permissionIdList);
+    }
+
+    @Operation(summary = "更新一个跟踪接口的信息")
+    @PostMapping("update_trace/{permissionId}")
+    public void updateTrace(@PathVariable("permissionId") Long permissionId,
+                            @Valid @RequestBody PermissionParam permissionParam) {
+        permissionService.update(permissionId, permissionParam);
+    }
 
 
 }

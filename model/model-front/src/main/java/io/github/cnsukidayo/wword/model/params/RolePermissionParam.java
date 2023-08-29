@@ -4,6 +4,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
+import java.util.List;
+
 /**
  * @author sukidayo
  * @date 2023/8/28 18:22
@@ -17,7 +19,7 @@ public class RolePermissionParam {
 
     @Schema(description = "权限接口id列表")
     @NotEmpty(message = "权限接口id列表不能为空")
-    private Long[] permissionIds;
+    private List<Long> permissionIds;
 
     public RolePermissionParam() {
     }
@@ -30,11 +32,11 @@ public class RolePermissionParam {
         this.roleId = roleId;
     }
 
-    public Long[] getPermissionIds() {
+    public List<Long> getPermissionIds() {
         return permissionIds;
     }
 
-    public void setPermissionIds(Long[] permissionIds) {
+    public void setPermissionIds(List<Long> permissionIds) {
         this.permissionIds = permissionIds;
     }
 }

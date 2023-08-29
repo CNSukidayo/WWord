@@ -1,10 +1,11 @@
 package io.github.cnsukidayo.wword.auth.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
+import io.github.cnsukidayo.wword.model.entity.Permission;
 import io.github.cnsukidayo.wword.model.entity.Role;
 import io.github.cnsukidayo.wword.model.entity.RolePermission;
+import io.github.cnsukidayo.wword.model.params.PageQueryParam;
 import io.github.cnsukidayo.wword.model.params.RoleParam;
 import io.github.cnsukidayo.wword.model.params.RolePermissionParam;
 
@@ -30,7 +31,7 @@ public interface RolePermissionService extends IService<RolePermission> {
     void updateRole(Long roleId, RoleParam roleParam);
 
     /**
-     * 根据一个角色的id进行删除
+     * 根据一个角色的id删除角色
      *
      * @param roleId 角色的id不为null
      */
@@ -39,10 +40,10 @@ public interface RolePermissionService extends IService<RolePermission> {
     /**
      * 分页查询所有角色并按照优先级排序
      *
-     * @param pageParam 分页查询参数不为null
+     * @param pageQueryParam 分页查询参数不为null
      * @return 返回分页查询的结果
      */
-    IPage<Role> selectRoleByPage(Page<Role> pageParam);
+    IPage<Role> selectRoleByPage(PageQueryParam pageQueryParam);
 
     /**
      * 为一个角色分配多个权限接口
@@ -57,4 +58,12 @@ public interface RolePermissionService extends IService<RolePermission> {
      * @param roleId 角色id不能为null
      */
     void revokeRolePermissionById(Long roleId);
+
+    /**
+     * 分页查询一个角色的所有接口
+     *
+     * @param roleId         角色id不为null
+     * @param pageQueryParam 分页查询参数不为null
+     */
+    IPage<Permission> rolePermissionPage(Long roleId, PageQueryParam pageQueryParam);
 }

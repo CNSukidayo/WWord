@@ -1,9 +1,9 @@
 package io.github.cnsukidayo.wword.auth.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.github.cnsukidayo.wword.auth.service.RolePermissionService;
-import io.github.cnsukidayo.wword.model.entity.Role;
+import io.github.cnsukidayo.wword.model.dto.PermissionDTO;
+import io.github.cnsukidayo.wword.model.dto.RoleDTO;
 import io.github.cnsukidayo.wword.model.params.PageQueryParam;
 import io.github.cnsukidayo.wword.model.params.RoleParam;
 import io.github.cnsukidayo.wword.model.params.RolePermissionParam;
@@ -28,7 +28,7 @@ public class RolePermissionController {
     }
 
     @Operation(summary = "添加一个角色")
-    @PostMapping("role_save")
+    @PostMapping("save_role")
     public void addRole(@Valid @RequestBody RoleParam roleParam) {
         rolePermissionService.saveRole(roleParam);
     }
@@ -41,29 +41,41 @@ public class RolePermissionController {
     }
 
     @Operation(summary = "删除一个角色信息")
-    @GetMapping("role_remove")
+    @GetMapping("remove_role")
     public void removeRole(@RequestParam("roleId") Long roleId) {
         rolePermissionService.removeRoleById(roleId);
     }
 
     @Operation(summary = "分页查询所有角色并按照优先级排序")
     @PostMapping("role_page")
-    public IPage<Role> rolePage(@Valid @RequestBody PageQueryParam pageQueryParam) {
-        return rolePermissionService.selectRoleByPage(new Page<>(pageQueryParam.getCurrent(), pageQueryParam.getSize()));
+    public IPage<RoleDTO> rolePage(@Valid @RequestBody PageQueryParam pageQueryParam) {
+        return rolePermissionService.selectRoleByPage(pageQueryParam)
+            .convert(role -> new RoleDTO().convertFrom(role));
     }
 
-
     @Operation(summary = "为一个角色分配多个权限接口")
-    @PostMapping("permission_grant")
+    @PostMapping("grant_permission")
     public void grantPermission(@Valid @RequestBody RolePermissionParam rolePermissionParam) {
         rolePermissionService.grantRolePermission(rolePermissionParam);
     }
 
-    @Operation(summary = "删除一个角色的所有权限")
-    @PostMapping("permission_revoke/{roleId}")
+    @Operation(summary = "删除一个角色的所有接口权限")
+    @PostMapping("revoke_permission/{roleId}")
     public void revokePermission(@PathVariable("roleId") Long roleId) {
         rolePermissionService.revokeRolePermissionById(roleId);
     }
 
+    @Operation(summary = "分页查询一个角色的所有接口")
+    @PostMapping("role_permission_page/{roleId}")
+    public IPage<PermissionDTO> rolePermissionPage(@PathVariable("roleId") Long roleId, @Valid @RequestBody PageQueryParam pageQueryParam) {
+        return rolePermissionService.rolePermissionPage(roleId, pageQueryParam)
+            .convert(permission -> new PermissionDTO().convertFrom(permission));
+    }
+
+    @Operation(summary = "为一个用户分配多个角色")
+    @PostMapping("grant_role")
+    public void grantRole() {
+
+    }
 
 }

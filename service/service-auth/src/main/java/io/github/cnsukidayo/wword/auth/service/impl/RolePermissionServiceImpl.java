@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import io.github.cnsukidayo.wword.auth.dao.RoleMapper;
 import io.github.cnsukidayo.wword.auth.dao.RolePermissionMapper;
+import io.github.cnsukidayo.wword.auth.dao.UserRoleMapper;
 import io.github.cnsukidayo.wword.auth.service.PermissionService;
 import io.github.cnsukidayo.wword.auth.service.RolePermissionService;
 import io.github.cnsukidayo.wword.common.exception.AlreadyExistsException;
@@ -13,15 +14,18 @@ import io.github.cnsukidayo.wword.common.exception.NonExistsException;
 import io.github.cnsukidayo.wword.model.entity.Permission;
 import io.github.cnsukidayo.wword.model.entity.Role;
 import io.github.cnsukidayo.wword.model.entity.RolePermission;
+import io.github.cnsukidayo.wword.model.entity.UserRole;
 import io.github.cnsukidayo.wword.model.params.PageQueryParam;
 import io.github.cnsukidayo.wword.model.params.RoleParam;
 import io.github.cnsukidayo.wword.model.params.RolePermissionParam;
+import io.github.cnsukidayo.wword.model.params.UserRoleParam;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.List;
 
 /**
  * @author sukidayo
@@ -31,15 +35,21 @@ import java.util.stream.Collectors;
 public class RolePermissionServiceImpl extends ServiceImpl<RolePermissionMapper, RolePermission>
     implements RolePermissionService {
 
+    private Logger log = LoggerFactory.getLogger(getClass());
+
+
     private final PermissionService permissionService;
 
     private final RoleMapper roleMapper;
 
+    private final UserRoleMapper userRoleMapper;
 
     public RolePermissionServiceImpl(PermissionService permissionService,
-                                     RoleMapper roleMapper) {
+                                     RoleMapper roleMapper,
+                                     UserRoleMapper userRoleMapper) {
         this.permissionService = permissionService;
         this.roleMapper = roleMapper;
+        this.userRoleMapper = userRoleMapper;
     }
 
 
@@ -88,27 +98,29 @@ public class RolePermissionServiceImpl extends ServiceImpl<RolePermissionMapper,
     }
 
     @Override
+    @Transactional
     public void grantRolePermission(RolePermissionParam rolePermissionParam) {
         Assert.notNull(rolePermissionParam, "rolePermissionParam must not be null");
 
         // 首先删除一个角色的所有权限接口
         revokeRolePermissionById(rolePermissionParam.getRoleId());
-        // 检查要分配的权限id是否存在,查询出所有的权限接口id;然后再判断接口列表是否在集合中
-        Set<Long> permissionIdSet = permissionService.getTraces()
+        // 检查要分配的权限id是否存在;需要去重
+        List<Long> permissionIdList = rolePermissionParam.getPermissionIds()
             .stream()
-            .map(Permission::getId)
-            .collect(Collectors.toSet());
-
-        if (!permissionIdSet.containsAll(rolePermissionParam.getPermissionIds())) {
+            .distinct()
+            .toList();
+        long totalCount = permissionService.count(new LambdaQueryWrapper<Permission>()
+            .in(Permission::getId, permissionIdList));
+        if (permissionIdList.size() != totalCount) {
+            log.error("The target permission ID list [{}] has non-existent IDs", rolePermissionParam);
             throw new NonExistsException("目标权限接口不存在!");
         }
         // todo 授权之前还必须检查目标权限必须是当前用户拥有的权限
-        // 授权,并且还要对目标用户上传的接口权限做去重
-        baseMapper.grantRolePermission(rolePermissionParam.getRoleId(),
-            rolePermissionParam.getPermissionIds().stream().distinct().collect(Collectors.toList()));
+        baseMapper.grantRolePermission(rolePermissionParam.getRoleId(), permissionIdList);
     }
 
     @Override
+    @Transactional
     public void revokeRolePermissionById(Long roleId) {
         Assert.notNull(roleId, "roleId must not be null");
 
@@ -121,6 +133,48 @@ public class RolePermissionServiceImpl extends ServiceImpl<RolePermissionMapper,
         Assert.notNull(pageQueryParam, "pageQueryParam must not be null");
 
         return baseMapper.rolePermissionPage(new Page<>(pageQueryParam.getCurrent(), pageQueryParam.getSize()), roleId);
+    }
+
+    @Override
+    @Transactional
+    public void grantUserRole(UserRoleParam userRoleParam) {
+        Assert.notNull(userRoleParam, "userRoleParam must not be null");
+
+        // 首先删除一个用户的所有角色
+        revokeUserRole(userRoleParam.getUserId());
+        // 首选去重
+        List<Long> roleIdList = userRoleParam.getRoleIdList()
+            .stream()
+            .distinct()
+            .toList();
+        // 检查要分配的角色是否存在
+        Long totalCount = roleMapper.selectCount(new LambdaQueryWrapper<Role>()
+            .in(Role::getId, roleIdList));
+
+        if (totalCount != roleIdList.size()) {
+            log.error("The target role ID list [{}] has non-existent IDs", roleIdList);
+            throw new NonExistsException("指定的角色不存在!");
+        }
+
+        // 为目标用户添加角色
+        baseMapper.grantUserRole(userRoleParam.getUserId(), roleIdList);
+
+    }
+
+    @Override
+    @Transactional
+    public void revokeUserRole(Long UUID) {
+        Assert.notNull(UUID, "UUID must not be null");
+
+        userRoleMapper.delete(new LambdaQueryWrapper<UserRole>().eq(UserRole::getUUID, UUID));
+    }
+
+    @Override
+    public IPage<Role> selectUserRoleByPage(Long UUID, PageQueryParam pageQueryParam) {
+        Assert.notNull(UUID, "UUID must not be null");
+        Assert.notNull(pageQueryParam, "pageQueryParam must not be null");
+
+        return baseMapper.userRolePage(new Page<>(pageQueryParam.getCurrent(), pageQueryParam.getSize()), UUID);
     }
 
 

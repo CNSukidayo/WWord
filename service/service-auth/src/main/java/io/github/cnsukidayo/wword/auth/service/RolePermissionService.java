@@ -8,6 +8,7 @@ import io.github.cnsukidayo.wword.model.entity.RolePermission;
 import io.github.cnsukidayo.wword.model.params.PageQueryParam;
 import io.github.cnsukidayo.wword.model.params.RoleParam;
 import io.github.cnsukidayo.wword.model.params.RolePermissionParam;
+import io.github.cnsukidayo.wword.model.params.UserRoleParam;
 
 /**
  * @author sukidayo
@@ -64,6 +65,31 @@ public interface RolePermissionService extends IService<RolePermission> {
      *
      * @param roleId         角色id不为null
      * @param pageQueryParam 分页查询参数不为null
+     * @return 返回分页查询的结果不为null
      */
     IPage<Permission> rolePermissionPage(Long roleId, PageQueryParam pageQueryParam);
+
+    /**
+     * 为一个用户分配多个角色
+     *
+     * @param userRoleParam 用户角色参数不为null
+     */
+    void grantUserRole(UserRoleParam userRoleParam);
+
+    /**
+     * 撤销一个用户的所有角色
+     *
+     * @param UUID 用户id不为null
+     */
+    void revokeUserRole(Long UUID);
+
+    /**
+     * 分页查询一个用户的所有角色
+     *
+     * @param UUID           用户id不为null
+     * @param pageQueryParam 分页查询参数不为null
+     * @return 查询的分页结果不为null
+     */
+    IPage<Role> selectUserRoleByPage(Long UUID, PageQueryParam pageQueryParam);
+
 }

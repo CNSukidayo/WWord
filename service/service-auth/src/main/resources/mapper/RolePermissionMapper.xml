@@ -22,7 +22,26 @@
                  INNER JOIN permission ON role_permission.permission_id = permission.id
         WHERE role_permission.role_id = #{roleId}
           AND role_permission.is_deleted = 0
+          and permission.is_deleted = 0
     </select>
 
+    <insert id="grantUserRole">
+        INSERT INTO user_role(uuid, role_id) values
+        <foreach collection="roleIdList" item="roleId" index="index" separator=",">
+            (#{UUID}, #{roleId})
+        </foreach>
+    </insert>
 
+    <select id="userRolePage" resultType="role">
+        SELECT role.id,
+               role.role_name,
+               role.priority,
+               role.create_time,
+               role.create_time
+        FROM user_role
+                 INNER JOIN role ON user_role.role_id = role.id
+        WHERE user_role.uuid = #{UUID}
+          AND user_role.is_deleted = 0
+          AND role.is_deleted = 0
+    </select>
 </mapper>

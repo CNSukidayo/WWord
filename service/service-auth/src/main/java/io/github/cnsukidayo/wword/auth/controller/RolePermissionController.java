@@ -7,6 +7,7 @@ import io.github.cnsukidayo.wword.model.dto.RoleDTO;
 import io.github.cnsukidayo.wword.model.params.PageQueryParam;
 import io.github.cnsukidayo.wword.model.params.RoleParam;
 import io.github.cnsukidayo.wword.model.params.RolePermissionParam;
+import io.github.cnsukidayo.wword.model.params.UserRoleParam;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -60,22 +61,38 @@ public class RolePermissionController {
     }
 
     @Operation(summary = "删除一个角色的所有接口权限")
-    @PostMapping("revoke_permission/{roleId}")
+    @GetMapping("revoke_permission/{roleId}")
     public void revokePermission(@PathVariable("roleId") Long roleId) {
         rolePermissionService.revokeRolePermissionById(roleId);
     }
 
     @Operation(summary = "分页查询一个角色的所有接口")
     @PostMapping("role_permission_page/{roleId}")
-    public IPage<PermissionDTO> rolePermissionPage(@PathVariable("roleId") Long roleId, @Valid @RequestBody PageQueryParam pageQueryParam) {
+    public IPage<PermissionDTO> rolePermissionPage(@PathVariable("roleId") Long roleId,
+                                                   @Valid @RequestBody PageQueryParam pageQueryParam) {
         return rolePermissionService.rolePermissionPage(roleId, pageQueryParam)
             .convert(permission -> new PermissionDTO().convertFrom(permission));
     }
 
     @Operation(summary = "为一个用户分配多个角色")
     @PostMapping("grant_role")
-    public void grantRole() {
+    public void grantRole(@Valid @RequestBody UserRoleParam userRoleParam) {
+        rolePermissionService.grantUserRole(userRoleParam);
+    }
 
+    @Operation(summary = "删除一个用户的所有角色")
+    @GetMapping("revoke_role/{uuid}")
+    public void revokeRole(@PathVariable("uuid") Long uuid) {
+        rolePermissionService.revokeUserRole(uuid);
+    }
+
+
+    @Operation(summary = "分页查询一个用户的所有角色")
+    @PostMapping("user_role_page/{uuid}")
+    public IPage<RoleDTO> userRolePage(@PathVariable("uuid") Long uuid,
+                                       @Valid @RequestBody PageQueryParam pageQueryParam) {
+        return rolePermissionService.selectUserRoleByPage(uuid, pageQueryParam)
+            .convert(role -> new RoleDTO().convertFrom(role));
     }
 
 }

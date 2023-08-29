@@ -45,7 +45,7 @@ mybatis-plus:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
     map-underscore-to-camel-case: true
   #  mapper-locations: classpath*:/mapper/**/*.xml
-  type-aliases-package: io.github.cnsukidayo.wword.model.pojo
+  type-aliases-package: io.github.cnsukidayo.wword.model.entity
 
 # knife4j的增强配置,不需要增强可以不配
 knife4j:

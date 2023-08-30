@@ -5,10 +5,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import io.github.cnsukidayo.wword.model.entity.Permission;
 import io.github.cnsukidayo.wword.model.entity.Role;
 import io.github.cnsukidayo.wword.model.entity.RolePermission;
-import io.github.cnsukidayo.wword.model.params.PageQueryParam;
-import io.github.cnsukidayo.wword.model.params.RoleParam;
-import io.github.cnsukidayo.wword.model.params.RolePermissionParam;
-import io.github.cnsukidayo.wword.model.params.UserRoleParam;
+import io.github.cnsukidayo.wword.model.entity.User;
+import io.github.cnsukidayo.wword.model.params.*;
 
 /**
  * @author sukidayo
@@ -91,5 +89,15 @@ public interface RolePermissionService extends IService<RolePermission> {
      * @return 查询的分页结果不为null
      */
     IPage<Role> selectUserRoleByPage(Long UUID, PageQueryParam pageQueryParam);
+
+    /**
+     * 将当前用户的权限克隆给一个目标用户<br>
+     * 并且当前接口也可以作为一个角色的接口权限,如果当前接口本身被定义给了一个角色<br>
+     * 则代表该角色可以传播它自身的所有权限!当前也包括传播克隆接口
+     *
+     * @param user          当前用户不能为null
+     * @param userRoleParam 待克隆的参数不能为null
+     */
+    void cloneBatch(User user, UserRoleParam userRoleParam);
 
 }

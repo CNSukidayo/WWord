@@ -37,4 +37,6 @@ public interface PermissionService extends IService<Permission> {
      * @param permissionParam 接口更新信息不为null
      */
     void update(Long permissionId, PermissionParam permissionParam);
+
+
 }

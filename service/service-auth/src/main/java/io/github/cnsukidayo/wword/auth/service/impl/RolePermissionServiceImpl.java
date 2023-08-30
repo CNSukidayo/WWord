@@ -11,21 +11,19 @@ import io.github.cnsukidayo.wword.auth.service.PermissionService;
 import io.github.cnsukidayo.wword.auth.service.RolePermissionService;
 import io.github.cnsukidayo.wword.common.exception.AlreadyExistsException;
 import io.github.cnsukidayo.wword.common.exception.NonExistsException;
-import io.github.cnsukidayo.wword.model.entity.Permission;
-import io.github.cnsukidayo.wword.model.entity.Role;
-import io.github.cnsukidayo.wword.model.entity.RolePermission;
-import io.github.cnsukidayo.wword.model.entity.UserRole;
-import io.github.cnsukidayo.wword.model.params.PageQueryParam;
-import io.github.cnsukidayo.wword.model.params.RoleParam;
-import io.github.cnsukidayo.wword.model.params.RolePermissionParam;
-import io.github.cnsukidayo.wword.model.params.UserRoleParam;
+import io.github.cnsukidayo.wword.model.entity.*;
+import io.github.cnsukidayo.wword.model.params.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author sukidayo
@@ -175,6 +173,38 @@ public class RolePermissionServiceImpl extends ServiceImpl<RolePermissionMapper,
         Assert.notNull(pageQueryParam, "pageQueryParam must not be null");
 
         return baseMapper.userRolePage(new Page<>(pageQueryParam.getCurrent(), pageQueryParam.getSize()), UUID);
+    }
+
+    @Override
+    @Transactional
+    public void cloneBatch(User user, UserRoleParam userRoleParam) {
+        Assert.notNull(user, "user must not be null");
+        Assert.notNull(userRoleParam, "userRoleParam must not be null");
+
+        // 首先查询当前用户是否有要克隆的所有角色
+        Set<Long> roleIdList = userRoleMapper.selectList(new LambdaQueryWrapper<UserRole>().eq(UserRole::getUUID, user.getUUID()))
+            .stream()
+            .map(UserRole::getRoleId)
+            .collect(Collectors.toSet());
+
+        // 去重
+        Set<Long> toCloneRoleIdList = new HashSet<>(userRoleParam.getRoleIdList());
+
+        if (!roleIdList.containsAll(toCloneRoleIdList)) {
+            log.error("The target role ID list [{}] has user's role non-existent IDs", toCloneRoleIdList);
+        }
+
+        // 查询目标用户当前拥有的角色
+        Set<Long> targetUserRoleIdList = userRoleMapper.selectList(new LambdaQueryWrapper<UserRole>().eq(UserRole::getUUID, userRoleParam.getUserId()))
+            .stream()
+            .map(UserRole::getRoleId)
+            .collect(Collectors.toSet());
+
+        toCloneRoleIdList.removeAll(targetUserRoleIdList);
+        // 克隆角色
+        userRoleParam.setRoleIdList(new ArrayList<>(targetUserRoleIdList));
+        grantUserRole(userRoleParam);
+
     }
 
 

@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import io.github.cnsukidayo.wword.auth.service.RolePermissionService;
 import io.github.cnsukidayo.wword.model.dto.PermissionDTO;
 import io.github.cnsukidayo.wword.model.dto.RoleDTO;
+import io.github.cnsukidayo.wword.model.entity.User;
 import io.github.cnsukidayo.wword.model.params.PageQueryParam;
 import io.github.cnsukidayo.wword.model.params.RoleParam;
 import io.github.cnsukidayo.wword.model.params.RolePermissionParam;
@@ -93,6 +94,14 @@ public class RolePermissionController {
                                        @Valid @RequestBody PageQueryParam pageQueryParam) {
         return rolePermissionService.selectUserRoleByPage(uuid, pageQueryParam)
             .convert(role -> new RoleDTO().convertFrom(role));
+    }
+
+    @Operation(summary = "将当前用户的权限克隆给一个用户")
+    @PostMapping("clone_batch")
+    public void cloneBatch(User user,
+                           @Valid @RequestBody UserRoleParam userRoleParam) {
+        // todo 功能待完善
+        rolePermissionService.cloneBatch(user, userRoleParam);
     }
 
 }

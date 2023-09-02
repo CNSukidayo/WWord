@@ -20,12 +20,13 @@ public class RequestHandlerTest {
     public void requestTest() throws IOException {
         InputStream inputStream = this.getClass().getClassLoader().getResource("cert/publicKey.cer").openStream();
         SSLSocketFactoryCreate sslSocketFactoryCreate = SSLSocketFactoryCreate.newInstance(inputStream);
+        Gson gson = new Gson();
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
                 .hostnameVerifier(new OkHttpHostnameVerifier())
                 .sslSocketFactory(sslSocketFactoryCreate.getSslSocketFactory(),sslSocketFactoryCreate.getX509TrustManager())
-                .addInterceptor(new TokenCheckOkHttpInterceptor())
+                .addInterceptor(new TokenCheckOkHttpInterceptor(gson))
                 .build();
-        Gson gson = new Gson();
+
         Request request = new Request.Builder()
                 .url("https://localhost:8200/api/u/categories/ping")
                 .post(RequestBody.create(MediaType.parse(org.springframework.http.MediaType.APPLICATION_JSON_VALUE),""))

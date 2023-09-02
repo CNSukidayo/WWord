@@ -1,13 +1,24 @@
 package io.github.cnsukidayo.wword.common.request;
 
-import io.github.cnsukidayo.wword.common.request.implement.core.UserRequestUtil;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import io.github.cnsukidayo.wword.model.exception.ResultCodeEnum;
+import io.github.cnsukidayo.wword.model.support.BaseResponse;
 import io.github.cnsukidayo.wword.model.support.WWordConst;
 import io.github.cnsukidayo.wword.model.token.AuthToken;
-import okhttp3.Interceptor;
-import okhttp3.Request;
-import okhttp3.Response;
+import io.github.cnsukidayo.wword.model.vo.ErrorVo;
+import okhttp3.*;
+import okio.Buffer;
+import okio.BufferedSource;
+import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.nio.charset.UnsupportedCharsetException;
 import java.util.Optional;
 
 /**
@@ -19,6 +30,15 @@ import java.util.Optional;
  */
 public final class TokenCheckOkHttpInterceptor implements Interceptor {
 
+    private final Gson gson;
+
+    private Logger logger = LoggerFactory.getLogger(getClass());
+
+    public TokenCheckOkHttpInterceptor(Gson gson) {
+        this.gson = gson;
+    }
+
+
     @Override
     public Response intercept(Chain chain) throws IOException {
         // 获取当前的请求体
@@ -27,12 +47,62 @@ public final class TokenCheckOkHttpInterceptor implements Interceptor {
         AuthToken authToken = RequestRegister.getAuthToken();
         request = request.newBuilder().header(WWordConst.API_ACCESS_KEY_HEADER_NAME, Optional.ofNullable(authToken.getAccessToken()).orElse("")).build();
         Response response = chain.proceed(request);
-        if (response.code() == 401) {
-            // token过期,尝试刷新token
-            UserRequestUtil.refresh();
-            // 重新请求当前方法(会再走一次拦截器,重新设置token等内容),拿到返回值进行返回
-            return RequestRegister.getRequestHandler().execute(response.request());
+        // 如果请求成功则有数据
+        String body;
+        try {
+            body = getResponseBody(response.body());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        BaseResponse baseResponse = gson.fromJson(body, BaseResponse.class);
+        // 首先判断有没有异常
+        if (!baseResponse.getStatus().equals(200)) {
+            // 如果有异常则将其转为ErrorVO,判断status的值是多少
+            Type type = new TypeToken<BaseResponse<ErrorVo>>() {
+            }.getType();
+            BaseResponse<ErrorVo> errorVoBaseResponse = gson.fromJson(body, type);
+            // 如果产生错误则判断是不是token过期了
+            if (errorVoBaseResponse.getData().getStatus().equals(ResultCodeEnum.LOGIN_FAIL.getCode())) {
+                // token过期,尝试刷新token.如果刷新token这一步失败了会直接在BadResponseOkHttpInterceptor被拦截
+//                UserRequestUtil.refresh();
+                RequestHandler requestHandler = RequestRegister.getRequestHandler();
+                Request refreshToken = new Request.Builder()
+                    .url(requestHandler.createPrefixUrl("api/u/user/refresh/57a9b1774ed84954a4988b3bbd9edfe9"))
+                    .post(requestHandler.jsonBody(null))
+                    .build();
+                // 只要能走到这一步就代表刷新成功了
+                Response token = requestHandler.execute(refreshToken);
+                String tokenBody = token.body().string();
+                Type tokenType = new TypeToken<BaseResponse<AuthToken>>() {
+                }.getType();
+                BaseResponse<AuthToken> tokenBaseResponse = gson.fromJson(tokenBody, tokenType);
+                RequestRegister.setAuthToken(tokenBaseResponse.getData());
+                // 重新请求当前方法(会再走一次拦截器,重新设置token等内容),拿到返回值进行返回
+                return RequestRegister.getRequestHandler().execute(response.request());
+            }
         }
         return response;
     }
+
+    private String getResponseBody(ResponseBody responseBody) throws Exception {
+        BufferedSource source = responseBody.source();
+        source.request(Long.MAX_VALUE);
+        Buffer buffer = source.buffer();
+
+        Charset charset = StandardCharsets.UTF_8;
+        MediaType contentType = responseBody.contentType();
+        if (contentType != null) {
+            try {
+                charset = contentType.charset(StandardCharsets.UTF_8);
+            } catch (UnsupportedCharsetException e) {
+                logger.error("将http数据写入流异常,异常原因：{}", ExceptionUtils.getStackTrace(e));
+            }
+        }
+
+        if (responseBody.contentLength() != 0) {
+            return buffer.clone().readString(charset);
+        }
+        return null;
+    }
+
 }

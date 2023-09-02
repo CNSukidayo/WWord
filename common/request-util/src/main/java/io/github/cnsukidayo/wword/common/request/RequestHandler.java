@@ -31,7 +31,6 @@ public class RequestHandler {
         this.okHttpClient = okHttpClient;
         this.gson = gson;
         this.commonExceptionHandler = commonExceptionHandler;
-        this.okHttpClient.interceptors().add(0, new BadResponseOkHttpInterceptor(gson));
     }
 
 
@@ -148,6 +147,7 @@ public class RequestHandler {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        System.out.println(body);
         return gson.fromJson(body, type);
     }
 

@@ -3,6 +3,7 @@ package io.github.cnsukidayo.wword.auth.controller;
 import io.github.cnsukidayo.wword.auth.service.PermissionService;
 import io.github.cnsukidayo.wword.common.exception.BadRequestException;
 import io.github.cnsukidayo.wword.model.entity.Permission;
+import io.github.cnsukidayo.wword.model.exception.ResultCodeEnum;
 import io.github.cnsukidayo.wword.model.params.PermissionParam;
 import io.github.cnsukidayo.wword.model.vo.PermissionVO;
 import io.swagger.v3.oas.annotations.Operation;
@@ -31,7 +32,7 @@ public class PermissionController {
     }
 
     @Operation(summary = "跟踪一个接口")
-    @PostMapping("trace")
+    @PostMapping(value = "trace")
     public void trace(@Valid @RequestBody PermissionParam permissionParam) {
         Permission permission = permissionParam.convertTo();
         permissionService.save(permission);
@@ -47,7 +48,7 @@ public class PermissionController {
     @PostMapping("untrace")
     public void untrace(@Parameter(description = "待取消跟踪的接口的id") @RequestBody List<Long> permissionIdList) {
         if (CollectionUtils.isEmpty(permissionIdList)) {
-            throw new BadRequestException("待取消跟踪的接口的id列表不能为空!");
+            throw new BadRequestException(ResultCodeEnum.UNTRACE_ID_LIST_NOT_EMPTY);
         }
         permissionService.removeBatchByIds(permissionIdList);
     }

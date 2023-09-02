@@ -9,10 +9,13 @@ import io.github.cnsukidayo.wword.auth.dao.RolePermissionMapper;
 import io.github.cnsukidayo.wword.auth.dao.UserRoleMapper;
 import io.github.cnsukidayo.wword.auth.service.PermissionService;
 import io.github.cnsukidayo.wword.auth.service.RolePermissionService;
-import io.github.cnsukidayo.wword.common.exception.AlreadyExistsException;
-import io.github.cnsukidayo.wword.common.exception.NonExistsException;
+import io.github.cnsukidayo.wword.common.exception.BadRequestException;
 import io.github.cnsukidayo.wword.model.entity.*;
-import io.github.cnsukidayo.wword.model.params.*;
+import io.github.cnsukidayo.wword.model.exception.ResultCodeEnum;
+import io.github.cnsukidayo.wword.model.params.PageQueryParam;
+import io.github.cnsukidayo.wword.model.params.RoleParam;
+import io.github.cnsukidayo.wword.model.params.RolePermissionParam;
+import io.github.cnsukidayo.wword.model.params.UserRoleParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -57,7 +60,7 @@ public class RolePermissionServiceImpl extends ServiceImpl<RolePermissionMapper,
 
         // 首先验证数据库中是否存在该角色
         if (roleMapper.exists(new LambdaQueryWrapper<Role>().eq(Role::getRoleName, roleParam.getRoleName()))) {
-            throw new AlreadyExistsException("目标角色已经存在,请勿重复添加!");
+            throw new BadRequestException(ResultCodeEnum.ALREADY_EXIST, "目标角色已经存在请勿重复添加!");
         }
 
         Role role = roleParam.convertTo();
@@ -111,7 +114,7 @@ public class RolePermissionServiceImpl extends ServiceImpl<RolePermissionMapper,
             .in(Permission::getId, permissionIdList));
         if (permissionIdList.size() != totalCount) {
             log.error("The target permission ID list [{}] has non-existent IDs", rolePermissionParam);
-            throw new NonExistsException("目标权限接口不存在!");
+            throw new BadRequestException(ResultCodeEnum.NOT_EXISTS, "目标权限接口不存在!");
         }
         // todo 授权之前还必须检查目标权限必须是当前用户拥有的权限
         baseMapper.grantRolePermission(rolePermissionParam.getRoleId(), permissionIdList);
@@ -151,7 +154,7 @@ public class RolePermissionServiceImpl extends ServiceImpl<RolePermissionMapper,
 
         if (totalCount != roleIdList.size()) {
             log.error("The target role ID list [{}] has non-existent IDs", roleIdList);
-            throw new NonExistsException("指定的角色不存在!");
+            throw new BadRequestException(ResultCodeEnum.NOT_EXISTS,"指定的角色不存在!");
         }
 
         // 为目标用户添加角色

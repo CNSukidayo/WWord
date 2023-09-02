@@ -15,13 +15,10 @@ public class ErrorVo {
     @Schema(description = "状态码")
     private Integer status;
 
-    @Schema(description = "错误信息")
+    @Schema(description = "错误信息,造成错误的详细原因")
     private String error;
 
-    @Schema(description = "本次请求的路径")
-    private String path;
-
-    @Schema(description = "http错误信息")
+    @Schema(description = "提示给前端的错误信息")
     private String message;
 
     @Schema(description = "错误堆栈信息")
@@ -52,14 +49,6 @@ public class ErrorVo {
 
     public void setError(String error) {
         this.error = error;
-    }
-
-    public String getPath() {
-        return path;
-    }
-
-    public void setPath(String path) {
-        this.path = path;
     }
 
     public String getMessage() {

@@ -42,29 +42,39 @@ public class WWordMvcConfiguration implements WebMvcConfigurer {
     @Override
     public void extendMessageConverters(List<HttpMessageConverter<?>> converters) {
         converters.stream()
-                .filter(c -> c instanceof MappingJackson2HttpMessageConverter)
-                .findFirst()
-                .ifPresent(converter -> {
-                    MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter =
-                            (MappingJackson2HttpMessageConverter) converter;
-                    // 构建ObjectMapper的对象
-                    Jackson2ObjectMapperBuilder builder = Jackson2ObjectMapperBuilder.json();
-                    // Json组件模块
-                    JavaTimeModule module = new JavaTimeModule();
-                    // 添加自定义解析器
-                    module.addSerializer(LocalDate.class, new LocalDateSerializer(DateTimeFormatter.ISO_LOCAL_DATE));
-                    module.addSerializer(LocalDateTime.class, new LocalDateTimeSerializer(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
-                    ObjectMapper objectMapper = builder.modules(module).build();
-                    mappingJackson2HttpMessageConverter.setObjectMapper(objectMapper);
-                });
+            .filter(c -> c instanceof MappingJackson2HttpMessageConverter)
+            .findFirst()
+            .ifPresent(converter -> {
+                MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter =
+                    (MappingJackson2HttpMessageConverter) converter;
+                // 构建ObjectMapper的对象
+                Jackson2ObjectMapperBuilder builder = Jackson2ObjectMapperBuilder.json();
+                // Json组件模块
+                JavaTimeModule module = new JavaTimeModule();
+                // 添加自定义解析器
+                module.addSerializer(LocalDate.class, new LocalDateSerializer(DateTimeFormatter.ISO_LOCAL_DATE));
+                module.addSerializer(LocalDateTime.class, new LocalDateTimeSerializer(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+                ObjectMapper objectMapper = builder.modules(module).build();
+                mappingJackson2HttpMessageConverter.setObjectMapper(objectMapper);
+            });
     }
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         if (StringUtils.hasText(wWordProperties.getResourceLocations())) {
             registry.addResourceHandler("/static/**")
-                    .addResourceLocations(FILE_PROTOCOL + wWordProperties.getResourceLocations());
+                .addResourceLocations(FILE_PROTOCOL + wWordProperties.getResourceLocations());
         }
+        registry.addResourceHandler("favicon.ico")
+            .addResourceLocations("classpath:/static/");
+        // 注册swagger相关的映射信息
+        registry.addResourceHandler("swagger-ui.html")
+            .addResourceLocations("classpath:/META-INF/resources/");
+        registry.addResourceHandler("doc.html")
+            .addResourceLocations("classpath:/META-INF/resources/");
+        registry.addResourceHandler("/webjars/**")
+            .addResourceLocations("classpath:/META-INF/resources/webjars/");
+
     }
 
 }

@@ -22,6 +22,7 @@ spring:
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
+    throw-exception-if-no-handler-found: true
   data:
     redis:
       host: localhost
@@ -34,6 +35,9 @@ spring:
     multipart:
       max-file-size: 1024MB
       max-request-size: 1024MB
+  web:
+    resources:
+      add-mappings: false
 
 logging:
   file:
@@ -52,6 +56,7 @@ knife4j:
   enable: true
   setting:
     language: zh_cn
+  production: false
 
 
 wword:

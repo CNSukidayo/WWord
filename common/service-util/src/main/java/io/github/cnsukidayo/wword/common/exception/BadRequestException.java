@@ -1,22 +1,31 @@
 package io.github.cnsukidayo.wword.common.exception;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
+import io.github.cnsukidayo.wword.model.exception.ResultCodeEnum;
 
 public class BadRequestException extends AbstractWWordException {
 
-    private HttpStatusCode httpStatusCode;
+    private final Integer status;
 
-    public BadRequestException(String message) {
-        super(message);
+    public BadRequestException(ResultCodeEnum resultCodeEnum) {
+        this(resultCodeEnum.getCode(), resultCodeEnum.getMessage());
     }
 
-    public BadRequestException(String message, Throwable cause) {
+    public BadRequestException(ResultCodeEnum resultCodeEnum, String message) {
+        this(resultCodeEnum.getCode(), message);
+    }
+
+    public BadRequestException(Integer status, String message) {
+        super(message);
+        this.status = status;
+    }
+
+    public BadRequestException(Integer status, String message, Throwable cause) {
         super(message, cause);
+        this.status = status;
     }
 
     @Override
-    public HttpStatus getStatus() {
-        return HttpStatus.BAD_REQUEST;
+    public Integer getStatus() {
+        return status;
     }
 }

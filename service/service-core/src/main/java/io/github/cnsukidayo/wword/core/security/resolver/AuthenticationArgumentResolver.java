@@ -1,9 +1,10 @@
 package io.github.cnsukidayo.wword.core.security.resolver;
 
-import io.github.cnsukidayo.wword.common.exception.AuthenticationException;
+import io.github.cnsukidayo.wword.common.exception.BadRequestException;
 import io.github.cnsukidayo.wword.common.security.authentication.Authentication;
 import io.github.cnsukidayo.wword.common.security.context.SecurityContextHolder;
 import io.github.cnsukidayo.wword.model.entity.User;
+import io.github.cnsukidayo.wword.model.exception.ResultCodeEnum;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.core.MethodParameter;
@@ -48,7 +49,7 @@ public class AuthenticationArgumentResolver implements HandlerMethodArgumentReso
 
         Authentication authentication =
                 Optional.ofNullable(SecurityContextHolder.getContext().getAuthentication())
-                        .orElseThrow(() -> new AuthenticationException("你还没有登陆"));
+                        .orElseThrow(() -> new BadRequestException(ResultCodeEnum.LOGIN_FAIL));
 
         if (Authentication.class.isAssignableFrom(parameterType)) {
             return authentication;

@@ -3,9 +3,7 @@ package io.github.cnsukidayo.wword.core.service.impl;
 import cn.hutool.crypto.digest.BCrypt;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import io.github.cnsukidayo.wword.common.exception.AlreadyExistsException;
 import io.github.cnsukidayo.wword.common.exception.BadRequestException;
-import io.github.cnsukidayo.wword.common.exception.NonExistsException;
 import io.github.cnsukidayo.wword.common.security.authentication.Authentication;
 import io.github.cnsukidayo.wword.common.security.context.SecurityContextHolder;
 import io.github.cnsukidayo.wword.common.utils.SecurityUtils;
@@ -16,6 +14,7 @@ import io.github.cnsukidayo.wword.core.service.UniversityService;
 import io.github.cnsukidayo.wword.core.service.UserService;
 import io.github.cnsukidayo.wword.model.entity.User;
 import io.github.cnsukidayo.wword.model.enums.LoginType;
+import io.github.cnsukidayo.wword.model.exception.ResultCodeEnum;
 import io.github.cnsukidayo.wword.model.params.LoginParam;
 import io.github.cnsukidayo.wword.model.params.UpdatePasswordParam;
 import io.github.cnsukidayo.wword.model.params.UpdateUserParam;
@@ -61,11 +60,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         Assert.notNull(userRegisterParam, "UserRegisterParam must be null");
         // 参数校验总是在最先执行的
         if (!userRegisterParam.getPassword().equals(userRegisterParam.getConfirmPassword()))
-            throw new BadRequestException("两次输入密码不一致");
+            throw new BadRequestException(ResultCodeEnum.PASSWORD_INCONSISTENT);
         Optional.ofNullable(baseMapper.selectOne(new LambdaQueryWrapper<User>().eq(User::getAccount, userRegisterParam.getAccount())))
-                .ifPresent(user -> {
-                    throw new AlreadyExistsException("用户名已存在!");
-                });
+            .ifPresent(user -> {
+                throw new BadRequestException(ResultCodeEnum.ALREADY_EXIST, "用户名已经存在!");
+            });
         User user = userRegisterParam.convertTo();
         // 加密密码
         user.setPassword(BCrypt.hashpw(userRegisterParam.getPassword()));
@@ -79,19 +78,21 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         Assert.notNull(loginParam, "LoginParam must not be null");
         if (SecurityContextHolder.getContext().isAuthenticated()) {
             // If the user has been logged in
-            throw new BadRequestException("您已登录，请不要重复登录");
+            throw new BadRequestException(ResultCodeEnum.LOGIN_FAIL.getCode(),
+                "您已登录,请不要重复登录");
         }
 
         User user = baseMapper.selectOne(new LambdaQueryWrapper<User>().eq(User::getAccount, loginParam.getAccount()));
         if (user == null || !BCrypt.checkpw(loginParam.getPassword(), user.getPassword())) {
-            throw new BadRequestException("用户名或者密码不正确");
+            throw new BadRequestException(ResultCodeEnum.LOGIN_FAIL.getCode(),
+                "用户名或者密码不正确");
         }
         // 记录登陆事件
         eventPublisher.publishEvent(
-                new LoginEvent(this,
-                        user.getUUID(),
-                        LoginType.LOGIN_IN,
-                        ServletUtils.getCurrentRequest().map(request -> request.getHeader(HttpHeaders.USER_AGENT)).orElse("")));
+            new LoginEvent(this,
+                user.getUUID(),
+                LoginType.LOGIN_IN,
+                ServletUtils.getCurrentRequest().map(request -> request.getHeader(HttpHeaders.USER_AGENT)).orElse("")));
         return buildAuthToken(user);
     }
 
@@ -100,20 +101,20 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         Assert.notNull(user, "user must not be null");
         Assert.notNull(updatePasswordParam, "updatePasswordParam must not be null");
         if (!updatePasswordParam.getNewPassword().equals(updatePasswordParam.getConfirmNewPassword()))
-            throw new BadRequestException("两次输入密码不一致");
+            throw new BadRequestException(ResultCodeEnum.PASSWORD_INCONSISTENT);
 
         if (!BCrypt.checkpw(updatePasswordParam.getOldPassword(), user.getPassword()))
-            throw new BadRequestException("旧密码错误");
+            throw new BadRequestException(ResultCodeEnum.OLD_PASSWORD_ERROR);
         // 加密密码
         user.setPassword(BCrypt.hashpw(updatePasswordParam.getNewPassword()));
         // 更新
         baseMapper.updateById(user);
         // 记录密码更新事件
         eventPublisher.publishEvent(
-                new LoginEvent(this,
-                        user.getUUID(),
-                        LoginType.PASSWORD_UPDATE,
-                        ServletUtils.getCurrentRequest().map(request -> request.getHeader(HttpHeaders.USER_AGENT)).orElse("")));
+            new LoginEvent(this,
+                user.getUUID(),
+                LoginType.PASSWORD_UPDATE,
+                ServletUtils.getCurrentRequest().map(request -> request.getHeader(HttpHeaders.USER_AGENT)).orElse("")));
     }
 
     @Override
@@ -122,7 +123,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         // 从缓存中得到用户的refresh_token,如果找不到说明refresh_token已经过期,用户很长时间没有登陆了,需要用户重新登陆
         String userID = redisTemplate.opsForValue().get(SecurityUtils.buildTokenRefreshKey(refreshToken));
         if (userID == null) {
-            throw new BadRequestException("登录状态已失效，请重新登录").setErrorData(refreshToken);
+            throw new BadRequestException(ResultCodeEnum.LOGIN_STATE_INVALID);
         }
         // 通过refresh_token找到用户的ID,通过用户的ID找到用户的access_token 然后一并清除用户的access_token和refresh_token
         User user = getById(Integer.valueOf(userID));
@@ -144,7 +145,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         Assert.notNull(user, "User must not be null");
         // 判断学校是否是数据库中存在的学校
         if (StringUtils.hasText(updateUserParam.getUniversity()) && !universityService.hasUniversity(updateUserParam.getUniversity())) {
-            throw new NonExistsException("学校:" + updateUserParam.getUniversity() + "不存在!");
+            throw new BadRequestException(ResultCodeEnum.NOT_EXISTS.getCode(),
+                "学校:" + updateUserParam.getUniversity() + "不存在!");
         }
         // 为null的字段mybatis默认是不会更新的
         User update = updateUserParam.convertTo();
@@ -158,7 +160,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if (authentication == null) {
-            throw new BadRequestException("您尚未登录,因此无法注销");
+            throw new BadRequestException(ResultCodeEnum.NO_LOGIN);
         }
 
         // 得到当前的用户
@@ -176,10 +178,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         });
         // 记录退出登陆事件
         eventPublisher.publishEvent(
-                new LoginEvent(this,
-                        user.getUUID(),
-                        LoginType.LOGIN_OUT,
-                        ServletUtils.getCurrentRequest().map(request -> request.getHeader(HttpHeaders.USER_AGENT)).orElse("")));
+            new LoginEvent(this,
+                user.getUUID(),
+                LoginType.LOGIN_OUT,
+                ServletUtils.getCurrentRequest().map(request -> request.getHeader(HttpHeaders.USER_AGENT)).orElse("")));
     }
 
 
@@ -202,15 +204,15 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
         // 缓存这些令牌仅仅是为了清除令牌
         redisTemplate.opsForValue().set(SecurityUtils.buildAccessTokenKey(user), token.getAccessToken(),
-                WWordConst.ACCESS_TOKEN_EXPIRED_SECONDS, TimeUnit.SECONDS);
+            WWordConst.ACCESS_TOKEN_EXPIRED_SECONDS, TimeUnit.SECONDS);
         redisTemplate.opsForValue().set(SecurityUtils.buildRefreshTokenKey(user), token.getRefreshToken(),
-                WWordConst.REFRESH_TOKEN_EXPIRED_DAYS, TimeUnit.DAYS);
+            WWordConst.REFRESH_TOKEN_EXPIRED_DAYS, TimeUnit.DAYS);
 
         // 缓存这些令牌,通过令牌获取用户的ID
         redisTemplate.opsForValue().set(SecurityUtils.buildTokenAccessKey(token.getAccessToken()), String.valueOf(user.getUUID()),
-                WWordConst.ACCESS_TOKEN_EXPIRED_SECONDS, TimeUnit.SECONDS);
+            WWordConst.ACCESS_TOKEN_EXPIRED_SECONDS, TimeUnit.SECONDS);
         redisTemplate.opsForValue().set(SecurityUtils.buildTokenRefreshKey(token.getRefreshToken()), String.valueOf(user.getUUID()),
-                WWordConst.REFRESH_TOKEN_EXPIRED_DAYS, TimeUnit.DAYS);
+            WWordConst.REFRESH_TOKEN_EXPIRED_DAYS, TimeUnit.DAYS);
 
         return token;
     }

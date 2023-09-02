@@ -8,14 +8,13 @@ import io.github.cnsukidayo.wword.admin.dao.WordIdMapper;
 import io.github.cnsukidayo.wword.admin.dao.WordMapper;
 import io.github.cnsukidayo.wword.admin.service.WordHandleService;
 import io.github.cnsukidayo.wword.admin.service.WordStructureService;
-import io.github.cnsukidayo.wword.common.exception.FileOperationException;
-import io.github.cnsukidayo.wword.common.exception.IllegalStateException;
-import io.github.cnsukidayo.wword.common.exception.NonExistsException;
+import io.github.cnsukidayo.wword.common.exception.BadRequestException;
 import io.github.cnsukidayo.wword.model.bo.JsonWordBO;
 import io.github.cnsukidayo.wword.model.entity.Divide;
 import io.github.cnsukidayo.wword.model.entity.Word;
 import io.github.cnsukidayo.wword.model.entity.WordId;
 import io.github.cnsukidayo.wword.model.entity.WordStructure;
+import io.github.cnsukidayo.wword.model.exception.ResultCodeEnum;
 import io.github.cnsukidayo.wword.model.params.AddOrUpdateWordParam;
 import io.github.cnsukidayo.wword.model.params.UpLoadWordJson;
 import org.slf4j.Logger;
@@ -166,17 +165,19 @@ public class WordHandleServiceImpl implements WordHandleService {
 
         // 先获得单词对应的父划分,划分必须是父划分不能是子划分
         Divide divide = Optional.ofNullable(divideMapper.selectById(upLoadWordJson.getDivideId()))
-                .filter(test -> test.getParentId() == -1)
-                .orElseThrow(() -> new NonExistsException("指定划分不存在!"));
+            .filter(test -> test.getParentId() == -1)
+            .orElseThrow(() -> new BadRequestException(ResultCodeEnum.NOT_EXISTS.getCode(),
+                "指定划分不存在!"));
         // 得到划分对应的id
         Long divideId = divide.getId();
         // 得到划分所对应的语种id
         Long languageId = divide.getLanguageId();
         // 根据语种id得到单词对应的结构体信息,并将其封装为K-V形式.Key是属性名称,value是属性名称对应的id
         Map<String, Long> wordStructureMap = Optional.ofNullable(wordStructureService.get(languageId))
-                .orElseThrow(() -> new NonExistsException("当前语种还没有定义结构体信息!"))
-                .stream()
-                .collect(Collectors.toMap(WordStructure::getField, WordStructure::getId));
+            .orElseThrow(() -> new BadRequestException(ResultCodeEnum.NOT_EXISTS.getCode()
+                , "当前语种还没有定义结构体信息!"))
+            .stream()
+            .collect(Collectors.toMap(WordStructure::getField, WordStructure::getId));
         // 得到当前expand字段对应的id
         hasFields(wordStructureMap, EXPAND, "wordOrigin");
         Long expandId = wordStructureMap.get(EXPAND);
@@ -186,8 +187,8 @@ public class WordHandleServiceImpl implements WordHandleService {
         StringBuilder copy = new StringBuilder();
         // 读取单词,必须使用拷贝流
         try (BufferedReader reader = new BufferedReader(
-                new InputStreamReader(
-                        new BufferedInputStream(jsonInputStream), StandardCharsets.UTF_8))) {
+            new InputStreamReader(
+                new BufferedInputStream(jsonInputStream), StandardCharsets.UTF_8))) {
             // 循环读取
             String signalJson;
             while (null != (signalJson = reader.readLine())) {
@@ -222,10 +223,10 @@ public class WordHandleServiceImpl implements WordHandleService {
                 // 封装单词相关测试
                 try {
                     for (JsonWordBO.Content.Word.InternalContent.Exam exam :
-                            Optional.ofNullable(jsonWordBO.getContent()
-                                    .getWord()
-                                    .getContent()
-                                    .getExam()).orElseGet(() -> new JsonWordBO.Content.Word.InternalContent.Exam[0])) {
+                        Optional.ofNullable(jsonWordBO.getContent()
+                            .getWord()
+                            .getContent()
+                            .getExam()).orElseGet(() -> new JsonWordBO.Content.Word.InternalContent.Exam[0])) {
                         Long groupId;
                         // 得到测试的问题
                         tempWord = createWord(wordIdValue);
@@ -251,7 +252,7 @@ public class WordHandleServiceImpl implements WordHandleService {
                         try {
                             // 得到所有的选项
                             for (JsonWordBO.Content.Word.InternalContent.Exam.Choice choice :
-                                    Optional.ofNullable(exam.getChoices()).orElseGet(() -> new JsonWordBO.Content.Word.InternalContent.Exam.Choice[0])) {
+                                Optional.ofNullable(exam.getChoices()).orElseGet(() -> new JsonWordBO.Content.Word.InternalContent.Exam.Choice[0])) {
                                 // 得到选项对应的索引,选项索引和测试问题之间是绑定的
                                 tempWord = createWord(wordIdValue);
                                 tempWord.setGroupId(groupId);
@@ -278,11 +279,11 @@ public class WordHandleServiceImpl implements WordHandleService {
                 try {
                     // 封装例句相关内容
                     for (JsonWordBO.Content.Word.InternalContent.Sentence.InternalSentence internalSentence :
-                            Optional.ofNullable(jsonWordBO.getContent()
-                                    .getWord()
-                                    .getContent()
-                                    .getSentence()
-                                    .getSentences()).orElseGet(() -> new JsonWordBO.Content.Word.InternalContent.Sentence.InternalSentence[0])) {
+                        Optional.ofNullable(jsonWordBO.getContent()
+                            .getWord()
+                            .getContent()
+                            .getSentence()
+                            .getSentences()).orElseGet(() -> new JsonWordBO.Content.Word.InternalContent.Sentence.InternalSentence[0])) {
                         // 得到例句的英文
                         tempWord = createWord(wordIdValue);
                         String sentenceValue = internalSentence.getsContent();
@@ -305,11 +306,11 @@ public class WordHandleServiceImpl implements WordHandleService {
                 try {
                     // 封装短语相关内容
                     for (JsonWordBO.Content.Word.InternalContent.Phrase.InternalPhrase phrase :
-                            Optional.ofNullable(jsonWordBO.getContent()
-                                    .getWord()
-                                    .getContent()
-                                    .getPhrase()
-                                    .getPhrases()).orElseGet(() -> new JsonWordBO.Content.Word.InternalContent.Phrase.InternalPhrase[0])) {
+                        Optional.ofNullable(jsonWordBO.getContent()
+                            .getWord()
+                            .getContent()
+                            .getPhrase()
+                            .getPhrases()).orElseGet(() -> new JsonWordBO.Content.Word.InternalContent.Phrase.InternalPhrase[0])) {
                         // 得到短语的英文
                         tempWord = createWord(wordIdValue);
                         String phraseValue = phrase.getpContent();
@@ -333,7 +334,7 @@ public class WordHandleServiceImpl implements WordHandleService {
                 try {
                     // 封装单词的中文翻译
                     for (JsonWordBO.Content.Word.InternalContent.Tran tran :
-                            jsonWordBO.getContent().getWord().getContent().getTrans()) {
+                        jsonWordBO.getContent().getWord().getContent().getTrans()) {
                         tempWord = createWord(wordIdValue);
                         String pos;
                         if (!(pos = tran.getPos().trim()).endsWith(".")) {
@@ -369,7 +370,7 @@ public class WordHandleServiceImpl implements WordHandleService {
                 try {
                     // 封装单词的真题例句信息
                     for (JsonWordBO.Content.Word.InternalContent.RealExamSentence.InternalRealSentence realSentence :
-                            jsonWordBO.getContent().getWord().getContent().getRealExamSentence().getSentences()) {
+                        jsonWordBO.getContent().getWord().getContent().getRealExamSentence().getSentences()) {
                         // 得到例句英文
                         tempWord = createWord(wordIdValue);
                         String realSentenceValue = realSentence.getsContent();
@@ -422,14 +423,14 @@ public class WordHandleServiceImpl implements WordHandleService {
             }
         } catch (Exception e) {
             log.error("json handle fail", e);
-            throw new FileOperationException("json文件处理异常")
-                    .setErrorData(upLoadWordJson.getFile().getOriginalFilename() + "划分名称:" + divide.getName());
+            throw new BadRequestException(ResultCodeEnum.File_OPERATION.getCode(),
+                "json文件处理异常");
         }
 
         // 读取单词,必须使用拷贝流
         try (BufferedReader reader = new BufferedReader(
-                new InputStreamReader(
-                        new ByteArrayInputStream(copy.toString().getBytes()), StandardCharsets.UTF_8))) {
+            new InputStreamReader(
+                new ByteArrayInputStream(copy.toString().getBytes()), StandardCharsets.UTF_8))) {
             // 循环读取
             String signalJson;
             while (null != (signalJson = reader.readLine())) {
@@ -440,8 +441,9 @@ public class WordHandleServiceImpl implements WordHandleService {
                 // 首先要得到当前单词在word_id表中的id
                 LambdaQueryWrapper<WordId> wordIdQuery = new LambdaQueryWrapper<>();
                 wordIdQuery.eq(WordId::getDivideId, divide.getId())
-                        .eq(WordId::getWord, wordOrigin);
-                Long wordIdValue = Optional.ofNullable(wordIdMapper.selectOne(wordIdQuery)).orElseThrow(() -> new IllegalStateException("can not find word" + wordOrigin)).getId();
+                    .eq(WordId::getWord, wordOrigin);
+                Long wordIdValue = Optional.ofNullable(wordIdMapper.selectOne(wordIdQuery)).orElseThrow(() -> new BadRequestException(ResultCodeEnum.ILLEGAL_STATE.getCode(),
+                    "can not find word" + wordOrigin)).getId();
                 Word tempWord = null;
                 // 得到同根词
                 try {
@@ -472,7 +474,7 @@ public class WordHandleServiceImpl implements WordHandleService {
                             // 根据联想词从当前单词本中找出对应单词的id
                             LambdaQueryWrapper<WordId> originIdLambdaQueryWrapper = new LambdaQueryWrapper<>();
                             originIdLambdaQueryWrapper.eq(WordId::getDivideId, divideId)
-                                    .eq(WordId::getWord, w);
+                                .eq(WordId::getWord, w);
                             WordId wordId = wordIdMapper.selectOne(originIdLambdaQueryWrapper);
                             if (wordId != null) {
                                 // 封装id信息
@@ -517,7 +519,7 @@ public class WordHandleServiceImpl implements WordHandleService {
                             // 根据同根词从当前单词本中找出对应单词的id
                             LambdaQueryWrapper<WordId> originIdLambdaQueryWrapper = new LambdaQueryWrapper<>();
                             originIdLambdaQueryWrapper.eq(WordId::getDivideId, divideId)
-                                    .eq(WordId::getWord, hwd);
+                                .eq(WordId::getWord, hwd);
                             WordId wordId = wordIdMapper.selectOne(originIdLambdaQueryWrapper);
                             if (wordId != null) {
                                 // 封装id信息
@@ -538,8 +540,8 @@ public class WordHandleServiceImpl implements WordHandleService {
 
         } catch (Exception e) {
             log.error("json handle fail", e);
-            throw new FileOperationException("json文件处理异常")
-                    .setErrorData(upLoadWordJson.getFile().getOriginalFilename() + "划分名称:" + divide.getName());
+            throw new BadRequestException(ResultCodeEnum.File_OPERATION.getCode(),
+                "json文件处理异常");
         }
 
         log.info("compute divide [{}] complete; consume time:[{}] ms", divide.getName(), System.currentTimeMillis() - startTime);
@@ -614,7 +616,8 @@ public class WordHandleServiceImpl implements WordHandleService {
         }
         if (!CollectionUtils.isEmpty(notExistList)) {
             log.error("字段检查错误,当前语种的结构体中缺少{}字段", notExistList);
-            throw new IllegalStateException("当前语种的结构体中缺少必要字段" + Arrays.toString(notExistList.toArray()) + "如果不存在会造成数据不一致问题.");
+            throw new BadRequestException(ResultCodeEnum.ILLEGAL_STATE.getCode(),
+                "当前语种的结构体中缺少必要字段" + Arrays.toString(notExistList.toArray()) + "如果不存在会造成数据不一致问题.");
         }
     }
 

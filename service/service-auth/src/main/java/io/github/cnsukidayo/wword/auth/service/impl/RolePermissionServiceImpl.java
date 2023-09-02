@@ -167,7 +167,7 @@ public class RolePermissionServiceImpl extends ServiceImpl<RolePermissionMapper,
     public void revokeUserRole(Long UUID) {
         Assert.notNull(UUID, "UUID must not be null");
 
-        userRoleMapper.delete(new LambdaQueryWrapper<UserRole>().eq(UserRole::getUUID, UUID));
+        userRoleMapper.delete(new LambdaQueryWrapper<UserRole>().eq(UserRole::getUuid, UUID));
     }
 
     @Override
@@ -185,7 +185,7 @@ public class RolePermissionServiceImpl extends ServiceImpl<RolePermissionMapper,
         Assert.notNull(userRoleParam, "userRoleParam must not be null");
 
         // 首先查询当前用户是否有要克隆的所有角色
-        Set<Long> roleIdList = userRoleMapper.selectList(new LambdaQueryWrapper<UserRole>().eq(UserRole::getUUID, user.getUUID()))
+        Set<Long> roleIdList = userRoleMapper.selectList(new LambdaQueryWrapper<UserRole>().eq(UserRole::getUuid, user.getUuid()))
             .stream()
             .map(UserRole::getRoleId)
             .collect(Collectors.toSet());
@@ -198,7 +198,7 @@ public class RolePermissionServiceImpl extends ServiceImpl<RolePermissionMapper,
         }
 
         // 查询目标用户当前拥有的角色
-        Set<Long> targetUserRoleIdList = userRoleMapper.selectList(new LambdaQueryWrapper<UserRole>().eq(UserRole::getUUID, userRoleParam.getUserId()))
+        Set<Long> targetUserRoleIdList = userRoleMapper.selectList(new LambdaQueryWrapper<UserRole>().eq(UserRole::getUuid, userRoleParam.getUserId()))
             .stream()
             .map(UserRole::getRoleId)
             .collect(Collectors.toSet());

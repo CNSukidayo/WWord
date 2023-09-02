@@ -24,7 +24,7 @@ public class LoginLogServiceImpl extends ServiceImpl<LoginLogMapper, LoginLog> i
         Assert.notNull(pageParam, "pageParam must not be null");
 
         return baseMapper.selectPage(pageParam, new LambdaQueryWrapper<LoginLog>()
-                .eq(LoginLog::getUUID, user.getUUID())
+                .eq(LoginLog::getUuid, user.getUuid())
                 .orderByDesc(LoginLog::getCreateTime));
     }
 

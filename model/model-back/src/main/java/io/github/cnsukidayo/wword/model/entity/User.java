@@ -25,7 +25,7 @@ public class User extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
     @TableId(value = "uuid", type = IdType.AUTO)
-    private Long UUID;
+    private Long uuid;
 
     @TableField("email")
     private String email;
@@ -64,12 +64,13 @@ public class User extends BaseEntity {
     public User() {
     }
 
-    public Long getUUID() {
-        return UUID;
+
+    public Long getUuid() {
+        return uuid;
     }
 
-    public void setUUID(Long UUID) {
-        this.UUID = UUID;
+    public void setUuid(Long uuid) {
+        this.uuid = uuid;
     }
 
     public String getNick() {

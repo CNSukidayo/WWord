@@ -43,7 +43,7 @@ public class PostCategoryServiceImpl extends ServiceImpl<PostCategoryMapper, Pos
         Assert.notNull(UUID, "UUID must not be null");
 
         PostCategory postCategory = addPostCategoryParam.convertTo();
-        postCategory.setUUID(UUID);
+        postCategory.setUuid(UUID);
 
         baseMapper.insert(postCategory);
     }
@@ -53,7 +53,7 @@ public class PostCategoryServiceImpl extends ServiceImpl<PostCategoryMapper, Pos
         Assert.notNull(uuid, "uuid must not be null");
 
         // 查询到当前用户的所有收藏夹,未处理引用收藏夹
-        List<PostCategory> postCategoryList = Optional.ofNullable(baseMapper.selectList(new LambdaQueryWrapper<PostCategory>().eq(PostCategory::getUUID, uuid))).orElseGet(ArrayList::new);
+        List<PostCategory> postCategoryList = Optional.ofNullable(baseMapper.selectList(new LambdaQueryWrapper<PostCategory>().eq(PostCategory::getUuid, uuid))).orElseGet(ArrayList::new);
         // 查询到所有的引用收藏夹,并且按照K-V封装 K是收藏夹的id,value是未处理的收藏夹
         Map<Long, PostCategory> linkMap = postCategoryList.stream()
             .filter(postCategory -> postCategory.getCategoryAttribute() == CategoryAttribute.LINK)
@@ -65,7 +65,7 @@ public class PostCategoryServiceImpl extends ServiceImpl<PostCategoryMapper, Pos
         if (!CollectionUtils.isEmpty(linkIdList)) {
             Optional.ofNullable(baseMapper.selectTargetPostCategory(linkIdList)).orElseGet(ArrayList::new)
                 .forEach(postCategory -> {
-                    UUIDList.add(postCategory.getUUID());
+                    UUIDList.add(postCategory.getUuid());
                     PostCategory linkPostCategory = linkMap.get(postCategory.getId());
                     // 注意在展示列表用户拿到的还是链接收藏夹
                     BeanUtils.copyProperties(postCategory, linkPostCategory, "categoryAttribute");
@@ -73,9 +73,9 @@ public class PostCategoryServiceImpl extends ServiceImpl<PostCategoryMapper, Pos
         }
         // 查询收藏夹的创建者信息
         UUIDList.add(uuid);
-        Map<Long, User> userMap = userService.listByIds(UUIDList).stream().collect(Collectors.toMap(User::getUUID, user -> user));
+        Map<Long, User> userMap = userService.listByIds(UUIDList).stream().collect(Collectors.toMap(User::getUuid, user -> user));
         // 更新收藏夹的创建者信息
-        postCategoryList.forEach(postCategory -> postCategory.setCreateName(userMap.get(postCategory.getUUID()).getNick()));
+        postCategoryList.forEach(postCategory -> postCategory.setCreateName(userMap.get(postCategory.getUuid()).getNick()));
         return postCategoryList;
     }
 
@@ -94,11 +94,11 @@ public class PostCategoryServiceImpl extends ServiceImpl<PostCategoryMapper, Pos
         Assert.notNull(uuid, "uuid must not be null");
 
         PostCategory postCategory = updatePostCategoryParam.convertTo();
-        postCategory.setUUID(uuid);
+        postCategory.setUuid(uuid);
 
         baseMapper.update(postCategory, new LambdaQueryWrapper<PostCategory>()
             .eq(PostCategory::getId, updatePostCategoryParam.getId())
-            .eq(PostCategory::getUUID, uuid)
+            .eq(PostCategory::getUuid, uuid)
             .ne(PostCategory::getCategoryAttribute, CategoryAttribute.LINK));
     }
 
@@ -109,7 +109,7 @@ public class PostCategoryServiceImpl extends ServiceImpl<PostCategoryMapper, Pos
 
         baseMapper.delete(new LambdaQueryWrapper<PostCategory>()
             .eq(PostCategory::getId, id)
-            .eq(PostCategory::getUUID, uuid));
+            .eq(PostCategory::getUuid, uuid));
     }
 
     @Override
@@ -135,10 +135,10 @@ public class PostCategoryServiceImpl extends ServiceImpl<PostCategoryMapper, Pos
 
         // 首先查询到该收藏夹
         PostCategory postCategory = Optional.ofNullable(baseMapper.selectOne(new LambdaQueryWrapper<PostCategory>().eq(PostCategory::getId, id)
-                .eq(PostCategory::getUUID, uuid)))
+                .eq(PostCategory::getUuid, uuid)))
             .orElseThrow(() -> new BadRequestException(ResultCodeEnum.NOT_EXISTS, "未知收藏夹"));
         // 如果收藏夹是私密的,并且不是用户本人访问的话,则抛出异常
-        if (postCategory.getCategoryAttribute() == CategoryAttribute.PRIVATE && !postCategory.getUUID().equals(uuid))
+        if (postCategory.getCategoryAttribute() == CategoryAttribute.PRIVATE && !postCategory.getUuid().equals(uuid))
             throw new BadRequestException(ResultCodeEnum.AUTHENTICATION);
         // 如果查询到的收藏夹是链接收藏夹,则查询真实收藏夹信息
         if (postCategory.getCategoryAttribute() == CategoryAttribute.LINK) {
@@ -149,7 +149,7 @@ public class PostCategoryServiceImpl extends ServiceImpl<PostCategoryMapper, Pos
             postCategory.setCategoryAttribute(CategoryAttribute.LINK);
         }
         // 封装收藏夹创建者信息
-        postCategory.setCreateName(userService.getById(postCategory.getUUID()).getNick());
+        postCategory.setCreateName(userService.getById(postCategory.getUuid()).getNick());
         PostCategoryVO postCategoryVO = new PostCategoryVO().convertFrom(postCategory);
         // 查询收藏夹的点赞数
         postCategoryVO.setLikeCount(baseMapper.likeCount(id));
@@ -170,14 +170,14 @@ public class PostCategoryServiceImpl extends ServiceImpl<PostCategoryMapper, Pos
             .orElseThrow(() -> new BadRequestException(ResultCodeEnum.NOT_EXISTS,
                 "目标收藏夹不存在!"));
         // 自已不能收藏自已的收藏夹
-        if (targetPostCategory.getUUID().equals(uuid)) {
+        if (targetPostCategory.getUuid().equals(uuid)) {
             throw new BadRequestException(ResultCodeEnum.STAR_FAIL.getCode(),
                 "您不能收藏自已的收藏夹!");
         }
         // 设置必要信息
         PostCategory postCategory = new PostCategory();
         postCategory.setId(targetPostCategory.getId());
-        postCategory.setUUID(uuid);
+        postCategory.setUuid(uuid);
         postCategory.setCategoryAttribute(CategoryAttribute.LINK);
         postCategory.setName(targetPostCategory.getName());
 

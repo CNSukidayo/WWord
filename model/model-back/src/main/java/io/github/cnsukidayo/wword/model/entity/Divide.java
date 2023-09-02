@@ -18,7 +18,7 @@ public class Divide extends BaseEntity {
     private Long id;
 
     @TableField("uuid")
-    private Long UUID;
+    private Long uuid;
 
     @TableField("language_id")
     private Long languageId;
@@ -43,12 +43,12 @@ public class Divide extends BaseEntity {
         this.id = id;
     }
 
-    public Long getUUID() {
-        return UUID;
+    public Long getUuid() {
+        return uuid;
     }
 
-    public void setUUID(Long UUID) {
-        this.UUID = UUID;
+    public void setUuid(Long uuid) {
+        this.uuid = uuid;
     }
 
     public Long getLanguageId() {

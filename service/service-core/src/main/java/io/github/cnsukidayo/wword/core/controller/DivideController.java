@@ -62,13 +62,13 @@ public class DivideController {
     @Operation(summary = "添加一个划分")
     @PostMapping("save")
     public void saveDivide(@RequestBody @Valid AddDivideParam addDivideParam, User user) {
-        divideService.save(addDivideParam, user.getUUID());
+        divideService.save(addDivideParam, user.getUuid());
     }
 
     @Operation(summary = "删除一个划分")
     @PostMapping("remove")
     public void remove(@Parameter(description = "划分的id,可以是父划分id也可以是子划分id") @RequestParam("id") Long id, User user) {
-        divideService.remove(id, user.getUUID());
+        divideService.remove(id, user.getUuid());
     }
 
     @Operation(summary = "批量添加单词到一个子划分中")
@@ -76,7 +76,7 @@ public class DivideController {
     public void saveDivideWord(@Parameter(description = "划分的id") @RequestParam("divideId") Long divideId,
                                @Parameter(description = "单词id列表") @NotEmpty(message = "单词id列表不为空") @RequestBody List<Long> wordIdList,
                                User user) {
-        divideService.saveBatchDivideWord(divideId, wordIdList, user.getUUID());
+        divideService.saveBatchDivideWord(divideId, wordIdList, user.getUuid());
     }
 
     @Operation(summary = "批量删除一个子划分中的单词")
@@ -84,14 +84,14 @@ public class DivideController {
     public void deleteDivideWord(@Parameter(description = "划分的id") @RequestParam("divideId") Long divideId,
                                  @Parameter(description = "单词id列表") @NotEmpty(message = "单词id列表不为空") @RequestBody List<Long> wordIdList,
                                  User user) {
-        divideService.deleteDivideWord(divideId, wordIdList, user.getUUID());
+        divideService.deleteDivideWord(divideId, wordIdList, user.getUuid());
     }
 
     @Operation(summary = "拷贝一个划分")
     @PostMapping("copyDivide")
     public void copyDivide(@Parameter(description = "划分的id") @RequestParam("divideId") Long divideId,
                            User user) {
-        divideService.copyDivide(divideId, user.getUUID());
+        divideService.copyDivide(divideId, user.getUuid());
     }
 
 

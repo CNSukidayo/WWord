@@ -19,7 +19,7 @@ public interface DivideWordMapper extends BaseMapper<DivideWord> {
      * 批量添加单词到一个子划分中
      *
      * @param divideId 子划分id不为null
-     * @param list     单词列表不为null
+     * @param wordIdList     单词列表不为null
      * @param UUID     用户id不为null
      */
     void insertBatchDivideWord(@Param("divideId") Long divideId, @Param("wordIdList") List<WordId> wordIdList, @Param("uuid") Long UUID);

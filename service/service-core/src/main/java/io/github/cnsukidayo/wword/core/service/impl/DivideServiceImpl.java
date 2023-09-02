@@ -55,7 +55,7 @@ public class DivideServiceImpl extends ServiceImpl<DivideMapper, Divide> impleme
         Assert.notNull(UUID, "UUID must not be null");
 
         // 根据languageId和uuid查询到所有的父划分
-        List<Divide> parentDivideList = Optional.ofNullable(baseMapper.selectList(new LambdaQueryWrapper<Divide>().eq(Divide::getUUID, UUID)
+        List<Divide> parentDivideList = Optional.ofNullable(baseMapper.selectList(new LambdaQueryWrapper<Divide>().eq(Divide::getUuid, UUID)
                 .eq(Divide::getLanguageId, languageId)
                 .eq(Divide::getParentId, -1)))
             .orElseGet(ArrayList::new);
@@ -89,7 +89,7 @@ public class DivideServiceImpl extends ServiceImpl<DivideMapper, Divide> impleme
         }
 
         Divide divide = addDivideParam.convertTo();
-        divide.setUUID(uuid);
+        divide.setUuid(uuid);
         baseMapper.insert(divide);
 
     }
@@ -100,7 +100,7 @@ public class DivideServiceImpl extends ServiceImpl<DivideMapper, Divide> impleme
         Assert.notNull(uuid, "uuid must not be null");
 
         Divide divide = Optional.ofNullable(baseMapper.selectById(id)).orElseThrow(() -> new BadRequestException(ResultCodeEnum.NOT_EXISTS, "指定划分不存在"));
-        if (!divide.getUUID().equals(uuid)) {
+        if (!divide.getUuid().equals(uuid)) {
             throw new BadRequestException(ResultCodeEnum.REMOVE_FAIL);
         }
         // 如果当前是父划分则删除父划分和所有子划分
@@ -135,7 +135,7 @@ public class DivideServiceImpl extends ServiceImpl<DivideMapper, Divide> impleme
         Divide divide = Optional.ofNullable(baseMapper.selectOne(new LambdaQueryWrapper<Divide>().eq(Divide::getId, childDivideId)))
             .orElseThrow(() -> new BadRequestException(ResultCodeEnum.NOT_EXISTS,"指定划分不存在"));
         Long parentId = divide.getParentId();
-        if (parentId == -1 || !divide.getUUID().equals(UUID)) {
+        if (parentId == -1 || !divide.getUuid().equals(UUID)) {
             throw new BadRequestException(ResultCodeEnum.ADD_FAIL);
         }
         // 从父划分中根据单词id查询出所有的单词信息
@@ -167,7 +167,7 @@ public class DivideServiceImpl extends ServiceImpl<DivideMapper, Divide> impleme
         Assert.notNull(divideId, "divideId must not be null");
         Assert.notNull(uuid, "uuid must not be null");
 
-        Divide parentDivide = Optional.ofNullable(baseMapper.selectById(divideId)).filter(divide -> divide.getParentId() == -1 && divide.getUUID() != 1).orElseThrow(() -> new BadRequestException(ResultCodeEnum.STAR_FAIL));
+        Divide parentDivide = Optional.ofNullable(baseMapper.selectById(divideId)).filter(divide -> divide.getParentId() == -1 && divide.getUuid() != 1).orElseThrow(() -> new BadRequestException(ResultCodeEnum.STAR_FAIL));
         // 拷贝父划分
         baseMapper.copy(parentDivide, uuid, -1L);
         // 查询出所有待拷贝的划分id
@@ -198,7 +198,7 @@ public class DivideServiceImpl extends ServiceImpl<DivideMapper, Divide> impleme
         // 查询父划分,如果父划分存在;并且父划分的parentId = -1则,代表当前是语种划分下的一个子划分.允许插入
         Divide divide = baseMapper.selectOne(new LambdaQueryWrapper<Divide>().eq(Divide::getId, addDivideParam.getParentId()));
         // 如果父划分不存在,则不可插入;即指向的parentId失效.
-        return divide != null && divide.getParentId() == -1 && divide.getLanguageId().equals(addDivideParam.getLanguageId()) && divide.getUUID().equals(UUID);
+        return divide != null && divide.getParentId() == -1 && divide.getLanguageId().equals(addDivideParam.getLanguageId()) && divide.getUuid().equals(UUID);
     }
 
 }

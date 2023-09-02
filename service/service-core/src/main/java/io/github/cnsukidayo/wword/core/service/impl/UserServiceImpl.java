@@ -90,7 +90,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         // 记录登陆事件
         eventPublisher.publishEvent(
             new LoginEvent(this,
-                user.getUUID(),
+                user.getUuid(),
                 LoginType.LOGIN_IN,
                 ServletUtils.getCurrentRequest().map(request -> request.getHeader(HttpHeaders.USER_AGENT)).orElse("")));
         return buildAuthToken(user);
@@ -112,7 +112,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         // 记录密码更新事件
         eventPublisher.publishEvent(
             new LoginEvent(this,
-                user.getUUID(),
+                user.getUuid(),
                 LoginType.PASSWORD_UPDATE,
                 ServletUtils.getCurrentRequest().map(request -> request.getHeader(HttpHeaders.USER_AGENT)).orElse("")));
     }
@@ -150,7 +150,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         }
         // 为null的字段mybatis默认是不会更新的
         User update = updateUserParam.convertTo();
-        update.setUUID(user.getUUID());
+        update.setUuid(user.getUuid());
         baseMapper.updateById(update);
     }
 
@@ -179,7 +179,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         // 记录退出登陆事件
         eventPublisher.publishEvent(
             new LoginEvent(this,
-                user.getUUID(),
+                user.getUuid(),
                 LoginType.LOGIN_OUT,
                 ServletUtils.getCurrentRequest().map(request -> request.getHeader(HttpHeaders.USER_AGENT)).orElse("")));
     }
@@ -209,9 +209,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             WWordConst.REFRESH_TOKEN_EXPIRED_DAYS, TimeUnit.DAYS);
 
         // 缓存这些令牌,通过令牌获取用户的ID
-        redisTemplate.opsForValue().set(SecurityUtils.buildTokenAccessKey(token.getAccessToken()), String.valueOf(user.getUUID()),
+        redisTemplate.opsForValue().set(SecurityUtils.buildTokenAccessKey(token.getAccessToken()), String.valueOf(user.getUuid()),
             WWordConst.ACCESS_TOKEN_EXPIRED_SECONDS, TimeUnit.SECONDS);
-        redisTemplate.opsForValue().set(SecurityUtils.buildTokenRefreshKey(token.getRefreshToken()), String.valueOf(user.getUUID()),
+        redisTemplate.opsForValue().set(SecurityUtils.buildTokenRefreshKey(token.getRefreshToken()), String.valueOf(user.getUuid()),
             WWordConst.REFRESH_TOKEN_EXPIRED_DAYS, TimeUnit.DAYS);
 
         return token;

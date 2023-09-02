@@ -14,7 +14,7 @@ import io.github.cnsukidayo.wword.model.enums.LoginType;
 public class LoginLog extends BaseEntity {
 
     @TableId(value = "uuid")
-    private Long UUID;
+    private Long uuid;
 
     @TableField("ip_address")
     private String ipAddress;
@@ -28,12 +28,12 @@ public class LoginLog extends BaseEntity {
     public LoginLog() {
     }
 
-    public Long getUUID() {
-        return UUID;
+    public Long getUuid() {
+        return uuid;
     }
 
-    public void setUUID(Long UUID) {
-        this.UUID = UUID;
+    public void setUuid(Long uuid) {
+        this.uuid = uuid;
     }
 
     public String getIpAddress() {

@@ -17,7 +17,7 @@ public class LoginEvent extends ApplicationEvent {
     public LoginEvent(Object source, Long UUID, LoginType loginType, String content) {
         super(source);
         this.loginLog = new LoginLog();
-        this.loginLog.setUUID(UUID);
+        this.loginLog.setUuid(UUID);
         this.loginLog.setIpAddress(ServletUtils.getRequestIp());
         this.loginLog.setLoginType(loginType);
         this.loginLog.setContent(content);

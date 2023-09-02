@@ -17,12 +17,12 @@ public class ListTest {
     @Test
     public void testMap() {
         PostCategory postCategory = new PostCategory();
-        postCategory.setUUID(1L);
+        postCategory.setUuid(1L);
         postCategory.setName("帖子");
 
         List<PostCategory> postCategoryList = new ArrayList<>();
         postCategoryList.add(postCategory);
-        Map<Long, PostCategory> collect = postCategoryList.stream().collect(Collectors.toMap(PostCategory::getUUID, postCategory1 -> postCategory1));
+        Map<Long, PostCategory> collect = postCategoryList.stream().collect(Collectors.toMap(PostCategory::getUuid, postCategory1 -> postCategory1));
 
 
     }

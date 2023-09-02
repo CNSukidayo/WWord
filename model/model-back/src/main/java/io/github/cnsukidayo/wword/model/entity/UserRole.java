@@ -12,7 +12,7 @@ import io.github.cnsukidayo.wword.model.entity.base.BaseEntity;
 public class UserRole extends BaseEntity {
 
     @TableField("uuid")
-    private Long UUID;
+    private Long uuid;
 
     @TableField("role_id")
     private Long roleId;
@@ -20,12 +20,12 @@ public class UserRole extends BaseEntity {
     public UserRole() {
     }
 
-    public Long getUUID() {
-        return UUID;
+    public Long getUuid() {
+        return uuid;
     }
 
-    public void setUUID(Long UUID) {
-        this.UUID = UUID;
+    public void setUuid(Long uuid) {
+        this.uuid = uuid;
     }
 
     public Long getRoleId() {

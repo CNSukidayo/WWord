@@ -16,7 +16,7 @@ import java.time.LocalDate;
 public class UserProfileDTO implements OutputConverter<UserProfileDTO, User> {
 
     @Schema(description = "用户唯一标识")
-    private Long UUID;
+    private Long uuid;
 
     @Schema(description = "当前账号绑定的邮箱")
     private String email;
@@ -51,12 +51,12 @@ public class UserProfileDTO implements OutputConverter<UserProfileDTO, User> {
     public UserProfileDTO() {
     }
 
-    public Long getUUID() {
-        return UUID;
+    public Long getUuid() {
+        return uuid;
     }
 
-    public void setUUID(Long UUID) {
-        this.UUID = UUID;
+    public void setUuid(Long uuid) {
+        this.uuid = uuid;
     }
 
     public String getEmail() {

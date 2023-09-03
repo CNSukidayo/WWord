@@ -23,9 +23,9 @@ public class ReflectionUtils {
         ParameterizedType currentType = null;
 
         for (Type genericType : genericTypes) {
-            if (genericType instanceof ParameterizedType parameterizedType) {
-                if (parameterizedType.getRawType().getTypeName().equals(superType.getTypeName())) {
-                    currentType = parameterizedType;
+            if (genericType instanceof ParameterizedType) {
+                if (((ParameterizedType) genericType).getRawType().getTypeName().equals(superType.getTypeName())) {
+                    currentType = (ParameterizedType) genericType;
                     break;
                 }
             }
@@ -54,7 +54,7 @@ public class ReflectionUtils {
 
         // 得到泛型类型
         ParameterizedType currentType =
-                getParameterizedType(interfaceType, implementationClass.getGenericInterfaces());
+            getParameterizedType(interfaceType, implementationClass.getGenericInterfaces());
 
         if (currentType != null) {
             // 返回当前类型

@@ -2,7 +2,6 @@ package io.github.cnsukidayo.wword.common.request;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import io.github.cnsukidayo.wword.model.support.BaseResponse;
 import io.github.cnsukidayo.wword.model.vo.ErrorVo;
 import okhttp3.*;
 import okio.Buffer;
@@ -45,6 +44,7 @@ public final class BadResponseOkHttpInterceptor implements Interceptor {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+        // 客户端错误
         if (!response.isSuccessful()) {
             Type type = new TypeToken<ErrorVo>() {
             }.getType();
@@ -52,17 +52,11 @@ public final class BadResponseOkHttpInterceptor implements Interceptor {
             throw new RuntimeException(errorVo.getError());
         }
         // 如果外层没有出现异常并不能代表内层不会出现异常,至少有返回数据了
-        Type type = new TypeToken<BaseResponse<ErrorVo>>() {
-        }.getType();
-        BaseResponse<ErrorVo> result = gson.fromJson(body, type);
-        if (!result.getStatus().equals(200)) {
-            throw new RuntimeException("error" + result.getData().getError() +
-                "message" + result.getData().getMessage());
-        }
         return response;
     }
 
     private String getResponseBody(ResponseBody responseBody) throws Exception {
+        // todo 封装
         BufferedSource source = responseBody.source();
         source.request(Long.MAX_VALUE);
         Buffer buffer = source.buffer();

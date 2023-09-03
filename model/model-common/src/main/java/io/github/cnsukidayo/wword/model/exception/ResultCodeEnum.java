@@ -22,7 +22,13 @@ public enum ResultCodeEnum {
     ALREADY_EXIST(4004, "指定的目标已经存在"),
     File_OPERATION(4005, "文件处理异常"),
 
+    /**
+     * 如果返回此状态码,前端需要刷新token
+     **/
     LOGIN_FAIL(4100, "未登录,请登陆后访问"),
+    /**
+     * 如果返回此状态码,前端不需要刷新token
+     **/
     LOGIN_STATE_INVALID(4101, "登陆状态已失效,请重新登陆"),
     AUTHENTICATION(4102, "您没有权限访问该内容!"),
     STAR_FAIL(4104, "收藏失败!"),

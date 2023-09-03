@@ -1,10 +1,13 @@
 package io.github.cnsukidayo.wword.common.request;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import io.github.cnsukidayo.wword.model.support.BaseResponse;
+import io.github.cnsukidayo.wword.model.vo.ErrorVo;
 import okhttp3.*;
 
 import java.io.IOException;
-import java.lang.reflect.Type;
+import java.lang.reflect.ParameterizedType;
 import java.util.Optional;
 
 /**
@@ -24,6 +27,10 @@ public class RequestHandler {
 
     private HttpUrl baseUrl;
 
+    private final String APPLICATION_JSON_VALUE = "application/json";
+
+    private Runnable refreshTokenFailHandler;
+
     public RequestHandler(OkHttpClient okHttpClient,
                           Gson gson,
                           OkHttpClientExceptionHandler commonExceptionHandler) {
@@ -31,6 +38,7 @@ public class RequestHandler {
         this.okHttpClient = okHttpClient;
         this.gson = gson;
         this.commonExceptionHandler = commonExceptionHandler;
+        this.refreshTokenFailHandler = refreshTokenFailHandler;
     }
 
 
@@ -105,7 +113,27 @@ public class RequestHandler {
      * @return 返回值不为null
      */
     public RequestBody jsonBody(String json) {
-        return RequestBody.create(MediaType.parse(org.springframework.http.MediaType.APPLICATION_JSON_VALUE), Optional.ofNullable(json).orElse(""));
+        return RequestBody.create(MediaType.parse(APPLICATION_JSON_VALUE), Optional.ofNullable(json).orElse(""));
+    }
+
+    /**
+     * 设置刷新token失败后的回调函数
+     *
+     * @param refreshTokenFailHandler 回调函数逻辑不为null
+     */
+    public void setRefreshTokenFailHandler(Runnable refreshTokenFailHandler) {
+        this.refreshTokenFailHandler = refreshTokenFailHandler;
+    }
+
+    /**
+     * token刷新失败之后的处理逻辑
+     *
+     * @return 返回回调函数
+     */
+    public void refreshTokenFailHandler() {
+        if (this.refreshTokenFailHandler != null) {
+            this.refreshTokenFailHandler.run();
+        }
     }
 
     /**
@@ -116,7 +144,7 @@ public class RequestHandler {
      */
     public <T> RequestBody jsonBody(T jsonObject) {
         String json = gson.toJson(jsonObject);
-        return RequestBody.create(MediaType.parse(org.springframework.http.MediaType.APPLICATION_JSON_VALUE), json);
+        return RequestBody.create(MediaType.parse(APPLICATION_JSON_VALUE), json);
     }
 
     public Response execute(Request request) {
@@ -134,12 +162,11 @@ public class RequestHandler {
         return response;
     }
 
-    public <T> T execute(Request request, Type type) {
+    public void execute(Request request, ResponseWrapper<? extends BaseResponse<?>> responseWrapper) {
         Response response = execute(request);
-
         ResponseBody responseBody = response.body();
         if (responseBody == null) {
-            return null;
+            throw new IllegalStateException("responseBody is null");
         }
         String body = null;
         try {
@@ -147,8 +174,26 @@ public class RequestHandler {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        System.out.println(body);
-        return gson.fromJson(body, type);
+        // 执行完这一步拿到数据,判断成功还是失败
+        BaseResponse baseResponse = gson.fromJson(body, BaseResponse.class);
+        // 首先判断有没有异常
+        if (baseResponse.getStatus().equals(200)) {
+            if (responseWrapper.getSuccessConsumer() != null) {
+                responseWrapper.getSuccessConsumer().accept(gson.fromJson(body,
+                    ((ParameterizedType) responseWrapper.getClass().getGenericSuperclass()).getActualTypeArguments()[0]));
+            }
+        } else {
+            BaseResponse<ErrorVo> errorVo = gson.fromJson(body, new TypeToken<>() {
+
+            });
+            if (responseWrapper.getFailConsumer() != null) {
+                responseWrapper.getFailConsumer().accept(errorVo);
+            }
+            // 抛出该异常
+            throw new RuntimeException("error = " + errorVo.getData().getError() +
+                ",message = " + errorVo.getData().getMessage());
+        }
     }
+
 
 }

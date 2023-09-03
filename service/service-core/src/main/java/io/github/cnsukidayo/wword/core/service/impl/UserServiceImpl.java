@@ -78,13 +78,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         Assert.notNull(loginParam, "LoginParam must not be null");
         if (SecurityContextHolder.getContext().isAuthenticated()) {
             // If the user has been logged in
-            throw new BadRequestException(ResultCodeEnum.LOGIN_FAIL.getCode(),
+            throw new BadRequestException(ResultCodeEnum.LOGIN_STATE_INVALID.getCode(),
                 "您已登录,请不要重复登录");
         }
 
         User user = baseMapper.selectOne(new LambdaQueryWrapper<User>().eq(User::getAccount, loginParam.getAccount()));
         if (user == null || !BCrypt.checkpw(loginParam.getPassword(), user.getPassword())) {
-            throw new BadRequestException(ResultCodeEnum.LOGIN_FAIL.getCode(),
+            throw new BadRequestException(ResultCodeEnum.LOGIN_STATE_INVALID.getCode(),
                 "用户名或者密码不正确");
         }
         // 记录登陆事件

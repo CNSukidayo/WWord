@@ -166,16 +166,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         // 得到当前的用户
         User user = authentication.user();
 
-        // 清除认证令牌
-        Optional.ofNullable(redisTemplate.opsForValue().get(SecurityUtils.buildAccessTokenKey(user))).ifPresent(access_token -> {
-            redisTemplate.delete(SecurityUtils.buildTokenAccessKey(access_token));
-            redisTemplate.delete(SecurityUtils.buildAccessTokenKey(user));
-        });
-        // 清除缓存令牌
-        Optional.ofNullable(redisTemplate.opsForValue().get(SecurityUtils.buildRefreshTokenKey(user))).ifPresent(refresh_token -> {
-            redisTemplate.delete(SecurityUtils.buildTokenRefreshKey(refresh_token));
-            redisTemplate.delete(SecurityUtils.buildRefreshTokenKey(user));
-        });
+        // 清除令牌
+        clearToken(user);
+
         // 记录退出登陆事件
         eventPublisher.publishEvent(
             new LoginEvent(this,
@@ -215,6 +208,20 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             WWordConst.REFRESH_TOKEN_EXPIRED_DAYS, TimeUnit.DAYS);
 
         return token;
+    }
+
+    private void clearToken(User user) {
+        Assert.notNull(user, "user must not be null");
+        // 清除认证令牌
+        Optional.ofNullable(redisTemplate.opsForValue().get(SecurityUtils.buildAccessTokenKey(user))).ifPresent(access_token -> {
+            redisTemplate.delete(SecurityUtils.buildTokenAccessKey(access_token));
+            redisTemplate.delete(SecurityUtils.buildAccessTokenKey(user));
+        });
+        // 清除缓存令牌
+        Optional.ofNullable(redisTemplate.opsForValue().get(SecurityUtils.buildRefreshTokenKey(user))).ifPresent(refresh_token -> {
+            redisTemplate.delete(SecurityUtils.buildTokenRefreshKey(refresh_token));
+            redisTemplate.delete(SecurityUtils.buildRefreshTokenKey(user));
+        });
     }
 
 

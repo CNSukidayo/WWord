@@ -5,17 +5,11 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>io.github.cnsukidayo.wword</groupId>
-        <artifactId>WWord</artifactId>
+        <artifactId>common</artifactId>
         <version>0.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>common</artifactId>
-    <packaging>pom</packaging>
-    <modules>
-        <module>request-util</module>
-        <module>service-util</module>
-        <module>logging-util</module>
-    </modules>
+    <artifactId>logging-util</artifactId>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>

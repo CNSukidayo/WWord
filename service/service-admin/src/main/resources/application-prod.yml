@@ -34,6 +34,19 @@ spring:
     multipart:
       max-file-size: 1024MB
       max-request-size: 1024MB
+  # 配置异步执行任务
+  task:
+    execution:
+      pool:
+        core-size: 4
+        max-size: 8
+        queue-capacity: 100
+      thread-name-prefix: "async-"
+  # 微服务相关配置
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
 
 logging:
   file:
@@ -53,6 +66,7 @@ knife4j:
   enable: true
   setting:
     language: zh_cn
+  production: false
 
 
 wword:

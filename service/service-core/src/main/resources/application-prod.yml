@@ -34,6 +34,12 @@ spring:
   web:
     resources:
       add-mappings: false
+  # springcloud相关配置
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+
 # 日志相关配置
 logging:
   file:

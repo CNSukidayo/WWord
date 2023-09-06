@@ -42,10 +42,17 @@ spring:
         max-size: 8
         queue-capacity: 100
       thread-name-prefix: "async-"
+  # 微服务相关配置
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
 
 logging:
   file:
     path: logs/admin/
+  level:
+    io.github.cnsukidayo: info
 
 #mybatis-plus相关配置
 mybatis-plus:
@@ -60,6 +67,7 @@ knife4j:
   enable: true
   setting:
     language: zh_cn
+  production: false
 
 
 wword:

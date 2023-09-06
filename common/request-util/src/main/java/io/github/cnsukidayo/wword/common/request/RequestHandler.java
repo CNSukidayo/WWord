@@ -189,9 +189,6 @@ public class RequestHandler {
             if (responseWrapper.getFailConsumer() != null) {
                 responseWrapper.getFailConsumer().accept(errorVo);
             }
-            // 抛出该异常
-            throw new RuntimeException("error = " + errorVo.getData().getError() +
-                ",message = " + errorVo.getData().getMessage());
         }
     }
 

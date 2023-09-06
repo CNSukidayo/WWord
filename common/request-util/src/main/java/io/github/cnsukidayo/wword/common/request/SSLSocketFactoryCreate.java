@@ -68,7 +68,6 @@ public class SSLSocketFactoryCreate {
     /**
      * 以流的方式添加信任证书
      */
-
     private X509TrustManager trustManagerForCertificates(InputStream in) throws GeneralSecurityException {
         CertificateFactory certificateFactory = CertificateFactory.getInstance("X.509");
         Collection<? extends Certificate> certificates = certificateFactory.generateCertificates(in);

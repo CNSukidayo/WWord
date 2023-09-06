@@ -38,6 +38,11 @@ spring:
   web:
     resources:
       add-mappings: false
+  # 微服务相关配置
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
 
 logging:
   file:

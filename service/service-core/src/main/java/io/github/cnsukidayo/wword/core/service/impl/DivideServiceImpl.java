@@ -2,7 +2,7 @@ package io.github.cnsukidayo.wword.core.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import io.github.cnsukidayo.wword.common.exception.BadRequestException;
+import io.github.cnsukidayo.wword.global.exception.BadRequestException;
 import io.github.cnsukidayo.wword.core.dao.DivideMapper;
 import io.github.cnsukidayo.wword.core.dao.DivideWordMapper;
 import io.github.cnsukidayo.wword.core.dao.LanguageClassMapper;

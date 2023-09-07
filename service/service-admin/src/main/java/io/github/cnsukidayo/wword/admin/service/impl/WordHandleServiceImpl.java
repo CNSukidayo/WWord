@@ -8,7 +8,7 @@ import io.github.cnsukidayo.wword.admin.dao.WordIdMapper;
 import io.github.cnsukidayo.wword.admin.dao.WordMapper;
 import io.github.cnsukidayo.wword.admin.service.WordHandleService;
 import io.github.cnsukidayo.wword.admin.service.WordStructureService;
-import io.github.cnsukidayo.wword.common.exception.BadRequestException;
+import io.github.cnsukidayo.wword.global.exception.BadRequestException;
 import io.github.cnsukidayo.wword.model.bo.JsonWordBO;
 import io.github.cnsukidayo.wword.model.entity.Divide;
 import io.github.cnsukidayo.wword.model.entity.Word;

@@ -1,6 +1,6 @@
 package io.github.cnsukidayo.wword.common.core;
 
-import io.github.cnsukidayo.wword.common.exception.AbstractWWordException;
+import io.github.cnsukidayo.wword.global.exception.AbstractWWordException;
 import io.github.cnsukidayo.wword.model.support.BaseResponse;
 import io.github.cnsukidayo.wword.model.vo.ErrorVo;
 import org.slf4j.LoggerFactory;

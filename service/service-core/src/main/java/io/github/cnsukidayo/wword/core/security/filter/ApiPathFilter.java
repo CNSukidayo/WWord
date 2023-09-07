@@ -1,12 +1,12 @@
 package io.github.cnsukidayo.wword.core.security.filter;
 
-import io.github.cnsukidayo.wword.common.exception.BadRequestException;
+import io.github.cnsukidayo.wword.global.exception.BadRequestException;
 import io.github.cnsukidayo.wword.common.security.authentication.AuthenticationImpl;
+import io.github.cnsukidayo.wword.common.security.context.SecurityContextHolder;
 import io.github.cnsukidayo.wword.common.security.context.SecurityContextImpl;
 import io.github.cnsukidayo.wword.common.security.filter.AbstractAuthenticationFilter;
-import io.github.cnsukidayo.wword.core.service.UserService;
-import io.github.cnsukidayo.wword.common.security.context.SecurityContextHolder;
 import io.github.cnsukidayo.wword.common.utils.SecurityUtils;
+import io.github.cnsukidayo.wword.core.service.UserService;
 import io.github.cnsukidayo.wword.model.entity.User;
 import io.github.cnsukidayo.wword.model.exception.ResultCodeEnum;
 import jakarta.servlet.FilterChain;
@@ -28,13 +28,13 @@ import java.io.IOException;
  */
 @Component
 @Order(0)
-public class ApiAuthenticationFilter extends AbstractAuthenticationFilter {
+public class ApiPathFilter extends AbstractAuthenticationFilter {
 
     private final UserService userService;
     private final RedisTemplate<String, String> redisTemplate;
 
-    public ApiAuthenticationFilter(UserService userService,
-                                   RedisTemplate<String, String> redisTemplate) {
+    public ApiPathFilter(UserService userService,
+                         RedisTemplate<String, String> redisTemplate) {
         this.userService = userService;
         this.redisTemplate = redisTemplate;
         addUrlPatterns("/api/u/**");

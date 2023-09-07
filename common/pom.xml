@@ -14,7 +14,7 @@
     <modules>
         <module>request-util</module>
         <module>service-util</module>
-        <module>logging-util</module>
+        <module>global-util</module>
     </modules>
 
     <properties>

@@ -1,10 +1,10 @@
 package io.github.cnsukidayo.wword.common.security.filter;
 
-import io.github.cnsukidayo.wword.common.exception.AbstractWWordException;
+import io.github.cnsukidayo.wword.global.exception.AbstractWWordException;
 import io.github.cnsukidayo.wword.common.security.context.SecurityContextHolder;
-import io.github.cnsukidayo.wword.common.security.handler.AuthenticationFailureHandler;
-import io.github.cnsukidayo.wword.common.security.handler.DefaultAuthenticationFailureHandler;
-import io.github.cnsukidayo.wword.model.support.WWordConst;
+import io.github.cnsukidayo.wword.global.handler.AuthenticationFailureHandler;
+import io.github.cnsukidayo.wword.global.handler.DefaultAuthenticationFailureHandler;
+import io.github.cnsukidayo.wword.model.environment.WWordConst;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

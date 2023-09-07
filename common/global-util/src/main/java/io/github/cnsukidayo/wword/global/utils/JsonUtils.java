@@ -1,4 +1,4 @@
-package io.github.cnsukidayo.wword.common.utils;
+package io.github.cnsukidayo.wword.global.utils;
 
 
 import com.fasterxml.jackson.core.JsonProcessingException;

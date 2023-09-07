@@ -5,11 +5,11 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>io.github.cnsukidayo.wword</groupId>
-        <artifactId>common</artifactId>
+        <artifactId>service-client</artifactId>
         <version>0.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>logging-util</artifactId>
+    <artifactId>service-auth-client</artifactId>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>

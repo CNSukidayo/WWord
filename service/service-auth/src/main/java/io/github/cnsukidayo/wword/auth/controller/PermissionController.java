@@ -1,7 +1,7 @@
 package io.github.cnsukidayo.wword.auth.controller;
 
 import io.github.cnsukidayo.wword.auth.service.PermissionService;
-import io.github.cnsukidayo.wword.common.exception.BadRequestException;
+import io.github.cnsukidayo.wword.global.exception.BadRequestException;
 import io.github.cnsukidayo.wword.model.entity.Permission;
 import io.github.cnsukidayo.wword.model.exception.ResultCodeEnum;
 import io.github.cnsukidayo.wword.model.params.PermissionParam;

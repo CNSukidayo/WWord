@@ -19,6 +19,10 @@ spring:
     pathmatch:
       matching-strategy: ant_path_matcher
     throw-exception-if-no-handler-found: true
+  data:
+    redis:
+      host: localhost
+      port: 6379
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
     time-zone: GMT+8
@@ -36,12 +40,19 @@ spring:
           enabled: true # 开启配置
       routes:
         - id: service-core
-          uri: lb:https://service-core
+          uri: lb://service-core
           predicates:
             - Path=/api/u/**
+        - id: service-auth
+          uri: lb://service-auth
+          predicates:
+            - Path=/api/auth/**
+
       httpclient:
         ssl:
           use-insecure-trust-manager: true
+  main:
+    web-application-type: reactive
 
 # 日志相关配置
 logging:

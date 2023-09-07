@@ -9,7 +9,7 @@ import io.github.cnsukidayo.wword.auth.dao.RolePermissionMapper;
 import io.github.cnsukidayo.wword.auth.dao.UserRoleMapper;
 import io.github.cnsukidayo.wword.auth.service.PermissionService;
 import io.github.cnsukidayo.wword.auth.service.RolePermissionService;
-import io.github.cnsukidayo.wword.common.exception.BadRequestException;
+import io.github.cnsukidayo.wword.global.exception.BadRequestException;
 import io.github.cnsukidayo.wword.model.entity.*;
 import io.github.cnsukidayo.wword.model.exception.ResultCodeEnum;
 import io.github.cnsukidayo.wword.model.params.PageQueryParam;

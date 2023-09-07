@@ -1,6 +1,6 @@
 //package io.github.cnsukidayo.wword.common.filter;
 //
-//import io.github.cnsukidayo.wword.model.support.WWordConst;
+//import io.github.cnsukidayo.wword.model.environment.WWordConst;
 //import jakarta.servlet.FilterChain;
 //import jakarta.servlet.ServletException;
 //import jakarta.servlet.ServletRequest;

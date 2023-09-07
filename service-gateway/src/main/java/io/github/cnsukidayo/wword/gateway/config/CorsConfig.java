@@ -1,5 +1,6 @@
 package io.github.cnsukidayo.wword.gateway.config;
 
+import io.github.cnsukidayo.wword.model.environment.WWordConst;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
@@ -13,7 +14,7 @@ import org.springframework.web.util.pattern.PathPatternParser;
 public class CorsConfig {
 
     private static final String ALLOW_HEADERS = HttpHeaders.CONTENT_TYPE + "," +
-        "API-" + HttpHeaders.AUTHORIZATION;
+        WWordConst.API_ACCESS_KEY_HEADER_NAME;
 
     @Bean
     public CorsWebFilter corsFilter() {

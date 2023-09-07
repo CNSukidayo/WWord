@@ -1,4 +1,4 @@
-package io.github.cnsukidayo.wword.common.exception;
+package io.github.cnsukidayo.wword.global.exception;
 
 import org.springframework.http.HttpStatus;
 

@@ -1,6 +1,6 @@
 package io.github.cnsukidayo.wword.service.impl;
 
-import io.github.cnsukidayo.wword.model.support.WWordConst;
+import io.github.cnsukidayo.wword.model.environment.WWordConst;
 import org.junit.Test;
 
 import java.util.UUID;

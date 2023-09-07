@@ -1,9 +1,12 @@
-package io.github.cnsukidayo.wword.common.security.handler;
+package io.github.cnsukidayo.wword.global.handler;
 
-import io.github.cnsukidayo.wword.common.exception.AbstractWWordException;
+import io.github.cnsukidayo.wword.global.exception.AbstractWWordException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.http.server.reactive.ServerHttpRequest;
+import org.springframework.http.server.reactive.ServerHttpResponse;
+import reactor.core.publisher.Mono;
 
 import java.io.IOException;
 
@@ -25,4 +28,9 @@ public interface AuthenticationFailureHandler {
      */
     void onFailure(HttpServletRequest request, HttpServletResponse response,
                    AbstractWWordException exception) throws IOException, ServletException;
+
+    Mono<Void> onFailure(ServerHttpRequest request, ServerHttpResponse response,
+                   AbstractWWordException exception);
+
+
 }

@@ -2,7 +2,7 @@ package io.github.cnsukidayo.wword.admin.service.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.github.cnsukidayo.wword.common.utils.JsonUtils;
+import io.github.cnsukidayo.wword.global.utils.JsonUtils;
 import io.github.cnsukidayo.wword.model.bo.JsonWordBO;
 import org.junit.Test;
 

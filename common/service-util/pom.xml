@@ -28,10 +28,10 @@
             <artifactId>model-front</artifactId>
             <version>0.1-SNAPSHOT</version>
         </dependency>
-
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
+            <groupId>io.github.cnsukidayo.wword</groupId>
+            <artifactId>global-util</artifactId>
+            <version>0.1-SNAPSHOT</version>
         </dependency>
 
         <dependency>

@@ -1,9 +1,9 @@
 package io.github.cnsukidayo.wword.common.core;
 
-import io.github.cnsukidayo.wword.common.utils.ExceptionUtils;
 import io.github.cnsukidayo.wword.model.support.BaseResponse;
 import io.github.cnsukidayo.wword.model.vo.ErrorVo;
 import jakarta.servlet.ServletException;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

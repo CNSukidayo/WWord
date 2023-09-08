@@ -1,11 +1,9 @@
 package io.github.cnsukidayo.wword.auth.client;
 
-import io.github.cnsukidayo.wword.model.entity.User;
+import io.github.cnsukidayo.wword.model.params.CheckAuthParam;
+import io.github.cnsukidayo.wword.model.support.BaseResponse;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-
-import java.io.Serializable;
+import org.springframework.web.bind.annotation.PostMapping;
 
 /**
  * @author sukidayo
@@ -14,8 +12,8 @@ import java.io.Serializable;
 @FeignClient("service-auth")
 public interface UserFeignClient {
 
-    @GetMapping("remote/auth/permission/getById/{uuid}")
-    User getById(@PathVariable("uuid") Serializable uuid);
+    @PostMapping("remote/auth/permission/getAndCheck")
+    BaseResponse<Object> getAndCheck(CheckAuthParam checkAuthParam);
 
 
 

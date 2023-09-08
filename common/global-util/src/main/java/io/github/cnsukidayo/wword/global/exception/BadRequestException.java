@@ -1,6 +1,5 @@
 package io.github.cnsukidayo.wword.global.exception;
 
-import io.github.cnsukidayo.wword.global.exception.AbstractWWordException;
 import io.github.cnsukidayo.wword.model.exception.ResultCodeEnum;
 
 public class BadRequestException extends AbstractWWordException {

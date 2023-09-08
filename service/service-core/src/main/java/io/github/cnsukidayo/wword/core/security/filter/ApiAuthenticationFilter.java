@@ -1,20 +1,19 @@
 package io.github.cnsukidayo.wword.core.security.filter;
 
-import io.github.cnsukidayo.wword.global.exception.BadRequestException;
 import io.github.cnsukidayo.wword.common.security.authentication.AuthenticationImpl;
 import io.github.cnsukidayo.wword.common.security.context.SecurityContextHolder;
 import io.github.cnsukidayo.wword.common.security.context.SecurityContextImpl;
 import io.github.cnsukidayo.wword.common.security.filter.AbstractAuthenticationFilter;
-import io.github.cnsukidayo.wword.common.utils.SecurityUtils;
-import io.github.cnsukidayo.wword.core.service.UserService;
+import io.github.cnsukidayo.wword.global.exception.BadRequestException;
+import io.github.cnsukidayo.wword.global.utils.JsonUtils;
 import io.github.cnsukidayo.wword.model.entity.User;
-import io.github.cnsukidayo.wword.model.exception.ResultCodeEnum;
+import io.github.cnsukidayo.wword.model.environment.WWordConst;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.core.annotation.Order;
-import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -28,40 +27,27 @@ import java.io.IOException;
  */
 @Component
 @Order(0)
-public class ApiPathFilter extends AbstractAuthenticationFilter {
+public class ApiAuthenticationFilter extends AbstractAuthenticationFilter {
 
-    private final UserService userService;
-    private final RedisTemplate<String, String> redisTemplate;
-
-    public ApiPathFilter(UserService userService,
-                         RedisTemplate<String, String> redisTemplate) {
-        this.userService = userService;
-        this.redisTemplate = redisTemplate;
+    public ApiAuthenticationFilter() {
         addUrlPatterns("/api/u/**");
         addExcludeUrlPatterns(
             "/api/u/user/login",
             "/api/u/user/register",
-            "/api/u/user/refresh/*",
-            "/api/u/categories/*");
+            "/api/u/user/refresh/*");
     }
 
     @Override
     protected void doAuthenticate(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
         // 获取用户请求的token
-        String token = getTokenFromRequest(request);
+        String userJson = request.getHeader(WWordConst.X_CLIENT_USER);
 
-        if (!StringUtils.hasText(token)) {
-            throw new BadRequestException(ResultCodeEnum.LOGIN_FAIL.getCode(),
-                "token不存在或已过期");
+        if (!StringUtils.hasText(userJson)) {
+            throw new BadRequestException(HttpStatus.INTERNAL_SERVER_ERROR.value(), "服务器错误!");
         }
-        String userID = redisTemplate.opsForValue().get(SecurityUtils.buildTokenAccessKey(token));
-        if (userID == null) {
-            throw new BadRequestException(ResultCodeEnum.LOGIN_FAIL.getCode(),
-                "token不存在或已过期:" + token);
-        }
-        User user = userService.getById(Integer.valueOf(userID));
 
+        User user = JsonUtils.jsonToObject(userJson, User.class);
         // 设置安全性
         SecurityContextHolder
             .setContext(new SecurityContextImpl(new AuthenticationImpl(user)));

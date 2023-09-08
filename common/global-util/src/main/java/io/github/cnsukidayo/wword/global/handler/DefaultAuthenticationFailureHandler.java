@@ -56,18 +56,7 @@ public class DefaultAuthenticationFailureHandler implements AuthenticationFailur
 
     @Override
     public Mono<Void> onFailure(ServerHttpRequest request, ServerHttpResponse response,
-                                AbstractWWordException exception) {
-
-        BaseResponse<ErrorVo> errorDetail = new BaseResponse<>();
-
-        HttpStatus status = HttpStatus.BAD_REQUEST;
-        errorDetail.setStatus(status.value());
-        errorDetail.setMessage(status.getReasonPhrase());
-        ErrorVo errorVo = new ErrorVo();
-        errorVo.setTimestamp(LocalDateTime.now().toEpochSecond(ZoneOffset.of("+8")));
-        errorVo.setStatus(exception.getStatus());
-        errorVo.setMessage(exception.getMessage());
-        errorDetail.setData(errorVo);
+                                Object errorDetail) {
         byte[] data;
         try {
             data = objectMapper.writeValueAsBytes(errorDetail);
@@ -76,6 +65,7 @@ public class DefaultAuthenticationFailureHandler implements AuthenticationFailur
         }
         DataBuffer buffer = response.bufferFactory().wrap(data);
         response.getHeaders().add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
+        // 设置响应为OK,统一起来
         response.setStatusCode(HttpStatus.OK);
         return response.writeWith(Mono.just(buffer));
     }

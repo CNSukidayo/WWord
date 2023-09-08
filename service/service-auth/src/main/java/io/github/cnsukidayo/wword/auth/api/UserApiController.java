@@ -1,14 +1,12 @@
 package io.github.cnsukidayo.wword.auth.api;
 
 import io.github.cnsukidayo.wword.auth.service.UserService;
-import io.github.cnsukidayo.wword.model.entity.User;
+import io.github.cnsukidayo.wword.model.bo.UserPermissionBO;
+import io.github.cnsukidayo.wword.model.params.CheckAuthParam;
+import io.github.cnsukidayo.wword.model.support.BaseResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.io.Serializable;
+import jakarta.validation.Valid;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author sukidayo
@@ -25,9 +23,9 @@ public class UserApiController {
         this.userService = userService;
     }
 
-    @GetMapping("getById/{uuid}")
-    public User getById(@PathVariable("uuid") Serializable uuid) {
-        return userService.getById(uuid);
+    @PostMapping("getAndCheck")
+    public BaseResponse<UserPermissionBO> getById(@Valid @RequestBody CheckAuthParam checkAuthParam) {
+        return BaseResponse.ok(userService.getAndAuth(checkAuthParam));
     }
 
 }

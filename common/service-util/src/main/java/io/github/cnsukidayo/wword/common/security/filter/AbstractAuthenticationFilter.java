@@ -67,7 +67,6 @@ public abstract class AbstractAuthenticationFilter extends OncePerRequestFilter 
 
         return result || urlPatterns.stream()
                 .noneMatch(p -> antPathMatcher.match(p, urlPathHelper.getRequestUri(request)));
-
     }
 
     /**

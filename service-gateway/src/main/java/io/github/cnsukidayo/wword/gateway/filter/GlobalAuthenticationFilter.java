@@ -2,6 +2,7 @@ package io.github.cnsukidayo.wword.gateway.filter;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.github.cnsukidayo.wword.auth.client.UserFeignClient;
+import io.github.cnsukidayo.wword.gateway.config.properties.WWordProperties;
 import io.github.cnsukidayo.wword.global.handler.AuthenticationFailureHandler;
 import io.github.cnsukidayo.wword.global.handler.DefaultAuthenticationFailureHandler;
 import io.github.cnsukidayo.wword.global.utils.JsonUtils;
@@ -13,11 +14,11 @@ import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.core.annotation.Order;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
@@ -38,25 +39,36 @@ public class GlobalAuthenticationFilter implements GlobalFilter {
 
     private volatile AuthenticationFailureHandler failureHandler;
 
-    private final RedisTemplate<String, String> redisTemplate;
-
     private final UserFeignClient userFeignClient;
 
-    ExecutorService executorService = Executors.newFixedThreadPool(1);
+    // todo 这一步会影响性能
+    private final ExecutorService executorService = Executors.newFixedThreadPool(1);
 
-    public GlobalAuthenticationFilter(RedisTemplate<String, String> redisTemplate,
-                                      @Lazy UserFeignClient userFeignClient) {
-        this.redisTemplate = redisTemplate;
+    private final WWordProperties wWordProperties;
+
+    private final AntPathMatcher antPathMatcher;
+
+    public GlobalAuthenticationFilter(@Lazy UserFeignClient userFeignClient,
+                                      WWordProperties wWordProperties) {
         this.userFeignClient = userFeignClient;
+        this.wWordProperties = wWordProperties;
+        this.antPathMatcher = new AntPathMatcher();
     }
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
+        String targetUrl = exchange.getRequest().getURI().getPath();
+        // 检查白名单
+        if (wWordProperties.getExcludeUrlPatterns().stream().anyMatch(p -> antPathMatcher.match(p, targetUrl))) {
+            return chain.filter(exchange);
+        }
+
         String token = exchange.getRequest().getHeaders().getFirst(WWordConst.API_ACCESS_KEY_HEADER_NAME);
         // 调用鉴权模块进行鉴权,看目标用户是否有当前接口的权限,如果有则放行,否则显示错误信息
         CheckAuthParam checkAuthParam = new CheckAuthParam();
         checkAuthParam.setToken(token);
-        checkAuthParam.setTargetUrl(exchange.getRequest().getURI().getPath());
+
+        checkAuthParam.setTargetUrl(targetUrl);
         Future<BaseResponse<Object>> future = executorService.submit(() -> userFeignClient.getAndCheck(checkAuthParam));
         try {
             BaseResponse<Object> result = future.get();

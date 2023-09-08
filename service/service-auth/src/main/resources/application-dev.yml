@@ -8,6 +8,7 @@ server:
   tomcat:
     uri-encoding: UTF-8
 
+# spring相关配置
 spring:
   datasource:
     username: root
@@ -58,6 +59,10 @@ knife4j:
     language: zh_cn
   production: false
 
-
+# 全局配置
 wword:
   resource-locations: D:/Program/Java Project/WWord/wwordResources/
+
+# 当前服务自定义配置
+service-auth:
+  max-login-log: 50

@@ -1,9 +1,9 @@
-package io.github.cnsukidayo.wword.core.controller;
+package io.github.cnsukidayo.wword.auth.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import io.github.cnsukidayo.wword.common.config.properties.WWordProperties;
-import io.github.cnsukidayo.wword.core.service.LoginLogService;
+import io.github.cnsukidayo.wword.auth.properties.ServiceAuthProperties;
+import io.github.cnsukidayo.wword.auth.service.LoginLogService;
 import io.github.cnsukidayo.wword.model.entity.LoginLog;
 import io.github.cnsukidayo.wword.model.entity.User;
 import io.github.cnsukidayo.wword.model.vo.LoginLogVO;
@@ -22,31 +22,31 @@ import java.util.stream.Collectors;
  */
 @Tag(name = "日志记录接口")
 @RestController
-@RequestMapping("api/u/logger")
+@RequestMapping("/api/auth/logger")
 public class LoggerController {
 
     private final LoginLogService loginLogService;
 
-    private final WWordProperties wWordProperties;
+    private final ServiceAuthProperties serviceAuthProperties;
 
     public LoggerController(LoginLogService loginLogService,
-                            WWordProperties wWordProperties) {
+                            ServiceAuthProperties serviceAuthProperties) {
         this.loginLogService = loginLogService;
-        this.wWordProperties = wWordProperties;
+        this.serviceAuthProperties = serviceAuthProperties;
     }
 
     @Operation(summary = "查询用户一个月内的登陆记录;并且只查询50条记录;按照降序排序")
     @GetMapping("getLoginLog")
     public List<LoginLogVO> getLoginLog(User user) {
-        Page<LoginLog> pageParam = new Page<>(0, wWordProperties.getMaxLoginLog());
+        Page<LoginLog> pageParam = new Page<>(0, serviceAuthProperties.getMaxLoginLog());
         IPage<LoginLog> pageModel = loginLogService.getLoginLog(user, pageParam);
         List<LoginLog> result = pageModel.getRecords();
         return result.stream()
-                .map(loginLog -> {
-                    LoginLogVO loginLogVO = new LoginLogVO().convertFrom(loginLog);
-                    loginLogVO.setLoginTypeString(loginLogVO.getLoginType().getValue());
-                    return loginLogVO;
-                }).collect(Collectors.toList());
+            .map(loginLog -> {
+                LoginLogVO loginLogVO = new LoginLogVO().convertFrom(loginLog);
+                loginLogVO.setLoginTypeString(loginLogVO.getLoginType().getValue());
+                return loginLogVO;
+            }).collect(Collectors.toList());
     }
 
 }

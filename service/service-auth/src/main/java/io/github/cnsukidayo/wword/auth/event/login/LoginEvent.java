@@ -1,4 +1,4 @@
-package io.github.cnsukidayo.wword.core.event.login;
+package io.github.cnsukidayo.wword.auth.event.login;
 
 import io.github.cnsukidayo.wword.common.utils.ServletUtils;
 import io.github.cnsukidayo.wword.model.entity.LoginLog;

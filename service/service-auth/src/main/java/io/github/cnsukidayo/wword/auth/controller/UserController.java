@@ -1,11 +1,11 @@
-package io.github.cnsukidayo.wword.core.controller;
+package io.github.cnsukidayo.wword.auth.controller;
 
-import io.github.cnsukidayo.wword.core.service.UserService;
+import io.github.cnsukidayo.wword.auth.service.UserService;
+import io.github.cnsukidayo.wword.model.entity.User;
 import io.github.cnsukidayo.wword.model.params.LoginParam;
 import io.github.cnsukidayo.wword.model.params.UpdatePasswordParam;
 import io.github.cnsukidayo.wword.model.params.UpdateUserParam;
 import io.github.cnsukidayo.wword.model.params.UserRegisterParam;
-import io.github.cnsukidayo.wword.model.entity.User;
 import io.github.cnsukidayo.wword.model.token.AuthToken;
 import io.github.cnsukidayo.wword.model.vo.UserProfileVO;
 import io.swagger.v3.oas.annotations.Operation;
@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @Tag(name = "用户管理接口")
 @RestController
-@RequestMapping("/api/u/user")
+@RequestMapping("/api/auth/user")
 public class UserController {
 
     private final UserService userService;

@@ -1,7 +1,7 @@
-package io.github.cnsukidayo.wword.core.listener.login;
+package io.github.cnsukidayo.wword.auth.listener.login;
 
-import io.github.cnsukidayo.wword.core.event.login.LoginEvent;
-import io.github.cnsukidayo.wword.core.service.LoginLogService;
+import io.github.cnsukidayo.wword.auth.event.login.LoginEvent;
+import io.github.cnsukidayo.wword.auth.service.LoginLogService;
 import io.github.cnsukidayo.wword.model.entity.LoginLog;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;

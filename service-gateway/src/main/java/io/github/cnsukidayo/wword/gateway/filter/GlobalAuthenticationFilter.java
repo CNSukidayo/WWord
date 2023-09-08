@@ -22,8 +22,11 @@ import org.springframework.util.AntPathMatcher;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -76,9 +79,10 @@ public class GlobalAuthenticationFilter implements GlobalFilter {
                 // 处理异常,将子服务的异常响应给用户
                 return getFailureHandler().onFailure(exchange.getRequest(), exchange.getResponse(), result);
             } else {
-                // 封装请求的用户信息
+                // 封装请求的用户信息并进行编码,从而支持中文
                 ServerHttpRequest.Builder builder = exchange.getRequest().mutate();
-                builder.header(WWordConst.X_CLIENT_USER, JsonUtils.objectToJson(result.getData()));
+                String clientUser = URLEncoder.encode(JsonUtils.objectToJson(((Map) result.getData()).get("user")), StandardCharsets.UTF_8);
+                builder.header(WWordConst.X_CLIENT_USER, clientUser);
                 return chain.filter(exchange.mutate().request(builder.build()).build());
             }
         } catch (InterruptedException

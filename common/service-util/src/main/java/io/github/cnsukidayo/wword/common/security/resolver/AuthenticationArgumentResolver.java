@@ -1,8 +1,8 @@
-package io.github.cnsukidayo.wword.core.security.resolver;
+package io.github.cnsukidayo.wword.common.security.resolver;
 
-import io.github.cnsukidayo.wword.global.exception.BadRequestException;
 import io.github.cnsukidayo.wword.common.security.authentication.Authentication;
 import io.github.cnsukidayo.wword.common.security.context.SecurityContextHolder;
+import io.github.cnsukidayo.wword.global.exception.BadRequestException;
 import io.github.cnsukidayo.wword.model.entity.User;
 import io.github.cnsukidayo.wword.model.exception.ResultCodeEnum;
 import org.apache.commons.logging.Log;

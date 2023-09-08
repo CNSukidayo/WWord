@@ -22,7 +22,7 @@ import java.util.Map;
  */
 @Tag(name = "权限管理接口")
 @RestController
-@RequestMapping("api/auth/permission")
+@RequestMapping("/api/auth/permission")
 public class PermissionController {
 
     private final PermissionService permissionService;

@@ -12,8 +12,6 @@ public class WWordProperties {
 
     private String resourceLocations;
 
-    private Integer maxLoginLog;
-
     public String getResourceLocations() {
         return resourceLocations;
     }
@@ -22,11 +20,4 @@ public class WWordProperties {
         this.resourceLocations = resourceLocations;
     }
 
-    public Integer getMaxLoginLog() {
-        return maxLoginLog;
-    }
-
-    public void setMaxLoginLog(Integer maxLoginLog) {
-        this.maxLoginLog = maxLoginLog;
-    }
 }

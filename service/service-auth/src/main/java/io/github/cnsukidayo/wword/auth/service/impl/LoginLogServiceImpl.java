@@ -1,11 +1,11 @@
-package io.github.cnsukidayo.wword.core.service.impl;
+package io.github.cnsukidayo.wword.auth.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import io.github.cnsukidayo.wword.core.dao.LoginLogMapper;
-import io.github.cnsukidayo.wword.core.service.LoginLogService;
+import io.github.cnsukidayo.wword.auth.dao.LoginLogMapper;
+import io.github.cnsukidayo.wword.auth.service.LoginLogService;
 import io.github.cnsukidayo.wword.model.entity.LoginLog;
 import io.github.cnsukidayo.wword.model.entity.User;
 import org.springframework.stereotype.Service;

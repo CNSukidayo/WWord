@@ -1,4 +1,4 @@
-package io.github.cnsukidayo.wword.core.service;
+package io.github.cnsukidayo.wword.auth.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;

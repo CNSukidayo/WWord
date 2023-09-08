@@ -1,21 +1,31 @@
 package io.github.cnsukidayo.wword.common.security.filter;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.github.cnsukidayo.wword.common.security.authentication.AuthenticationImpl;
+import io.github.cnsukidayo.wword.common.security.context.SecurityContextImpl;
 import io.github.cnsukidayo.wword.global.exception.AbstractWWordException;
 import io.github.cnsukidayo.wword.common.security.context.SecurityContextHolder;
+import io.github.cnsukidayo.wword.global.exception.BadRequestException;
 import io.github.cnsukidayo.wword.global.handler.AuthenticationFailureHandler;
 import io.github.cnsukidayo.wword.global.handler.DefaultAuthenticationFailureHandler;
+import io.github.cnsukidayo.wword.global.utils.JsonUtils;
+import io.github.cnsukidayo.wword.model.entity.User;
 import io.github.cnsukidayo.wword.model.environment.WWordConst;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.http.HttpStatus;
 import org.springframework.lang.NonNull;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.util.UrlPathHelper;
 
 import java.io.IOException;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 /**
@@ -37,8 +47,11 @@ public abstract class AbstractAuthenticationFilter extends OncePerRequestFilter 
 
     private Set<String> urlPatterns = new LinkedHashSet<>();
 
-    protected AbstractAuthenticationFilter() {
+    private final ObjectMapper objectMapper;
+
+    protected AbstractAuthenticationFilter(ObjectMapper objectMapper) {
         antPathMatcher = new AntPathMatcher();
+        this.objectMapper = objectMapper;
     }
 
     /**
@@ -54,8 +67,22 @@ public abstract class AbstractAuthenticationFilter extends OncePerRequestFilter 
         return request.getHeader(WWordConst.API_ACCESS_KEY_HEADER_NAME);
     }
 
-    protected abstract void doAuthenticate(HttpServletRequest request, HttpServletResponse response,
-                                           FilterChain filterChain) throws ServletException, IOException;
+    protected void doAuthenticate(HttpServletRequest request, HttpServletResponse response,
+                                  FilterChain filterChain) throws ServletException, IOException {
+        // 获取请求的用户数据
+        String userJson = request.getHeader(WWordConst.X_CLIENT_USER);
+
+        if (!StringUtils.hasText(userJson)) {
+            throw new BadRequestException(HttpStatus.INTERNAL_SERVER_ERROR.value(), "服务器错误!");
+        }
+        // 进行解码
+        User user = JsonUtils.jsonToObject(URLDecoder.decode(userJson, StandardCharsets.UTF_8), User.class, objectMapper);
+        // 设置安全性
+        SecurityContextHolder
+            .setContext(new SecurityContextImpl(new AuthenticationImpl(user)));
+        // 执行过滤链
+        filterChain.doFilter(request, response);
+    }
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
@@ -63,10 +90,10 @@ public abstract class AbstractAuthenticationFilter extends OncePerRequestFilter 
 
         // 检查白名单
         boolean result = excludeUrlPatterns.stream()
-                .anyMatch(p -> antPathMatcher.match(p, urlPathHelper.getRequestUri(request)));
+            .anyMatch(p -> antPathMatcher.match(p, urlPathHelper.getRequestUri(request)));
 
         return result || urlPatterns.stream()
-                .noneMatch(p -> antPathMatcher.match(p, urlPathHelper.getRequestUri(request)));
+            .noneMatch(p -> antPathMatcher.match(p, urlPathHelper.getRequestUri(request)));
     }
 
     /**
@@ -139,7 +166,7 @@ public abstract class AbstractAuthenticationFilter extends OncePerRequestFilter 
      * @param failureHandler 错误认证处理器
      */
     public synchronized void setFailureHandler(
-            @NonNull AuthenticationFailureHandler failureHandler) {
+        @NonNull AuthenticationFailureHandler failureHandler) {
         Assert.notNull(failureHandler, "Authentication failure handler must not be null");
 
         this.failureHandler = failureHandler;

@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @Tag(name = "角色权限管理接口")
 @RestController
-@RequestMapping("api/auth/role_permission")
+@RequestMapping("/api/auth/role_permission")
 public class RolePermissionController {
 
     private final RolePermissionService rolePermissionService;

@@ -38,7 +38,6 @@ public class RolePermissionServiceImpl extends ServiceImpl<RolePermissionMapper,
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
-
     private final PermissionService permissionService;
 
     private final RoleMapper roleMapper;

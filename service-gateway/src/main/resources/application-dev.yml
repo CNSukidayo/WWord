@@ -65,6 +65,6 @@ logging:
 wword:
   # 白名单,不走gateway转发的路径
   exclude-url-patterns:
+    - api/auth/user/register
     - api/auth/user/login
     - api/auth/user/refresh/*
-    - api/auth/user/register

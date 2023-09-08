@@ -1,4 +1,4 @@
-package io.github.cnsukidayo.wword.common.core;
+package io.github.cnsukidayo.wword.global.handler;
 
 import io.github.cnsukidayo.wword.model.support.BaseResponse;
 import io.github.cnsukidayo.wword.model.vo.ErrorVo;
@@ -25,7 +25,7 @@ public abstract class BaseExceptionHandler {
 
     private final Logger log;
 
-    BaseExceptionHandler(Boolean production, Logger log) {
+    protected BaseExceptionHandler(Boolean production, Logger log) {
         this.production = production;
         this.log = log;
     }

@@ -1,5 +1,6 @@
 package io.github.cnsukidayo.wword.common.core;
 
+import io.github.cnsukidayo.wword.global.handler.BaseExceptionHandler;
 import io.github.cnsukidayo.wword.model.support.BaseResponse;
 import io.github.cnsukidayo.wword.model.vo.ErrorVo;
 import jakarta.servlet.ServletException;
@@ -34,7 +35,7 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 @RestControllerAdvice
 public class BeforeControllerExceptionHandler extends BaseExceptionHandler {
 
-    public BeforeControllerExceptionHandler(@Value("${knife4j.production}") Boolean production) {
+    public BeforeControllerExceptionHandler(@Value("${knife4j.production:true}") Boolean production) {
         super(production, LoggerFactory.getLogger(BeforeControllerExceptionHandler.class));
     }
 

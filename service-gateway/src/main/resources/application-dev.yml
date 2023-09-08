@@ -68,3 +68,4 @@ wword:
     - api/auth/user/register
     - api/auth/user/login
     - api/auth/user/refresh/*
+  production: false

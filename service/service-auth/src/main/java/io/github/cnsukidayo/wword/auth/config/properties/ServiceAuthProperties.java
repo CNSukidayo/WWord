@@ -1,4 +1,4 @@
-package io.github.cnsukidayo.wword.auth.properties;
+package io.github.cnsukidayo.wword.auth.config.properties;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;

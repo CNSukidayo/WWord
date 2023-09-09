@@ -5,10 +5,11 @@ import org.springframework.web.reactive.config.ResourceHandlerRegistry;
 import org.springframework.web.reactive.config.WebFluxConfigurer;
 
 @Configuration
-public class GateWayConfig implements WebFluxConfigurer {
+public class WWordWebFluxConfiguration implements WebFluxConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
+
         registry.addResourceHandler("favicon.ico")
             .addResourceLocations("classpath:/static/");
         // 注册swagger相关的映射信息

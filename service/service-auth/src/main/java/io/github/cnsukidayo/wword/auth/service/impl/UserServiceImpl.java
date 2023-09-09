@@ -4,29 +4,37 @@ import cn.hutool.crypto.digest.BCrypt;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import io.github.cnsukidayo.wword.auth.dao.UserMapper;
+import io.github.cnsukidayo.wword.auth.dao.UserRoleMapper;
 import io.github.cnsukidayo.wword.auth.event.login.LoginEvent;
+import io.github.cnsukidayo.wword.auth.service.PermissionService;
+import io.github.cnsukidayo.wword.auth.service.RolePermissionService;
 import io.github.cnsukidayo.wword.auth.service.UserService;
 import io.github.cnsukidayo.wword.common.security.authentication.Authentication;
 import io.github.cnsukidayo.wword.common.security.context.SecurityContextHolder;
 import io.github.cnsukidayo.wword.common.utils.SecurityUtils;
 import io.github.cnsukidayo.wword.common.utils.ServletUtils;
+import io.github.cnsukidayo.wword.core.client.UniversityFeignClient;
 import io.github.cnsukidayo.wword.global.exception.BadRequestException;
 import io.github.cnsukidayo.wword.model.bo.UserPermissionBO;
+import io.github.cnsukidayo.wword.model.entity.Permission;
+import io.github.cnsukidayo.wword.model.entity.RolePermission;
 import io.github.cnsukidayo.wword.model.entity.User;
+import io.github.cnsukidayo.wword.model.entity.UserRole;
 import io.github.cnsukidayo.wword.model.enums.LoginType;
 import io.github.cnsukidayo.wword.model.environment.WWordConst;
 import io.github.cnsukidayo.wword.model.exception.ResultCodeEnum;
 import io.github.cnsukidayo.wword.model.params.*;
 import io.github.cnsukidayo.wword.model.token.AuthToken;
-import io.github.cnsukidayo.wword.core.client.UniversityFeignClient;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpHeaders;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -44,14 +52,28 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     private final ApplicationEventPublisher eventPublisher;
 
+    private final UserRoleMapper userRoleMapper;
 
+    private final PermissionService permissionService;
+
+    private final RolePermissionService rolePermissionService;
+
+    private final AntPathMatcher antPathMatcher;
 
     public UserServiceImpl(RedisTemplate<String, String> redisTemplate,
                            ApplicationEventPublisher applicationEventPublisher,
-                           UniversityFeignClient universityService) {
+                           UniversityFeignClient universityService,
+                           UserRoleMapper userRoleMapper,
+                           PermissionService permissionService,
+                           RolePermissionService rolePermissionService,
+                           AntPathMatcher antPathMatcher) {
         this.redisTemplate = redisTemplate;
         this.universityFeignClient = universityService;
         this.eventPublisher = applicationEventPublisher;
+        this.userRoleMapper = userRoleMapper;
+        this.permissionService = permissionService;
+        this.rolePermissionService = rolePermissionService;
+        this.antPathMatcher = antPathMatcher;
     }
 
 
@@ -60,13 +82,40 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         Assert.notNull(checkAuthParam, "checkAuthParam must not be null");
 
         // 得到用户id
-        String userID = redisTemplate.opsForValue().get(SecurityUtils.buildTokenAccessKey(checkAuthParam.getToken()));
-
+        String userID = Optional.ofNullable(redisTemplate.opsForValue().get(SecurityUtils.buildTokenAccessKey(checkAuthParam.getToken())))
+            .filter(StringUtils::hasText)
+            .orElseThrow(() -> new BadRequestException(ResultCodeEnum.LOGIN_STATE_INVALID));
         // 查询目标用户
-        User user = baseMapper.selectById(userID);
+        User user = Optional.ofNullable(baseMapper.selectById(userID))
+            .orElseThrow(() -> new BadRequestException(ResultCodeEnum.LOGIN_FAIL));
+
         UserPermissionBO userPermissionBO = new UserPermissionBO();
         userPermissionBO.setUser(user);
-        userPermissionBO.setHasPermission(true);
+        userPermissionBO.setHasPermission(false);
+        // 查询目标用户的角色id
+        List<Long> userRoleIdList = userRoleMapper.selectList(new LambdaQueryWrapper<UserRole>().eq(UserRole::getUuid, user.getUuid()))
+            .stream()
+            .map(UserRole::getRoleId)
+            .toList();
+        // 通过缓存直接查询所有接口
+        List<Permission> allPermissionList = permissionService.getTraces();
+        // 查询目标用户的所有权限接口的id
+        List<Long> permissionIdList = rolePermissionService.list(new LambdaQueryWrapper<RolePermission>().in(RolePermission::getRoleId, userRoleIdList))
+            .stream()
+            .map(RolePermission::getPermissionId)
+            .distinct()
+            .toList();
+        // 筛选出permissionIdList对应的接口
+        allPermissionList = allPermissionList.stream()
+            .filter(permission -> permissionIdList.contains(permission.getId()))
+            .toList();
+        // 判断是否有符合权限的接口
+        for (Permission permission : allPermissionList) {
+            if (antPathMatcher.match(permission.getPath(), checkAuthParam.getTargetUrl())) {
+                userPermissionBO.setHasPermission(true);
+                return userPermissionBO;
+            }
+        }
         return userPermissionBO;
     }
 

@@ -39,23 +39,6 @@ spring:
         locator:
           enabled: true # 开启配置
       routes:
-#        - id: local-service
-#          uri: classpath:/META-INF/resources/
-#          predicates:
-#            - Path=/doc.html
-#        - id: local-service
-#          uri: classpath:/META-INF/resources/
-#          predicates:
-#            - Path=/swagger-ui.html
-#        - id: local-service
-#          uri: classpath:classpath:/META-INF/resources/webjars/
-#          predicates:
-#            - Path=/webjars/**
-#        - id: local-service
-#          uri: classpath:classpath:/ist/
-#          predicates:
-#            - Path=/static/*,/favicon.ico
-
         - id: service-core
           uri: lb://service-core
           predicates:

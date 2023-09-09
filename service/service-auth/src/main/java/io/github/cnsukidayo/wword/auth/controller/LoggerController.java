@@ -2,7 +2,7 @@ package io.github.cnsukidayo.wword.auth.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import io.github.cnsukidayo.wword.auth.properties.ServiceAuthProperties;
+import io.github.cnsukidayo.wword.auth.config.properties.ServiceAuthProperties;
 import io.github.cnsukidayo.wword.auth.service.LoginLogService;
 import io.github.cnsukidayo.wword.model.entity.LoginLog;
 import io.github.cnsukidayo.wword.model.entity.User;

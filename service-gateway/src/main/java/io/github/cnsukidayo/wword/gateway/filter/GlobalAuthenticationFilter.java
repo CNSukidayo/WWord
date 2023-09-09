@@ -67,11 +67,9 @@ public class GlobalAuthenticationFilter implements GlobalFilter {
         }
 
         String token = exchange.getRequest().getHeaders().getFirst(WWordConst.API_ACCESS_KEY_HEADER_NAME);
-        token = "7b4e2ebb0a4d4bf591ec394c7fff5311";
         // 调用鉴权模块进行鉴权,看目标用户是否有当前接口的权限,如果有则放行,否则显示错误信息
         CheckAuthParam checkAuthParam = new CheckAuthParam();
         checkAuthParam.setToken(token);
-
         checkAuthParam.setTargetUrl(targetUrl);
         Future<BaseResponse<Object>> future = executorService.submit(() -> userFeignClient.getAndCheck(checkAuthParam));
         try {

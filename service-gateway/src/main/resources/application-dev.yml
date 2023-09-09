@@ -28,7 +28,7 @@ spring:
     time-zone: GMT+8
   web:
     resources:
-      add-mappings: false
+      add-mappings: true # 先开启静态资源映射
   # 微服务相关配置
   cloud:
     nacos:
@@ -60,6 +60,16 @@ logging:
     path: logs/gateway-service/
   level:
     io.github.cnsukidayo: info
+
+knife4j:
+  gateway:
+    enabled: true
+    strategy: manual
+    routes:
+      - name: 鉴权模块
+        service-name: service-auth
+        url: /service-auth/v3/api-docs/default
+        context-path: /service-auth
 
 # 自定义相关配置
 wword:

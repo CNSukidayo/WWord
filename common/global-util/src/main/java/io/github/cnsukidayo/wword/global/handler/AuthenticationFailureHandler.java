@@ -30,7 +30,7 @@ public interface AuthenticationFailureHandler {
                    AbstractWWordException exception) throws IOException, ServletException;
 
     Mono<Void> onFailure(ServerHttpRequest request, ServerHttpResponse response,
-                   Object errorDetail);
+                         Object errorDetail);
 
 
 }

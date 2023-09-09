@@ -29,7 +29,7 @@ spring:
     time-zone: GMT+8
   web:
     resources:
-      add-mappings: false
+      add-mappings: true
   # springcloud相关配置
   cloud:
     nacos:
@@ -65,6 +65,17 @@ mybatis-plus:
 #      display-name: "用户端接口"
 #      packages-to-scan: io.github.cnsukidayo.wword.controller.u
 # knife4j的增强配置,不需要增强可以不配
+springdoc:
+  api-docs:
+    groups:
+      enabled: true
+  group-configs:
+    - group: default
+      display-name: 用户服务
+      packages-to-scan:
+        - io.github.cnsukidayo.wword.core.controller
+
+
 knife4j:
   enable: true
   setting:

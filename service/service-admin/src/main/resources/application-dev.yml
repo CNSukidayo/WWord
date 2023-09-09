@@ -62,6 +62,17 @@ mybatis-plus:
   #  mapper-locations: classpath*:/mapper/**/*.xml
   type-aliases-package: io.github.cnsukidayo.wword.model.entity
 
+#springdoc配置
+springdoc:
+  api-docs:
+    groups:
+      enabled: true
+  group-configs:
+    - group: default
+      display-name: 管理员服务
+      packages-to-scan:
+        - io.github.cnsukidayo.wword.admin.controller
+
 # knife4j的增强配置,不需要增强可以不配
 knife4j:
   enable: true

@@ -58,10 +58,15 @@ springdoc:
     groups:
       enabled: true
   group-configs:
-    - group: default
-      display-name: 权限服务
+    - group: auth-front
+      display-name: 权限服务-前端
       packages-to-scan:
         - io.github.cnsukidayo.wword.auth.controller
+    - group: auth-cloud
+      display-name: 权限服务-微服务
+      packages-to-scan:
+        - io.github.cnsukidayo.wword.auth.api
+
 # knife4j的增强配置,不需要增强可以不配
 knife4j:
   enable: true

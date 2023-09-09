@@ -23,11 +23,6 @@
             <artifactId>service-core-client</artifactId>
             <version>0.1-SNAPSHOT</version>
         </dependency>
-        <dependency>
-            <groupId>io.github.cnsukidayo.wword</groupId>
-            <artifactId>service-auth-client</artifactId>
-            <version>0.1-SNAPSHOT</version>
-        </dependency>
     </dependencies>
 
 </project>

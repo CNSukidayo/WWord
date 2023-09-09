@@ -70,12 +70,14 @@ springdoc:
     groups:
       enabled: true
   group-configs:
-    - group: default
-      display-name: 用户服务
+    - group: core-front
+      display-name: 业务模块-前端
       packages-to-scan:
         - io.github.cnsukidayo.wword.core.controller
-
-
+    - group: core-cloud
+      display-name: 业务模块-微服务
+      packages-to-scan:
+        - io.github.cnsukidayo.wword.core.api
 knife4j:
   enable: true
   setting:

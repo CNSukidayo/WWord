@@ -47,6 +47,10 @@ spring:
           uri: lb://service-auth
           predicates:
             - Path=/api/auth/**
+        - id: service-admin
+          uri: lb://service-admin
+          predicates:
+            - Path=/api/admin/**
 
       httpclient:
         ssl:
@@ -64,13 +68,28 @@ logging:
 knife4j:
   gateway:
     enabled: true
-    strategy: manual
+    strategy: manual # 不要使用服务探测,灵活性太低(可能后序版本会改善)
     routes:
-      - name: 鉴权模块
+      - name: 权限模块-前端
         service-name: service-auth
-        url: /service-auth/v3/api-docs/default
-        context-path: /service-auth
-
+        url: /service-auth/v3/api-docs/auth-front
+        context-path:
+      - name: 权限模块-微服务
+        service-name: service-auth
+        url: /service-auth/v3/api-docs/auth-cloud
+        context-path: /
+      - name: 业务模块-前端
+        service-name: service-core
+        url: /service-core/v3/api-docs/core-front
+        context-path: /
+      - name: 业务模块-微服务
+        service-name: service-core
+        url: /service-core/v3/api-docs/core-cloud
+        context-path: /
+      - name: 管理员模块-前端
+        service-name: service-admin
+        url: /service-admin/v3/api-docs/admin-front
+        context-path: /
 # 自定义相关配置
 wword:
   # 白名单,不走gateway转发的路径

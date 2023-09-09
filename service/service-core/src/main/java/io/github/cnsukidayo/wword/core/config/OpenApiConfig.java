@@ -14,10 +14,9 @@ public class OpenApiConfig {
     @Bean
     public OpenAPI springShopOpenAPI() {
         return new OpenAPI()
-                .info(new Info()
-                        .title("万语词后端项目API666666")
-                        .description("基于SpringDoc的万语词后端项目API")
-                        .version("v0.0.1"));
+            .info(new Info()
+                .title("万语词后端项目API")
+                .description("基于SpringDoc的万语词后端项目API;当前模块:业务模块")
+                .version("v0.0.1"));
     }
-
 }

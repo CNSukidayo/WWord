@@ -7,12 +7,6 @@ server:
       enabled: true
   tomcat:
     uri-encoding: UTF-8
-  ssl:
-    key-store: classpath:ssl/httpsKey.p12
-    key-store-password: abc123456789
-    key-store-type: PKCS12
-    key-alias: wword
-
 spring:
   datasource:
     username: root
@@ -68,7 +62,7 @@ springdoc:
     groups:
       enabled: true
   group-configs:
-    - group: default
+    - group: admin-front
       display-name: 管理员服务
       packages-to-scan:
         - io.github.cnsukidayo.wword.admin.controller

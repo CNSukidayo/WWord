@@ -466,8 +466,7 @@ public class WordHandleServiceImpl implements WordHandleService {
 
     @Override
     @Async
-    @Transactional
-    public void updateBase() {
+    public void updateBase(Long divideId) {
         // todo 分布式事务目前无法解决
         /*
         本地事务,在分布式系统,只能控制自已的回滚,控制不了其它服务的回滚
@@ -487,59 +486,70 @@ public class WordHandleServiceImpl implements WordHandleService {
             3.根据wordId从word表中查询出单词的所有详细信息
             4.晋升规则:先按照单词的结构数量越多的价值越高.在结构数量相同的情况下,信息越丰富的价值越高
          */
-        for (Divide officialDivide : officialDivideList) {
-            if (officialDivide.getDivideType() != DivideType.OFFICIAL) continue;
-            log.info("handler divide:[{}]", officialDivide.getName());
-            Long officialDivideId = officialDivide.getId();
-            // 根据划分id查询当前的所有单词
-            List<WordId> currentWordIdList = coreFeignClient.selectWordIdByDivideId(officialDivideId);
-            List<WordId> addToBaseList = new LinkedList<>();
-            for (int i = 0; i < currentWordIdList.size(); i++) {
-                log.debug("current handle:[{}],word:[{}],index:[{}]",
-                    officialDivide.getName(),
-                    currentWordIdList.get(i).getWord(),
-                    i);
-                // 直接根据word原文查询(但是divideId)必须比当前大
-                List<WordId> sameWordIdList = coreFeignClient.selectSameWordIdWord(currentWordIdList.get(i));
-                sameWordIdList.add(currentWordIdList.get(i));
-                sameWordIdList.sort(wordIdComparator);
-                addToBaseList.add(sameWordIdList.get(sameWordIdList.size() - 1));
+
+        Divide officialDivide = null;
+        for (Divide divide : officialDivideList) {
+            if (divide.getId().equals(divideId)) {
+                officialDivide = divide;
+                break;
             }
-            // 批量添加单词
-            for (WordId addWord : addToBaseList) {
-                // 插入新单词
-                WordId newWordId = new WordId();
-                newWordId.setDivideId(baseId);
-                newWordId.setWord(addWord.getWord());
-                newWordId = coreFeignClient.saveWordId(newWordId);
-                log.debug("saveWordId:[{}]", newWordId);
-                // 查询出目标单词的详细信息
-                List<Word> targetWordDetailList = coreFeignClient.selectWordById(addWord.getId());
-                // 有限处理groupId是空的单词
-                Queue<Word> queue = new ArrayDeque<>();
-                targetWordDetailList.forEach(word -> {
-                    if (word.getGroupId() == null) {
-                        queue.add(word);
-                    }
-                });
-                while (!queue.isEmpty()) {
-                    Word targetWordDetail = queue.poll();
-                    List<Word> childWordList = findChildWord(targetWordDetail, targetWordDetailList);
-                    Word word = new Word();
-                    word.setWordId(newWordId.getId());
-                    word.setWordStructureId(targetWordDetail.getWordStructureId());
-                    word.setValue(targetWordDetail.getValue());
-                    word.setGroupId(targetWordDetail.getGroupId());
-                    // 插入单词
-                    word = coreFeignClient.saveWord(word);
-                    log.debug("saveWord:[{}]", word.getValue());
-                    // 更新
-                    Long groupFlag = word.getGroupFlag();
-                    childWordList.forEach(childWord -> {
-                        childWord.setGroupId(groupFlag);
-                        queue.add(childWord);
-                    });
+        }
+
+        log.info("handler divide:[{}]", officialDivide.getName());
+        Long officialDivideId = officialDivide.getId();
+        // 根据划分id查询当前的所有单词
+        List<WordId> currentWordIdList = coreFeignClient.selectWordIdByDivideId(officialDivideId);
+        List<WordId> addToBaseList = new LinkedList<>();
+        for (int i = 0; i < currentWordIdList.size(); i++) {
+            WordId currentWordId = currentWordIdList.get(i);
+            log.debug("current handle:[{}],word:[{}],index:[{}]",
+                officialDivide.getName(),
+                currentWordId.getWord(),
+                i);
+            // 如果当前单词已经存在于总库中则跳过
+            if ( coreFeignClient.exist(currentWordId.getWord(), baseId)){
+                continue;
+            }
+            // 直接根据word原文查询(但是divideId)必须比当前大
+            List<WordId> sameWordIdList = coreFeignClient.selectSameWordIdWord(currentWordId);
+            sameWordIdList.add(currentWordId);
+            sameWordIdList.sort(wordIdComparator);
+            addToBaseList.add(sameWordIdList.get(sameWordIdList.size() - 1));
+        }
+        // 批量添加单词
+        for (WordId addWord : addToBaseList) {
+            // 插入新单词
+            WordId newWordId = new WordId();
+            newWordId.setDivideId(baseId);
+            newWordId.setWord(addWord.getWord());
+            newWordId = coreFeignClient.saveWordId(newWordId);
+            log.debug("saveWordId:[{}]", newWordId);
+            // 查询出目标单词的详细信息
+            List<Word> targetWordDetailList = coreFeignClient.selectWordById(addWord.getId());
+            // 有限处理groupId是空的单词
+            Queue<Word> queue = new ArrayDeque<>();
+            targetWordDetailList.forEach(word -> {
+                if (word.getGroupId() == null) {
+                    queue.add(word);
                 }
+            });
+            while (!queue.isEmpty()) {
+                Word targetWordDetail = queue.poll();
+                List<Word> childWordList = findChildWord(targetWordDetail, targetWordDetailList);
+                Word word = new Word();
+                word.setWordId(newWordId.getId());
+                word.setWordStructureId(targetWordDetail.getWordStructureId());
+                word.setValue(targetWordDetail.getValue());
+                word.setGroupId(targetWordDetail.getGroupId());
+                // 插入单词
+                word = coreFeignClient.saveWord(word);
+                log.debug("saveWord:[{}]", word.getValue());
+                // 更新
+                Long groupFlag = word.getGroupFlag();
+                childWordList.forEach(childWord -> {
+                    childWord.setGroupId(groupFlag);
+                    queue.add(childWord);
+                });
             }
         }
         // 发布到elastic search

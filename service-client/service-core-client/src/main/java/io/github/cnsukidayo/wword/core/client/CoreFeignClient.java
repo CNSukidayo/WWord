@@ -86,7 +86,7 @@ public interface CoreFeignClient {
      * @return 返回插入后的结果不为null
      */
     @PostMapping("/remote/u/wordId/saveWord")
-    Word saveWord(@RequestBody Word word) ;
+    Word saveWord(@RequestBody Word word);
 
     /**
      * 查询一个单词的结构数量(方便排序)
@@ -95,7 +95,7 @@ public interface CoreFeignClient {
      * @return 返回数量不为null
      */
     @GetMapping("/remote/u/wordId/countStructure")
-    Long countStructure(@RequestParam Long wordId) ;
+    Long countStructure(@RequestParam Long wordId);
 
     /**
      * 查询一个单词的信息数
@@ -104,6 +104,16 @@ public interface CoreFeignClient {
      * @return 返回数量不为null
      */
     @GetMapping("/remote/u/wordId/countValue")
-    Long countValue(@RequestParam Long wordId) ;
+    Long countValue(@RequestParam Long wordId);
+
+    /**
+     * 判断一个单词是否在一个划分中
+     *
+     * @param word     单词内容不为null
+     * @param divideId 划分id不为null
+     * @return 返回值不为null
+     */
+    @GetMapping("/remote/u/wordId/exist")
+    Boolean exist(@RequestParam("word") String word, @RequestParam("divideId") Long divideId);
 
 }

@@ -68,5 +68,10 @@ public class WordIdApiController {
         return wordIdService.countValue(wordId);
     }
 
-
+    @Operation(description = "判断一个单词是否在一个划分中")
+    @GetMapping("exist")
+    public Boolean exist(@Parameter(description = "单词原文") @RequestParam("word") String word,
+                         @Parameter(description = "划分id") @RequestParam("divideId") Long divideId) {
+        return wordIdService.exist(word, divideId);
+    }
 }

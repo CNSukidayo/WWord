@@ -71,5 +71,14 @@ public class WordIdServiceImpl extends ServiceImpl<WordIdMapper, WordId> impleme
         return wordMapper.selectCount(new LambdaQueryWrapper<Word>().eq(Word::getWordId, wordId));
     }
 
+    @Override
+    public Boolean exist(String word, Long divideId) {
+        Assert.hasText(word, "word must not be empty");
+        Assert.notNull(divideId, "divideId must not be null");
+        return wordIdMapper.exists(new LambdaQueryWrapper<WordId>()
+            .eq(WordId::getDivideId, divideId)
+            .eq(WordId::getWord, word));
+    }
+
 
 }

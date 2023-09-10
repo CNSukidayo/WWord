@@ -56,10 +56,10 @@ public class WordHandleController {
 
     @Operation(summary = "更新单词总库")
     @GetMapping("updateBase")
-    public void updateBase() {
+    public void updateBase(@RequestParam("divideId") Long divideId) {
         // todo 可以添加事件
         log.info("updateBase start");
-        wordHandleService.updateBase();
+        wordHandleService.updateBase(divideId);
     }
 
 }

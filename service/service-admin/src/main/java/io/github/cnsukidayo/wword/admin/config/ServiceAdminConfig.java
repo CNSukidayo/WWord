@@ -21,5 +21,4 @@ public class ServiceAdminConfig {
     public Comparator<WordId> wordIdComparator(CoreFeignClient coreFeignClient) {
         return new DefaultWordIdComparable(coreFeignClient);
     }
-
 }

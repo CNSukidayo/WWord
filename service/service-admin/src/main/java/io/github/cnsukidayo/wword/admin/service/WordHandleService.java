@@ -28,6 +28,8 @@ public interface WordHandleService {
 
     /**
      * 更新单词总库,该方法时一个耗时方法
+     *
+     * @param divideId 划分id
      */
-    void updateBase();
+    void updateBase(Long divideId);
 }

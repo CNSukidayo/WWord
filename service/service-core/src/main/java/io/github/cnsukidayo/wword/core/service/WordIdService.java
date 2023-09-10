@@ -60,4 +60,12 @@ public interface WordIdService extends IService<WordId> {
      */
     Long countValue(Long wordId);
 
+    /**
+     * 判断一个单词是否在一个划分中
+     *
+     * @param word     单词内容不为null
+     * @param divideId 划分id不为null
+     * @return 返回值不为null
+     */
+    Boolean exist(String word, Long divideId);
 }

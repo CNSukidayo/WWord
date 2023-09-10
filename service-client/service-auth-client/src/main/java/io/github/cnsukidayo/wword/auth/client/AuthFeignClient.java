@@ -18,7 +18,7 @@ import java.util.List;
  * @date 2023/9/7 19:34
  */
 @FeignClient("service-auth")
-public interface UserFeignClient {
+public interface AuthFeignClient {
 
     /**
      * 得到并且校验目标用户的权限<br>

@@ -2,10 +2,10 @@ package io.github.cnsukidayo.wword.core.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import io.github.cnsukidayo.wword.model.dto.DivideDTO;
-import io.github.cnsukidayo.wword.model.params.AddDivideParam;
 import io.github.cnsukidayo.wword.model.entity.Divide;
 import io.github.cnsukidayo.wword.model.entity.DivideWord;
 import io.github.cnsukidayo.wword.model.entity.LanguageClass;
+import io.github.cnsukidayo.wword.model.params.AddDivideParam;
 
 import java.util.List;
 
@@ -66,9 +66,9 @@ public interface DivideService extends IService<Divide> {
     void deleteDivideWord(Long divideId, List<Long> wordIdList, Long UUID);
 
     /**
-     * 展示一个划分下面的所有单词
+     * 展示一个子划分下面的所有单词
      *
-     * @param divideId 划分的id
+     * @param divideId 子划分的id
      * @return 单词集合
      */
     List<DivideWord> listDivideWord(Long divideId);
@@ -82,9 +82,10 @@ public interface DivideService extends IService<Divide> {
     void copyDivide(Long divideId, Long uuid);
 
     /**
-     * 查询出所有的父划分
+     * 查询出所有的父划分,并且会按照divideID进行升序
      *
      * @return 返回集合不为空nul
      */
     List<Divide> listParentDivide();
+
 }

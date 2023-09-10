@@ -1,7 +1,7 @@
 package io.github.cnsukidayo.wword.gateway.filter;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import io.github.cnsukidayo.wword.auth.client.UserFeignClient;
+import io.github.cnsukidayo.wword.auth.client.AuthFeignClient;
 import io.github.cnsukidayo.wword.gateway.config.properties.WWordProperties;
 import io.github.cnsukidayo.wword.global.handler.AuthenticationFailureHandler;
 import io.github.cnsukidayo.wword.global.handler.DefaultAuthenticationFailureHandler;
@@ -42,7 +42,7 @@ public class GlobalAuthenticationFilter implements GlobalFilter {
 
     private volatile AuthenticationFailureHandler failureHandler;
 
-    private final UserFeignClient userFeignClient;
+    private final AuthFeignClient authFeignClient;
 
     // todo 这一步会影响性能
     private final ExecutorService executorService = Executors.newFixedThreadPool(1);
@@ -51,9 +51,9 @@ public class GlobalAuthenticationFilter implements GlobalFilter {
 
     private final AntPathMatcher antPathMatcher;
 
-    public GlobalAuthenticationFilter(@Lazy UserFeignClient userFeignClient,
+    public GlobalAuthenticationFilter(@Lazy AuthFeignClient authFeignClient,
                                       WWordProperties wWordProperties) {
-        this.userFeignClient = userFeignClient;
+        this.authFeignClient = authFeignClient;
         this.wWordProperties = wWordProperties;
         this.antPathMatcher = new AntPathMatcher();
     }
@@ -71,7 +71,7 @@ public class GlobalAuthenticationFilter implements GlobalFilter {
         CheckAuthParam checkAuthParam = new CheckAuthParam();
         checkAuthParam.setToken(token);
         checkAuthParam.setTargetUrl(targetUrl);
-        Future<BaseResponse<Object>> future = executorService.submit(() -> userFeignClient.getAndCheck(checkAuthParam));
+        Future<BaseResponse<Object>> future = executorService.submit(() -> authFeignClient.getAndCheck(checkAuthParam));
         try {
             BaseResponse<Object> result = future.get();
             if (!result.getStatus().equals(HttpStatus.OK.value())) {

@@ -3,9 +3,11 @@ package io.github.cnsukidayo.wword.core.api;
 import io.github.cnsukidayo.wword.core.service.DivideService;
 import io.github.cnsukidayo.wword.model.entity.Divide;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -30,5 +32,12 @@ public class DivideApiController {
     public List<Divide> listParentDivide() {
         return divideService.listParentDivide();
     }
+
+    @Operation(summary = "根据划分id查询出划分的详细信息")
+    @GetMapping("selectById")
+    public Divide selectById(@Parameter(description = "划分id") @RequestParam("divideId") Long divideId) {
+        return divideService.getById(divideId);
+    }
+
 
 }

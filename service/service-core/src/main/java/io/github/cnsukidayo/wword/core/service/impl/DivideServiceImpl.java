@@ -188,7 +188,8 @@ public class DivideServiceImpl extends ServiceImpl<DivideMapper, Divide> impleme
         return baseMapper.selectList(new LambdaQueryWrapper<Divide>().eq(Divide::getParentId, -1)
             .and(queryWrapper -> queryWrapper.eq(Divide::getDivideType, DivideType.OFFICIAL)
                 .or()
-                .eq(Divide::getDivideType, DivideType.BASE)));
+                .eq(Divide::getDivideType, DivideType.BASE))
+            .orderByAsc(Divide::getId));
     }
 
     /**

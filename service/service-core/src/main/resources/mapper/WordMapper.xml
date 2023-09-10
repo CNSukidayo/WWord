@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.github.cnsukidayo.wword.core.dao.WordMapper">
+    <select id="countStructure" resultType="java.lang.Long">
+        SELECT COUNT(*)
+        FROM (SELECT count(*) FROM word WHERE is_deleted = 0 AND (word_id = 1) GROUP BY word_structure_id) AS total
+    </select>
+</mapper>

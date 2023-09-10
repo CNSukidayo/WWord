@@ -13,7 +13,7 @@ import io.github.cnsukidayo.wword.common.security.authentication.Authentication;
 import io.github.cnsukidayo.wword.common.security.context.SecurityContextHolder;
 import io.github.cnsukidayo.wword.common.utils.SecurityUtils;
 import io.github.cnsukidayo.wword.common.utils.ServletUtils;
-import io.github.cnsukidayo.wword.core.client.UniversityFeignClient;
+import io.github.cnsukidayo.wword.core.client.CoreFeignClient;
 import io.github.cnsukidayo.wword.global.exception.BadRequestException;
 import io.github.cnsukidayo.wword.model.bo.UserPermissionBO;
 import io.github.cnsukidayo.wword.model.entity.Permission;
@@ -48,7 +48,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     private final RedisTemplate<String, String> redisTemplate;
 
-    private final UniversityFeignClient universityFeignClient;
+    private final CoreFeignClient coreFeignClient;
 
     private final ApplicationEventPublisher eventPublisher;
 
@@ -62,13 +62,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     public UserServiceImpl(RedisTemplate<String, String> redisTemplate,
                            ApplicationEventPublisher applicationEventPublisher,
-                           UniversityFeignClient universityService,
+                           CoreFeignClient coreFeignClient,
                            UserRoleMapper userRoleMapper,
                            PermissionService permissionService,
                            RolePermissionService rolePermissionService,
                            AntPathMatcher antPathMatcher) {
         this.redisTemplate = redisTemplate;
-        this.universityFeignClient = universityService;
+        this.coreFeignClient = coreFeignClient;
         this.eventPublisher = applicationEventPublisher;
         this.userRoleMapper = userRoleMapper;
         this.permissionService = permissionService;
@@ -209,7 +209,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         Assert.notNull(updateUserParam, "UpdateUserParam must not be null");
         Assert.notNull(user, "User must not be null");
         // 判断学校是否是数据库中存在的学校
-        if (StringUtils.hasText(updateUserParam.getUniversity()) && !universityFeignClient.hasUniversity(updateUserParam.getUniversity())) {
+        if (StringUtils.hasText(updateUserParam.getUniversity()) && !coreFeignClient.hasUniversity(updateUserParam.getUniversity())) {
             throw new BadRequestException(ResultCodeEnum.NOT_EXISTS.getCode(),
                 "学校:" + updateUserParam.getUniversity() + "不存在!");
         }

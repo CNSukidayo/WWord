@@ -13,8 +13,8 @@ import io.github.cnsukidayo.wword.model.entity.base.BaseEntity;
 @TableName("word")
 public class Word extends BaseEntity {
 
-    @TableId(value = "id", type = IdType.AUTO)
-    private Long id;
+    @TableId(value = "group_flag", type = IdType.AUTO)
+    private Long groupFlag;
 
     @TableField("word_id")
     private Long wordId;
@@ -31,12 +31,12 @@ public class Word extends BaseEntity {
     public Word() {
     }
 
-    public Long getId() {
-        return id;
+    public Long getGroupFlag() {
+        return groupFlag;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setGroupFlag(Long groupFlag) {
+        this.groupFlag = groupFlag;
     }
 
     public Long getWordId() {
@@ -62,9 +62,9 @@ public class Word extends BaseEntity {
     public void setValue(String value) {
         if (value == null) return;
         this.value = value.replace('；', ';')
-                .replace('，', ',')
-                .replace('。', '.')
-                .replace('：', ':');
+            .replace('，', ',')
+            .replace('。', '.')
+            .replace('：', ':');
     }
 
     public Long getGroupId() {

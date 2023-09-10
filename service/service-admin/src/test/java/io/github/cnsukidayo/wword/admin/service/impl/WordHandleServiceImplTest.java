@@ -6,10 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author sukidayo
@@ -21,6 +18,24 @@ public class WordHandleServiceImplTest {
 
     @Test
     public void testWeight() {
+        List<Integer> list = new ArrayList<>();
+        list.add(1);
+        list.add(5);
+        list.add(2);
+        list.sort(new Comparator<Integer>() {
+            @Override
+            public int compare(Integer o1, Integer o2) {
+                return o1 - o2;
+            }
+        });
+        Queue<Integer> queue = new ArrayDeque<>();
+        queue.add(1);
+        queue.add(2);
+        queue.add(3);
+        while (!queue.isEmpty()) {
+            Integer poll = queue.peek();
+            System.out.println(poll);
+        }
     }
 
     @Test
@@ -65,7 +80,7 @@ public class WordHandleServiceImplTest {
                     structureIdList.add(structureId);
                     if (insertMap.get(structureId) == null) {
                         Word word = new Word();
-                        word.setId(decimal);
+                        word.setGroupFlag(decimal);
                         word.setWordStructureId(structureId);
                         insertMap.put(structureId, word);
                     }

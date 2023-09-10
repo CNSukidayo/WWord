@@ -2,7 +2,7 @@ package io.github.cnsukidayo.wword.core.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import io.github.cnsukidayo.wword.auth.client.UserFeignClient;
+import io.github.cnsukidayo.wword.auth.client.AuthFeignClient;
 import io.github.cnsukidayo.wword.global.exception.BadRequestException;
 import io.github.cnsukidayo.wword.core.dao.PostCategoryMapper;
 import io.github.cnsukidayo.wword.core.service.PostCategoryService;
@@ -31,10 +31,10 @@ import java.util.stream.Collectors;
 @Service
 public class PostCategoryServiceImpl extends ServiceImpl<PostCategoryMapper, PostCategory> implements PostCategoryService {
 
-    private final UserFeignClient userFeignClient;
+    private final AuthFeignClient authFeignClient;
 
-    public PostCategoryServiceImpl(UserFeignClient userFeignClient) {
-        this.userFeignClient = userFeignClient;
+    public PostCategoryServiceImpl(AuthFeignClient authFeignClient) {
+        this.authFeignClient = authFeignClient;
     }
 
     @Override
@@ -73,7 +73,7 @@ public class PostCategoryServiceImpl extends ServiceImpl<PostCategoryMapper, Pos
         }
         // 查询收藏夹的创建者信息
         UUIDList.add(uuid);
-        Map<Long, User> userMap = userFeignClient.listByIds(UUIDList).stream().collect(Collectors.toMap(User::getUuid, user -> user));
+        Map<Long, User> userMap = authFeignClient.listByIds(UUIDList).stream().collect(Collectors.toMap(User::getUuid, user -> user));
         // 更新收藏夹的创建者信息
         postCategoryList.forEach(postCategory -> postCategory.setCreateName(userMap.get(postCategory.getUuid()).getNick()));
         return postCategoryList;
@@ -149,7 +149,7 @@ public class PostCategoryServiceImpl extends ServiceImpl<PostCategoryMapper, Pos
             postCategory.setCategoryAttribute(CategoryAttribute.LINK);
         }
         // 封装收藏夹创建者信息
-        postCategory.setCreateName(userFeignClient.getById(postCategory.getUuid()).getNick());
+        postCategory.setCreateName(authFeignClient.getById(postCategory.getUuid()).getNick());
         PostCategoryVO postCategoryVO = new PostCategoryVO().convertFrom(postCategory);
         // 查询收藏夹的点赞数
         postCategoryVO.setLikeCount(baseMapper.likeCount(id));

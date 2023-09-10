@@ -55,9 +55,10 @@ public class WordHandleController {
     }
 
     @Operation(summary = "更新单词总库")
-    @GetMapping("update_base")
+    @GetMapping("updateBase")
     public void updateBase() {
         // todo 可以添加事件
+        log.info("updateBase start");
         wordHandleService.updateBase();
     }
 

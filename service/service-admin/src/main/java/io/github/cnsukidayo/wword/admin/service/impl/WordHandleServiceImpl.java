@@ -2,12 +2,11 @@ package io.github.cnsukidayo.wword.admin.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.github.cnsukidayo.wword.admin.dao.DivideMapper;
 import io.github.cnsukidayo.wword.admin.dao.WordIdMapper;
 import io.github.cnsukidayo.wword.admin.dao.WordMapper;
 import io.github.cnsukidayo.wword.admin.service.WordHandleService;
 import io.github.cnsukidayo.wword.admin.service.WordStructureService;
-import io.github.cnsukidayo.wword.core.client.DivideFeignClient;
+import io.github.cnsukidayo.wword.core.client.CoreFeignClient;
 import io.github.cnsukidayo.wword.global.exception.BadRequestException;
 import io.github.cnsukidayo.wword.model.bo.JsonWordBO;
 import io.github.cnsukidayo.wword.model.entity.Divide;
@@ -20,6 +19,7 @@ import io.github.cnsukidayo.wword.model.params.AddOrUpdateWordParam;
 import io.github.cnsukidayo.wword.model.params.UpLoadWordJson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,35 +43,30 @@ public class WordHandleServiceImpl implements WordHandleService {
 
     private final ObjectMapper objectMapper;
 
-    private final EnWordsMapper enWordsMapper;
-
     private final WordStructureService wordStructureService;
 
     private final WordMapper wordMapper;
 
     private final WordIdMapper wordIdMapper;
 
-    private DivideFeignClient divideFeignClient;
-
-    // todo 远程调用
-    private final DivideMapper divideMapper;
+    private final CoreFeignClient coreFeignClient;
 
     private static final String EXPAND = "expand";
 
-    public WordHandleServiceImpl(EnWordsMapper enWordsMapper,
-                                 WordStructureService wordStructureService,
+    private final Comparator<WordId> wordIdComparator;
+
+    public WordHandleServiceImpl(WordStructureService wordStructureService,
                                  WordMapper wordMapper,
-                                 DivideMapper divideMapper,
                                  WordIdMapper wordIdMapper,
                                  ObjectMapper objectMapper,
-                                 DivideFeignClient divideFeignClient) {
-        this.enWordsMapper = enWordsMapper;
+                                 CoreFeignClient coreFeignClient,
+                                 @Qualifier("wordIdComparator") Comparator<WordId> wordIdComparator) {
         this.wordStructureService = wordStructureService;
         this.wordMapper = wordMapper;
-        this.divideMapper = divideMapper;
         this.wordIdMapper = wordIdMapper;
         this.objectMapper = objectMapper;
-        this.divideFeignClient = divideFeignClient;
+        this.coreFeignClient = coreFeignClient;
+        this.wordIdComparator = wordIdComparator;
     }
 
     @Async
@@ -82,7 +77,7 @@ public class WordHandleServiceImpl implements WordHandleService {
         Assert.notNull(jsonInputStream, "jsonInputStream must not be null");
 
         // 先获得单词对应的父划分,划分必须是父划分不能是子划分
-        Divide divide = Optional.ofNullable(divideMapper.selectById(upLoadWordJson.getDivideId()))
+        Divide divide = Optional.ofNullable(coreFeignClient.selectById(upLoadWordJson.getDivideId()))
             .filter(test -> test.getParentId() == -1)
             .orElseThrow(() -> new BadRequestException(ResultCodeEnum.NOT_EXISTS.getCode(),
                 "指定划分不存在!"));
@@ -152,7 +147,7 @@ public class WordHandleServiceImpl implements WordHandleService {
                         tempWord.setWordStructureId(wordStructureMap.getOrDefault("question", expandId));
                         tempWord.setValue(question);
                         wordMapper.insert(tempWord);
-                        groupId = tempWord.getId();
+                        groupId = tempWord.getGroupFlag();
                         // 得到测试的答案的解释
                         tempWord = createWord(wordIdValue);
                         tempWord.setGroupId(groupId);
@@ -178,7 +173,7 @@ public class WordHandleServiceImpl implements WordHandleService {
                                 tempWord.setWordStructureId(wordStructureMap.getOrDefault("choiceIndex", expandId));
                                 tempWord.setValue(choiceIndex);
                                 wordMapper.insert(tempWord);
-                                Long choiceIndexId = tempWord.getId();
+                                Long choiceIndexId = tempWord.getGroupFlag();
                                 // 得到选项对应的值,选项内容和选项索引是绑定的
                                 tempWord = createWord(wordIdValue);
                                 tempWord.setGroupId(choiceIndexId);
@@ -208,7 +203,7 @@ public class WordHandleServiceImpl implements WordHandleService {
                         tempWord.setWordStructureId(wordStructureMap.getOrDefault("sentence", expandId));
                         tempWord.setValue(sentenceValue);
                         wordMapper.insert(tempWord);
-                        Long groupId = tempWord.getId();
+                        Long groupId = tempWord.getGroupFlag();
                         // 得到例句英文的翻译,例句的英文翻译需要和例句英文进行绑定
                         tempWord = createWord(wordIdValue);
                         tempWord.setGroupId(groupId);
@@ -237,7 +232,7 @@ public class WordHandleServiceImpl implements WordHandleService {
                         tempWord.setWordStructureId(wordStructureMap.getOrDefault("phrase", expandId));
                         tempWord.setValue(phraseValue);
                         wordMapper.insert(tempWord);
-                        Long groupId = tempWord.getId();
+                        Long groupId = tempWord.getGroupFlag();
                         // 得到短语对应的中文
                         tempWord = createWord(wordIdValue);
                         tempWord.setGroupId(groupId);
@@ -263,7 +258,7 @@ public class WordHandleServiceImpl implements WordHandleService {
                         tempWord.setWordStructureId(wordStructureMap.getOrDefault(pos, expandId));
                         tempWord.setValue(translationValue);
                         wordMapper.insert(tempWord);
-                        Long groupId = tempWord.getId();
+                        Long groupId = tempWord.getGroupFlag();
                         // 得到单词的英文解释;英文的格式就直接采用 词性.英文描述
                         tempWord = createWord(wordIdValue);
                         tempWord.setGroupId(groupId);
@@ -295,7 +290,7 @@ public class WordHandleServiceImpl implements WordHandleService {
                         tempWord.setWordStructureId(wordStructureMap.getOrDefault("realExamSentence", expandId));
                         tempWord.setValue(realSentenceValue);
                         wordMapper.insert(tempWord);
-                        Long groupId = tempWord.getId();
+                        Long groupId = tempWord.getGroupFlag();
                         // 得到例句的paper信息(是哪一套试卷)
                         tempWord = createWord(wordIdValue);
                         tempWord.setGroupId(groupId);
@@ -372,7 +367,7 @@ public class WordHandleServiceImpl implements WordHandleService {
                         tempWord.setWordStructureId(wordStructureMap.get("synoPos"));
                         tempWord.setValue(synoPos);
                         wordMapper.insert(tempWord);
-                        Long groupId = tempWord.getId();
+                        Long groupId = tempWord.getGroupFlag();
                         // 得到联想词的翻译
                         String synoTran = syno.getTran();
                         tempWord = createWord(wordIdValue);
@@ -388,7 +383,7 @@ public class WordHandleServiceImpl implements WordHandleService {
                             tempWord.setWordStructureId(wordStructureMap.get("synoWord"));
                             tempWord.setValue(w);
                             wordMapper.insert(tempWord);
-                            Long internalGroupId = tempWord.getId();
+                            Long internalGroupId = tempWord.getGroupFlag();
                             // 根据联想词从当前单词本中找出对应单词的id
                             LambdaQueryWrapper<WordId> originIdLambdaQueryWrapper = new LambdaQueryWrapper<>();
                             originIdLambdaQueryWrapper.eq(WordId::getDivideId, divideId)
@@ -417,7 +412,7 @@ public class WordHandleServiceImpl implements WordHandleService {
                         tempWord.setWordStructureId(wordStructureMap.get("relPos"));
                         tempWord.setValue(relPos);
                         wordMapper.insert(tempWord);
-                        Long groupId = tempWord.getId();
+                        Long groupId = tempWord.getGroupFlag();
                         // 得到同根词的内容
                         for (JsonWordBO.Content.Word.InternalContent.RelWord.InternalRelWord.InternalWord relWordInfo : relWord.getWords()) {
                             String hwd = relWordInfo.getHwd();
@@ -426,7 +421,7 @@ public class WordHandleServiceImpl implements WordHandleService {
                             tempWord.setWordStructureId(wordStructureMap.get("relWord"));
                             tempWord.setValue(hwd);
                             wordMapper.insert(tempWord);
-                            Long internalGroupId = tempWord.getId();
+                            Long internalGroupId = tempWord.getGroupFlag();
                             // 得到对应的翻译
                             String tran = relWordInfo.getTran();
                             tempWord = createWord(wordIdValue);
@@ -467,55 +462,25 @@ public class WordHandleServiceImpl implements WordHandleService {
 
     @Override
     public void saveWord(AddOrUpdateWordParam addOrUpdateWordParam) {
-//        Assert.notNull(addOrUpdateWordParam, "addOrUpdateWordParam must not be null");
-//        // 先获得单词对应的父划分
-//        Divide divide = Optional.ofNullable(divideMapper.selectById(addOrUpdateWordParam.getDivideId()))
-//                .orElseThrow(() -> new NonExistsException("指定划分不存在!"));
-//        // 得到划分所对应的语种id
-//        Long languageId = divide.getLanguageId();
-//        // 根据语种id得到单词对应的结构体信息
-//        List<WordStructure> wordStructures = Optional.ofNullable(wordStructureService.get(languageId)).orElseThrow(() -> new NonExistsException("当前语种还没有定义结构体信息!"));
-//        // 得到expand的id,如果当前语种没有定义结构信息或者expand属性则会产生异常.
-//        Long expandId = wordStructures.stream()
-//                .filter(wordStructure -> wordStructure.getField().equals(EXPAND))
-//                .findFirst()
-//                .orElseThrow(() -> new IllegalStateException("当前语种的结构体中没有扩展(expand)属性,expand是默认属性,如果不存在会造成数据不一致问题."))
-//                .getId();
-//        // 得到当前语种对应结构体属性字段的id
-//        Set<Long> wordStructureIdSet = wordStructures.stream()
-//                .map(WordStructure::getId)
-//                .collect(Collectors.toSet());
-//
-//        String word = addOrUpdateWordParam.getWord();
-//        long hashCode = word.hashCode();
-//        wordMapper.replaceWordId(word, divide.getId(), hashCode);
-//        List<Word> insertWordList = addOrUpdateWordParam.getWordValueParamList()
-//                .stream()
-//                .map(wordValueParam -> {
-//                    Word result = wordValueParam.convertTo();
-//                    result.setId(hashCode);
-//                    result.setDivideId(divide.getId());
-//                    if (!wordStructureIdSet.contains(result.getWordStructureId())) {
-//                        result.setWordStructureId(expandId);
-//                    }
-//                    return result;
-//                })
-//                .toList();
-//        wordMapper.replaceWord(insertWordList);
     }
 
     @Override
     @Async
     @Transactional
     public void updateBase() {
+        // todo 分布式事务目前无法解决
+        /*
+        本地事务,在分布式系统,只能控制自已的回滚,控制不了其它服务的回滚
+         */
         // 首先查询出所有父划分
-        List<Divide> officialDivideList = divideFeignClient.listParentDivide();
+        List<Divide> officialDivideList = coreFeignClient.listParentDivide();
         // 得到总库的id
         Long baseId = officialDivideList.stream()
             .filter(divide -> divide.getDivideType() == DivideType.BASE)
             .map(Divide::getId)
             .findFirst()
             .orElseThrow(() -> new BadRequestException(ResultCodeEnum.ILLEGAL_STATE, "找不到总库!"));
+
         /*
             1.遍历每个划分,开始晋升到总库;先根据划分id查询到当前划分下的所有单词
             2.然后挨个查找数据库中的所有单词,但是只查询划分id在当前id之后的单词
@@ -523,8 +488,62 @@ public class WordHandleServiceImpl implements WordHandleService {
             4.晋升规则:先按照单词的结构数量越多的价值越高.在结构数量相同的情况下,信息越丰富的价值越高
          */
         for (Divide officialDivide : officialDivideList) {
+            if (officialDivide.getDivideType() != DivideType.OFFICIAL) continue;
+            log.info("handler divide:[{}]", officialDivide.getName());
             Long officialDivideId = officialDivide.getId();
+            // 根据划分id查询当前的所有单词
+            List<WordId> currentWordIdList = coreFeignClient.selectWordIdByDivideId(officialDivideId);
+            List<WordId> addToBaseList = new LinkedList<>();
+            for (int i = 0; i < currentWordIdList.size(); i++) {
+                log.debug("current handle:[{}],word:[{}],index:[{}]",
+                    officialDivide.getName(),
+                    currentWordIdList.get(i).getWord(),
+                    i);
+                // 直接根据word原文查询(但是divideId)必须比当前大
+                List<WordId> sameWordIdList = coreFeignClient.selectSameWordIdWord(currentWordIdList.get(i));
+                sameWordIdList.add(currentWordIdList.get(i));
+                sameWordIdList.sort(wordIdComparator);
+                addToBaseList.add(sameWordIdList.get(sameWordIdList.size() - 1));
+            }
+            // 批量添加单词
+            for (WordId addWord : addToBaseList) {
+                // 插入新单词
+                WordId newWordId = new WordId();
+                newWordId.setDivideId(baseId);
+                newWordId.setWord(addWord.getWord());
+                newWordId = coreFeignClient.saveWordId(newWordId);
+                log.debug("saveWordId:[{}]", newWordId);
+                // 查询出目标单词的详细信息
+                List<Word> targetWordDetailList = coreFeignClient.selectWordById(addWord.getId());
+                // 有限处理groupId是空的单词
+                Queue<Word> queue = new ArrayDeque<>();
+                targetWordDetailList.forEach(word -> {
+                    if (word.getGroupId() == null) {
+                        queue.add(word);
+                    }
+                });
+                while (!queue.isEmpty()) {
+                    Word targetWordDetail = queue.poll();
+                    List<Word> childWordList = findChildWord(targetWordDetail, targetWordDetailList);
+                    Word word = new Word();
+                    word.setWordId(newWordId.getId());
+                    word.setWordStructureId(targetWordDetail.getWordStructureId());
+                    word.setValue(targetWordDetail.getValue());
+                    word.setGroupId(targetWordDetail.getGroupId());
+                    // 插入单词
+                    word = coreFeignClient.saveWord(word);
+                    log.debug("saveWord:[{}]", word.getValue());
+                    // 更新
+                    Long groupFlag = word.getGroupFlag();
+                    childWordList.forEach(childWord -> {
+                        childWord.setGroupId(groupFlag);
+                        queue.add(childWord);
+                    });
+                }
+            }
         }
+        // 发布到elastic search
+        log.info("updateBase finish");
     }
 
     /**
@@ -560,6 +579,24 @@ public class WordHandleServiceImpl implements WordHandleService {
             throw new BadRequestException(ResultCodeEnum.ILLEGAL_STATE.getCode(),
                 "当前语种的结构体中缺少必要字段" + Arrays.toString(notExistList.toArray()) + "如果不存在会造成数据不一致问题.");
         }
+    }
+
+    /**
+     * 查询出和当前单词有关系的组单词
+     *
+     * @param word 当前单词
+     * @return 返回有单词的集合
+     * @@param wordList 所有单词
+     */
+    private List<Word> findChildWord(Word word, List<Word> wordList) {
+        List<Word> childList = new LinkedList<>();
+        Long group = word.getGroupFlag();
+        for (Word childWord : wordList) {
+            if (childWord.getGroupId() != null && word.getGroupFlag().equals(childWord.getGroupId())) {
+                childList.add(childWord);
+            }
+        }
+        return childList;
     }
 
 

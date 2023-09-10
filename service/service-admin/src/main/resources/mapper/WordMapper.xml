@@ -7,7 +7,7 @@
     <insert id="replaceWord">
         replace INTO word(`id`, `word_structure_id`,`divide_id`, `value`,is_deleted) values
         <foreach collection="wordCollection" item="word" index="index" separator=",">
-            (#{word.id},#{word.wordStructureId},#{word.divideId},#{word.value},#{word.isDeleted})
+            (#{word.parentGroup},#{word.wordStructureId},#{word.divideId},#{word.value},#{word.isDeleted})
         </foreach>
     </insert>
 

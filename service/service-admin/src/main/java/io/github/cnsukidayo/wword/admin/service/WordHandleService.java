@@ -12,11 +12,6 @@ import java.io.InputStream;
 public interface WordHandleService {
 
     /**
-     * 处理enwords数据库数据
-     */
-    void handleEnWords();
-
-    /**
      * 处理丰富的json信息
      *
      * @param upLoadWordJson  上传的单词Json内容
@@ -30,4 +25,9 @@ public interface WordHandleService {
      * @param addOrUpdateWordParam 单词对象不能为null
      */
     void saveWord(AddOrUpdateWordParam addOrUpdateWordParam);
+
+    /**
+     * 更新单词总库,该方法时一个耗时方法
+     */
+    void updateBase();
 }

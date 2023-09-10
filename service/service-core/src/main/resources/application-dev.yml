@@ -29,7 +29,7 @@ spring:
     time-zone: GMT+8
   web:
     resources:
-      add-mappings: true
+      add-mappings: false
   # springcloud相关配置
   cloud:
     nacos:
@@ -87,3 +87,7 @@ knife4j:
 # 自定义配置
 wword:
   resource-locations: D:/Program/Java Project/WWord/wwordResources/
+
+# 服务自定义配置
+service-core:
+  remote-base-address: /remove/core/

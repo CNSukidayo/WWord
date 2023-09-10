@@ -10,7 +10,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 public enum DivideType {
 
     OFFICIAL("官方"),
-    PERSONAL("个人");
+    PERSONAL("个人"),
+    BASE("总库");
     private final String value;
 
     DivideType(String value) {

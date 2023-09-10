@@ -80,4 +80,11 @@ public interface DivideService extends IService<Divide> {
      * @param uuid     拷贝的目标用户id不为null
      */
     void copyDivide(Long divideId, Long uuid);
+
+    /**
+     * 查询出所有的父划分
+     *
+     * @return 返回集合不为空nul
+     */
+    List<Divide> listParentDivide();
 }

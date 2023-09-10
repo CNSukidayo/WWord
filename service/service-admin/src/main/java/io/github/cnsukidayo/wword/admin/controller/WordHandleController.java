@@ -27,7 +27,7 @@ public class WordHandleController {
 
     private final WordHandleService wordHandleService;
 
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private final Logger log = LoggerFactory.getLogger(getClass());
 
     public WordHandleController(WordHandleService wordHandleService) {
         this.wordHandleService = wordHandleService;
@@ -54,19 +54,11 @@ public class WordHandleController {
         wordHandleService.handleJson(upLoadWordJson, new ByteArrayInputStream(byteArrayOutputStream.toByteArray()));
     }
 
-    @Operation(summary = "处理EnWords")
-    @GetMapping("handleEnWords")
-    public void handleEnWords() {
-        wordHandleService.handleEnWords();
+    @Operation(summary = "更新单词总库")
+    @GetMapping("update_base")
+    public void updateBase() {
+        // todo 可以添加事件
+        wordHandleService.updateBase();
     }
-
-    @Operation(summary = "日志")
-    @GetMapping("log")
-    public void log() {
-        log.info("info");
-        log.warn("warn");
-        log.error("error");
-    }
-
 
 }

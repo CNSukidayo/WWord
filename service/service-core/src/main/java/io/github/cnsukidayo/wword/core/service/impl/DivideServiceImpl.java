@@ -13,6 +13,7 @@ import io.github.cnsukidayo.wword.model.entity.Divide;
 import io.github.cnsukidayo.wword.model.entity.DivideWord;
 import io.github.cnsukidayo.wword.model.entity.LanguageClass;
 import io.github.cnsukidayo.wword.model.entity.WordId;
+import io.github.cnsukidayo.wword.model.enums.DivideType;
 import io.github.cnsukidayo.wword.model.exception.ResultCodeEnum;
 import io.github.cnsukidayo.wword.model.params.AddDivideParam;
 import org.springframework.stereotype.Service;
@@ -133,7 +134,7 @@ public class DivideServiceImpl extends ServiceImpl<DivideMapper, Divide> impleme
         Assert.notNull(UUID, "UUID must not be null");
 
         Divide divide = Optional.ofNullable(baseMapper.selectOne(new LambdaQueryWrapper<Divide>().eq(Divide::getId, childDivideId)))
-            .orElseThrow(() -> new BadRequestException(ResultCodeEnum.NOT_EXISTS,"指定划分不存在"));
+            .orElseThrow(() -> new BadRequestException(ResultCodeEnum.NOT_EXISTS, "指定划分不存在"));
         Long parentId = divide.getParentId();
         if (parentId == -1 || !divide.getUuid().equals(UUID)) {
             throw new BadRequestException(ResultCodeEnum.ADD_FAIL);
@@ -180,6 +181,14 @@ public class DivideServiceImpl extends ServiceImpl<DivideMapper, Divide> impleme
                 divideWordMapper.copy(sourceId, childDivide.getId(), uuid);
             });
         }
+    }
+
+    @Override
+    public List<Divide> listParentDivide() {
+        return baseMapper.selectList(new LambdaQueryWrapper<Divide>().eq(Divide::getParentId, -1)
+            .and(queryWrapper -> queryWrapper.eq(Divide::getDivideType, DivideType.OFFICIAL)
+                .or()
+                .eq(Divide::getDivideType, DivideType.BASE)));
     }
 
     /**

@@ -1,6 +1,5 @@
 package io.github.cnsukidayo.wword.gateway.filter;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import io.github.cnsukidayo.wword.auth.client.AuthFeignClient;
 import io.github.cnsukidayo.wword.gateway.config.properties.WWordProperties;
 import io.github.cnsukidayo.wword.global.handler.AuthenticationFailureHandler;
@@ -27,10 +26,6 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 
 /**
  * @author sukidayo
@@ -43,9 +38,6 @@ public class GlobalAuthenticationFilter implements GlobalFilter {
     private volatile AuthenticationFailureHandler failureHandler;
 
     private final AuthFeignClient authFeignClient;
-
-    // todo 这一步会影响性能
-    private final ExecutorService executorService = Executors.newFixedThreadPool(1);
 
     private final WWordProperties wWordProperties;
 
@@ -71,9 +63,8 @@ public class GlobalAuthenticationFilter implements GlobalFilter {
         CheckAuthParam checkAuthParam = new CheckAuthParam();
         checkAuthParam.setToken(token);
         checkAuthParam.setTargetUrl(targetUrl);
-        Future<BaseResponse<Object>> future = executorService.submit(() -> authFeignClient.getAndCheck(checkAuthParam));
         try {
-            BaseResponse<Object> result = future.get();
+            BaseResponse<Object> result = authFeignClient.getAndCheck(checkAuthParam);
             if (!result.getStatus().equals(HttpStatus.OK.value())) {
                 // 处理异常,将子服务的异常响应给用户
                 return getFailureHandler().onFailure(exchange.getRequest(), exchange.getResponse(), result);
@@ -84,9 +75,7 @@ public class GlobalAuthenticationFilter implements GlobalFilter {
                 builder.header(WWordConst.X_CLIENT_USER, clientUser);
                 return chain.filter(exchange.mutate().request(builder.build()).build());
             }
-        } catch (InterruptedException
-                 | ExecutionException
-                 | JsonProcessingException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             // 构造一个异常并返回
             BaseResponse<ErrorVo> errorDetail = new BaseResponse<>();

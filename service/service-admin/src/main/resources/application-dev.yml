@@ -41,6 +41,11 @@ spring:
     nacos:
       discovery:
         server-addr: localhost:8848
+    openfeign:
+      httpclient:
+        connection-timeout: 9999999
+        ok-http:
+          read-timeout: 99999
 
 logging:
   file:

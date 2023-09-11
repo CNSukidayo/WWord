@@ -1,6 +1,8 @@
 package io.github.cnsukidayo.wword.admin.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.cnsukidayo.wword.admin.dao.WordIdMapper;
 import io.github.cnsukidayo.wword.admin.dao.WordMapper;
@@ -15,8 +17,10 @@ import io.github.cnsukidayo.wword.model.entity.WordId;
 import io.github.cnsukidayo.wword.model.entity.WordStructure;
 import io.github.cnsukidayo.wword.model.enums.DivideType;
 import io.github.cnsukidayo.wword.model.exception.ResultCodeEnum;
+import io.github.cnsukidayo.wword.model.param.AddWordESParam;
 import io.github.cnsukidayo.wword.model.params.AddOrUpdateWordParam;
 import io.github.cnsukidayo.wword.model.params.UpLoadWordJson;
+import io.github.cnsukidayo.wword.search.client.SearchFeignClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -55,18 +59,22 @@ public class WordHandleServiceImpl implements WordHandleService {
 
     private final Comparator<WordId> wordIdComparator;
 
+    private final SearchFeignClient searchFeignClient;
+
     public WordHandleServiceImpl(WordStructureService wordStructureService,
                                  WordMapper wordMapper,
                                  WordIdMapper wordIdMapper,
                                  ObjectMapper objectMapper,
                                  CoreFeignClient coreFeignClient,
-                                 @Qualifier("wordIdComparator") Comparator<WordId> wordIdComparator) {
+                                 @Qualifier("wordIdComparator") Comparator<WordId> wordIdComparator,
+                                 SearchFeignClient searchFeignClient) {
         this.wordStructureService = wordStructureService;
         this.wordMapper = wordMapper;
         this.wordIdMapper = wordIdMapper;
         this.objectMapper = objectMapper;
         this.coreFeignClient = coreFeignClient;
         this.wordIdComparator = wordIdComparator;
+        this.searchFeignClient = searchFeignClient;
     }
 
     @Async
@@ -549,6 +557,65 @@ public class WordHandleServiceImpl implements WordHandleService {
             // 发布到elastic search
             log.info("updateBase finish");
         }
+    }
+
+    @Override
+    @Async
+    public void updateESBase(Long baseId, Long languageId) {
+        Assert.notNull(baseId, "baseId must not be null");
+        Assert.notNull(languageId, "languageId must not be null");
+
+        // 首先分页查询出单词库中的单词
+        int current = 1;
+        Page<WordId> queryPage = new Page<>(current, 1000);
+        IPage<WordId> pageModel = wordIdMapper.selectPage(queryPage, new LambdaQueryWrapper<WordId>()
+            .eq(WordId::getDivideId, baseId)
+            .orderByAsc(WordId::getId));
+
+        while (!pageModel.getRecords().isEmpty()) {
+            List<WordId> wordIdList = pageModel.getRecords();
+            log.info("start handle page:[{}],handle id:[{}]", pageModel.getCurrent(), wordIdList.get(0).getId());
+            List<AddWordESParam> tobeAdd = new LinkedList<>();
+            for (int i = 0; i < wordIdList.size(); i++) {
+                log.debug("handle Index:[{}]", i);
+                WordId wordId = wordIdList.get(i);
+                List<Word> allWordList = wordMapper.selectList(new LambdaQueryWrapper<Word>()
+                    .eq(Word::getWordId, wordId.getId()));
+                // 筛选出有用的信息
+                Map<Long, String> detail = allWordList.stream()
+                    .filter(test -> {
+                        Long wordStructureId = test.getWordStructureId();
+                        return wordStructureId >= 1 && wordStructureId <= 15;
+                    })
+                    .collect(Collectors
+                        .toMap(Word::getWordStructureId, Word::getValue, (existingValue, newValue) -> existingValue));
+                AddWordESParam addWordESParam = new AddWordESParam();
+                addWordESParam.setWordId(wordId.getId());
+                addWordESParam.setLanguageId(languageId);
+                addWordESParam.setWord(wordId.getWord());
+                addWordESParam.setDetail(detail);
+                tobeAdd.add(addWordESParam);
+            }
+            // 远程调用
+            searchFeignClient.saveBatch(tobeAdd);
+            log.info("end handle page:[{}], end handle id:[{}]",
+                pageModel.getCurrent(),
+                wordIdList.get(wordIdList.size() - 1).getId());
+            current++;
+            queryPage = new Page<>(current, 1000);
+            pageModel = wordIdMapper.selectPage(queryPage, new LambdaQueryWrapper<WordId>()
+                .eq(WordId::getDivideId, baseId)
+                .orderByAsc(WordId::getId));
+        }
+    }
+
+
+
+    private boolean isNumber(Long source, Long... number) {
+        for (Long test : number) {
+            if (test.equals(source)) return true;
+        }
+        return false;
     }
 
     /**

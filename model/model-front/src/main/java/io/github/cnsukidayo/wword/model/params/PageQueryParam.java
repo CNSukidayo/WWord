@@ -10,7 +10,7 @@ import jakarta.validation.constraints.NotNull;
  */
 @Schema(description = "分页查询参数")
 public class PageQueryParam {
-    @Schema(description = "当前是第几页")
+    @Schema(description = "当前是第几页,第一页从1开始")
     @NotNull(message = "当前页必须不为null")
     private Integer current;
 

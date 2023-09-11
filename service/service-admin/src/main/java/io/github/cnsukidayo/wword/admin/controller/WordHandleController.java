@@ -4,6 +4,7 @@ import io.github.cnsukidayo.wword.admin.service.WordHandleService;
 import io.github.cnsukidayo.wword.model.params.AddOrUpdateWordParam;
 import io.github.cnsukidayo.wword.model.params.UpLoadWordJson;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.apache.ibatis.annotations.Param;
@@ -60,6 +61,13 @@ public class WordHandleController {
         // todo 可以添加事件
         log.info("updateBase start");
         wordHandleService.updateBase(divideId);
+    }
+
+    @Operation(summary = "发布基本库的单词到ES中")
+    @GetMapping("updateESBase")
+    public void updateESBase(@Parameter(description = "基本库Id") @RequestParam("baseId") Long baseId,
+                             @Parameter(description = "语种id") @RequestParam("languageId") Long languageId) {
+        wordHandleService.updateESBase(baseId, languageId);
     }
 
 }

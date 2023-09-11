@@ -32,4 +32,13 @@ public interface WordHandleService {
      * @param divideId 划分id
      */
     void updateBase(Long divideId);
+
+    /**
+     * 更新单词库的ElasticSearch
+     *
+     * @param baseId     单词库ID
+     * @param languageId 语种ID
+     */
+    void updateESBase(Long baseId, Long languageId);
+
 }

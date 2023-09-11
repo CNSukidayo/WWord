@@ -4,7 +4,6 @@ import io.github.cnsukidayo.wword.model.base.InputConverter;
 import io.github.cnsukidayo.wword.model.entity.es.WordES;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
 import java.util.Map;
@@ -29,7 +28,6 @@ public class AddWordESParam implements InputConverter<WordES> {
     private Long languageId;
 
     @Schema(description = "key:是单词的structure_id value:该结构的字段信息")
-    @NotEmpty(message = "单词详细信息不能为空")
     private Map<Long, String> detail;
 
     public AddWordESParam() {

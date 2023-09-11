@@ -1,0 +1,57 @@
+server:
+  port: 8201
+  servlet:
+    encoding:
+      charset: UTF-8
+      force: true
+      enabled: true
+  tomcat:
+    uri-encoding: UTF-8
+
+# spring相关配置
+spring:
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+    throw-exception-if-no-handler-found: true
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+  web:
+    resources:
+      add-mappings: false
+  # springcloud相关配置
+#  cloud:
+#    nacos:
+#      discovery:
+#        server-addr: localhost:8848
+
+# 日志相关配置
+logging:
+  file:
+    path: logs/${spring.application.name}/
+  level:
+    io.github.cnsukidayo: info
+# knife4j的增强配置,不需要增强可以不配
+springdoc:
+  api-docs:
+    groups:
+      enabled: true
+  group-configs:
+    - group: search-front
+      display-name: 搜索模块-前端
+      packages-to-scan:
+        - io.github.cnsukidayo.wword.search.controller
+    - group: search-cloud
+      display-name: 搜索模块-微服务
+      packages-to-scan:
+        - io.github.cnsukidayo.wword.search.api
+knife4j:
+  enable: true
+  setting:
+    language: zh_cn
+  production: false
+
+# 自定义配置
+wword:
+  resource-locations: D:/Program/Java Project/WWord/wwordResources/

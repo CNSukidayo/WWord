@@ -22,8 +22,9 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
  * @author cnsukidayo
  */
 @ControllerAdvice(value = {"io.github.cnsukidayo.wword.core.controller",
-        "io.github.cnsukidayo.wword.admin.controller",
-        "io.github.cnsukidayo.wword.auth.controller"})
+    "io.github.cnsukidayo.wword.admin.controller",
+    "io.github.cnsukidayo.wword.auth.controller",
+    "io.github.cnsukidayo.wword.search.controller"})
 public class CommonResultControllerAdvice implements ResponseBodyAdvice<Object> {
 
     @Override
@@ -52,7 +53,7 @@ public class CommonResultControllerAdvice implements ResponseBodyAdvice<Object> 
      */
     private MappingJacksonValue getOrCreateContainer(Object body) {
         return body instanceof MappingJacksonValue ? (MappingJacksonValue) body :
-                new MappingJacksonValue(body);
+            new MappingJacksonValue(body);
     }
 
     private void beforeBodyWriteInternal(MappingJacksonValue bodyContainer,

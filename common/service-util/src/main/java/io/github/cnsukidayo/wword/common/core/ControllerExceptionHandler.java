@@ -26,7 +26,7 @@ import java.util.List;
 @RestControllerAdvice(value = {"io.github.cnsukidayo.wword.core.controller",
     "io.github.cnsukidayo.wword.admin.controller",
     "io.github.cnsukidayo.wword.auth.controller",
-    "io.github.cnsukidayo.wword.auth.api"})
+    "io.github.cnsukidayo.wword.search.controller"})
 public class ControllerExceptionHandler extends BaseExceptionHandler {
 
     public ControllerExceptionHandler(@Value("${knife4j.production}") Boolean production) {

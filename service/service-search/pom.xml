@@ -5,11 +5,11 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>io.github.cnsukidayo.wword</groupId>
-        <artifactId>model</artifactId>
+        <artifactId>service</artifactId>
         <version>0.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>model-back</artifactId>
+    <artifactId>service-search</artifactId>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
@@ -19,20 +19,8 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.baomidou</groupId>
-            <artifactId>mybatis-plus-boot-starter</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.github.cnsukidayo.wword</groupId>
-            <artifactId>model-common</artifactId>
-            <version>0.1-SNAPSHOT</version>
-        </dependency>
-
-        <!--创建索引库的-->
-        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-elasticsearch</artifactId>
-            <scope>provided</scope>
         </dependency>
     </dependencies>
 

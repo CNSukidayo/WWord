@@ -17,6 +17,7 @@
         <module>service-auth</module>
         <module>service-search</module>
         <module>service-rabbit</module>
+        <module>service-third-party</module>
     </modules>
 
     <properties>

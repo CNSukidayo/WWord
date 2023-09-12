@@ -344,7 +344,7 @@ public class WordHandleServiceImpl implements WordHandleService {
             }
         } catch (Exception e) {
             log.error("json handle fail", e);
-            throw new BadRequestException(ResultCodeEnum.File_OPERATION.getCode(),
+            throw new BadRequestException(ResultCodeEnum.FILE_OPERATION.getCode(),
                 "json文件处理异常");
         }
 
@@ -461,7 +461,7 @@ public class WordHandleServiceImpl implements WordHandleService {
 
         } catch (Exception e) {
             log.error("json handle fail", e);
-            throw new BadRequestException(ResultCodeEnum.File_OPERATION.getCode(),
+            throw new BadRequestException(ResultCodeEnum.FILE_OPERATION.getCode(),
                 "json文件处理异常");
         }
 

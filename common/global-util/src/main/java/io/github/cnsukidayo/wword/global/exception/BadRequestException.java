@@ -14,13 +14,13 @@ public class BadRequestException extends AbstractWWordException {
         this(resultCodeEnum.getCode(), message);
     }
 
-    public BadRequestException(Integer status, String message) {
-        super(message);
-        this.status = status;
+    public BadRequestException(ResultCodeEnum resultCodeEnum, Throwable cause) {
+        super(resultCodeEnum.getMessage(), cause);
+        this.status = resultCodeEnum.getCode();
     }
 
-    public BadRequestException(Integer status, String message, Throwable cause) {
-        super(message, cause);
+    public BadRequestException(Integer status, String message) {
+        super(message);
         this.status = status;
     }
 

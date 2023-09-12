@@ -1,4 +1,4 @@
-package io.github.cnsukidayo.wword.third.party;
+package io.github.cnsukidayo.wword;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

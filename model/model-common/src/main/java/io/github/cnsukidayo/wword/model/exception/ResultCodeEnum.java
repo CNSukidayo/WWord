@@ -20,7 +20,8 @@ public enum ResultCodeEnum {
     NOT_EXISTS(4002, "指定的目标不存在"),
     ILLEGAL_STATE(4003, "不合法的状态"),
     ALREADY_EXIST(4004, "指定的目标已经存在"),
-    File_OPERATION(4005, "文件处理异常"),
+    FILE_OPERATION(4005, "文件处理异常"),
+    FILE_UPLOAD_ERROR(4006, "文件上传失败"),
 
     /**
      * 如果返回此状态码,前端需要刷新token

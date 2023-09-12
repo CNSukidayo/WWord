@@ -43,32 +43,32 @@ public class WordIdApiController {
         return wordIdService.selectWordById(wordId);
     }
 
-    @Operation(description = "添加一个WordId")
+    @Operation(summary = "添加一个WordId")
     @PostMapping("saveWordId")
     public WordId saveWordId(@Parameter(description = "待添加的WordId") @RequestBody WordId wordId) {
         wordIdService.save(wordId);
         return wordId;
     }
 
-    @Operation(description = "添加一个Word")
+    @Operation(summary = "添加一个Word")
     @PostMapping("saveWord")
     public Word saveWord(@Parameter(description = "待添加的单词") @RequestBody Word word) {
         return wordIdService.saveWord(word);
     }
 
-    @Operation(description = "查询一个单词的结构数量")
+    @Operation(summary = "查询一个单词的结构数量")
     @GetMapping("countStructure")
     public Long countStructure(@Parameter(description = "单词的id") @RequestParam Long wordId) {
         return wordIdService.countStructure(wordId);
     }
 
-    @Operation(description = "查询一个单词的信息数")
+    @Operation(summary = "查询一个单词的信息数")
     @GetMapping("countValue")
     public Long countValue(@Parameter(description = "单词的id") @RequestParam Long wordId) {
         return wordIdService.countValue(wordId);
     }
 
-    @Operation(description = "判断一个单词是否在一个划分中")
+    @Operation(summary = "判断一个单词是否在一个划分中")
     @GetMapping("exist")
     public Boolean exist(@Parameter(description = "单词原文") @RequestParam("word") String word,
                          @Parameter(description = "划分id") @RequestParam("divideId") Long divideId) {

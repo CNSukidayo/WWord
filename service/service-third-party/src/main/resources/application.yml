@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: service-third-party
+  profiles:
+    active: dev

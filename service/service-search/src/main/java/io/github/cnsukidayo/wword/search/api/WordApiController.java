@@ -30,19 +30,19 @@ public class WordApiController {
         this.wordESService = wordESService;
     }
 
-    @Operation(description = "添加一个单词到ES中")
+    @Operation(summary = "添加一个单词到ES中")
     @PostMapping("save")
     public void save(@Valid @RequestBody AddWordESParam addWordESParam) {
         wordESService.save(addWordESParam);
     }
 
-    @Operation(description = "批量添加单词到ES中")
+    @Operation(summary = "批量添加单词到ES中")
     @PostMapping("saveBatch")
     public void saveBatch(@Valid @RequestBody List<AddWordESParam> addWordESParams) {
         wordESService.saveBatch(addWordESParams);
     }
 
-    @Operation(description = "模糊查询单词,这个方法只提供单词的基本信息")
+    @Operation(summary = "模糊查询单词,这个方法只提供单词的基本信息")
     @PostMapping("searchWord")
     public Page<WordES> searchWord(@Valid @RequestBody SearchWordParam searchWordParam) {
         return wordESService.searchWord(searchWordParam);

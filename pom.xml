@@ -25,6 +25,7 @@
         <hutool.version>5.8.20</hutool.version>
         <spring-cloud.version>2022.0.3</spring-cloud.version>
         <spring-cloud-alibaba.version>2022.0.0.0</spring-cloud-alibaba.version>
+        <aliyun-sdk-oss.version>3.17.1</aliyun-sdk-oss.version>
     </properties>
 
 
@@ -83,6 +84,12 @@
                 <version>${spring-cloud-alibaba.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.aliyun.oss</groupId>
+                <artifactId>aliyun-sdk-oss</artifactId>
+                <version>${aliyun-sdk-oss.version}</version>
             </dependency>
 
         </dependencies>

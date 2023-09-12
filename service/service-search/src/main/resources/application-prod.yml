@@ -1,5 +1,5 @@
 server:
-  port: 8201
+  port: 8204
   servlet:
     encoding:
       charset: UTF-8
@@ -10,6 +10,8 @@ server:
 
 # spring相关配置
 spring:
+  main:
+    allow-bean-definition-overriding: true
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
@@ -21,10 +23,14 @@ spring:
     resources:
       add-mappings: false
   # springcloud相关配置
-#  cloud:
-#    nacos:
-#      discovery:
-#        server-addr: localhost:8848
+  #  cloud:
+  #    nacos:
+  #      discovery:
+  #        server-addr: localhost:8848
+
+  # ES相关配置
+  elasticsearch:
+    uris: http://localhost:9200
 
 # 日志相关配置
 logging:

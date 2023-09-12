@@ -593,7 +593,7 @@ public class WordHandleServiceImpl implements WordHandleService {
                 addWordESParam.setWordId(wordId.getId());
                 addWordESParam.setLanguageId(languageId);
                 addWordESParam.setWord(wordId.getWord());
-                addWordESParam.setDetail(detail);
+                addWordESParam.setDetail(Optional.of(detail).orElse(new HashMap<>()));
                 tobeAdd.add(addWordESParam);
             }
             // 远程调用
@@ -608,7 +608,6 @@ public class WordHandleServiceImpl implements WordHandleService {
                 .orderByAsc(WordId::getId));
         }
     }
-
 
 
     private boolean isNumber(Long source, Long... number) {

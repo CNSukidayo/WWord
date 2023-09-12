@@ -27,3 +27,4 @@ hs_err_pid*
 /logs
 WWord.iml
 /wwordResources
+/**/application-dev.yml

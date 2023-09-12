@@ -4,6 +4,7 @@ import cn.hutool.core.date.DateTime;
 import com.aliyun.oss.OSS;
 import com.aliyun.oss.model.PutObjectRequest;
 import com.aliyun.oss.model.PutObjectResult;
+import io.github.cnsukidayo.wword.common.utils.FileUtils;
 import io.github.cnsukidayo.wword.global.exception.BadRequestException;
 import io.github.cnsukidayo.wword.model.exception.ResultCodeEnum;
 import io.github.cnsukidayo.wword.third.oss.config.properties.OSSProperties;
@@ -42,10 +43,13 @@ public class OSSServiceImpl implements OSSService {
             InputStream inputStream = multipartFile.getInputStream();
             // 生成文件的名称,随机名称
             String objectName = multipartFile.getOriginalFilename();
-            objectName = UUID.randomUUID().toString().replaceAll("-", "") + objectName.substring(objectName.lastIndexOf('.'));
+            String filePre = UUID.randomUUID().toString().replaceAll("-", "");
+            objectName = filePre + objectName.substring(objectName.lastIndexOf('.'));
             // 对上传文件进行分组,根据当前年/月/日 objectName:2023/7/1/UUID.png
-            String currentDateTime = new DateTime().toString("yyyy/MM/dd");
-            objectName = currentDateTime + "/" + objectName;
+            objectName = FileUtils.separatorFilePath('/',
+                new DateTime().toString("yyyy/MM/dd"),
+                filePre,
+                objectName);
             /*
             args0:bucket名称
             args1:上传到阿里云的文件的路径(包含名称)

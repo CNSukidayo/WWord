@@ -1,9 +1,11 @@
 package io.github.cnsukidayo.wword.common.core;
 
+import io.github.cnsukidayo.wword.common.utils.ValidationUtils;
 import io.github.cnsukidayo.wword.global.exception.AbstractWWordException;
 import io.github.cnsukidayo.wword.global.handler.BaseExceptionHandler;
 import io.github.cnsukidayo.wword.model.support.BaseResponse;
 import io.github.cnsukidayo.wword.model.vo.ErrorVo;
+import jakarta.validation.ConstraintViolationException;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -13,7 +15,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 /**
  * controller层的异常处理器,仅仅是应用内的方法出现异常时会被次控制器捕获.<br>
@@ -55,6 +59,36 @@ public class ControllerExceptionHandler extends BaseExceptionHandler {
                 error.append(fieldError.getField())
                     .append(":")
                     .append(fieldError.getDefaultMessage())
+                    .append('\n');
+            }
+            baseResponse.getData().setError(error.toString());
+        }
+        return baseResponse;
+    }
+
+    /**
+     * 处理参数校验失败的异常,该异常不是由@Valid注解触发的,而是在service手动抛出的
+     *
+     * @param e 参数校验失败携带的异常信息
+     * @return 返回响应信息
+     */
+    @ExceptionHandler(ConstraintViolationException.class)
+    @ResponseStatus(HttpStatus.OK)
+    public BaseResponse<ErrorVo> handleConstraintViolationException(ConstraintViolationException e) {
+        Iterator<Map.Entry<String, String>> iterator = ValidationUtils.mapWithValidError(e.getConstraintViolations())
+            .entrySet().iterator();
+        BaseResponse<ErrorVo> baseResponse = handleGlobalException(e);
+        baseResponse.getData().setStatus(baseResponse.getStatus());
+        Map.Entry<String, String> value = iterator.next();
+        // 只提示给用户一条消息
+        baseResponse.getData().setMessage(value.getValue());
+        if (!getProduction()) {
+            StringBuilder error = new StringBuilder();
+            while (iterator.hasNext()) {
+                value = iterator.next();
+                error.append(value.getKey())
+                    .append(":")
+                    .append(value.getValue())
                     .append('\n');
             }
             baseResponse.getData().setError(error.toString());

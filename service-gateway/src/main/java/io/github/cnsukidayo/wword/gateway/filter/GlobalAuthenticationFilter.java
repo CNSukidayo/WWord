@@ -11,7 +11,6 @@ import io.github.cnsukidayo.wword.model.support.BaseResponse;
 import io.github.cnsukidayo.wword.model.vo.ErrorVo;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpRequest;
@@ -43,7 +42,7 @@ public class GlobalAuthenticationFilter implements GlobalFilter {
 
     private final AntPathMatcher antPathMatcher;
 
-    public GlobalAuthenticationFilter(@Lazy AuthFeignClient authFeignClient,
+    public GlobalAuthenticationFilter(AuthFeignClient authFeignClient,
                                       WWordProperties wWordProperties) {
         this.authFeignClient = authFeignClient;
         this.wWordProperties = wWordProperties;

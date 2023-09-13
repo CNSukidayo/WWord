@@ -31,7 +31,8 @@ import java.util.Map;
     "io.github.cnsukidayo.wword.admin.controller",
     "io.github.cnsukidayo.wword.auth.controller",
     "io.github.cnsukidayo.wword.search.api",
-    "io.github.cnsukidayo.wword.third.oss.api"})
+    "io.github.cnsukidayo.wword.third.oss.api",
+    "io.github.cnsukidayo.wword.auth.react"})
 public class ControllerExceptionHandler extends BaseExceptionHandler {
 
     public ControllerExceptionHandler(@Value("${knife4j.production}") Boolean production) {

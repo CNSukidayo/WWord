@@ -26,6 +26,7 @@
         <spring-cloud.version>2022.0.3</spring-cloud.version>
         <spring-cloud-alibaba.version>2022.0.0.0</spring-cloud-alibaba.version>
         <aliyun-sdk-oss.version>3.17.1</aliyun-sdk-oss.version>
+        <feign-reactor.version>4.0.0</feign-reactor.version>
     </properties>
 
 
@@ -91,6 +92,25 @@
                 <artifactId>aliyun-sdk-oss</artifactId>
                 <version>${aliyun-sdk-oss.version}</version>
             </dependency>
+
+            <dependency>
+                <groupId>com.playtika.reactivefeign</groupId>
+                <artifactId>feign-reactor-webclient</artifactId>
+                <version>${feign-reactor.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.playtika.reactivefeign</groupId>
+                <artifactId>feign-reactor-cloud</artifactId>
+                <version>${feign-reactor.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.playtika.reactivefeign</groupId>
+                <artifactId>feign-reactor-spring-configuration</artifactId>
+                <version>${feign-reactor.version}</version>
+            </dependency>
+
 
         </dependencies>
     </dependencyManagement>

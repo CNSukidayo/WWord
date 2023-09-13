@@ -22,6 +22,7 @@ public enum ResultCodeEnum {
     ALREADY_EXIST(4004, "指定的目标已经存在"),
     FILE_OPERATION(4005, "文件处理异常"),
     FILE_UPLOAD_ERROR(4006, "文件上传失败"),
+    JSON_HANDLE_ERROR(4007, "Json解析异常"),
 
     /**
      * 如果返回此状态码,前端需要刷新token
@@ -36,6 +37,7 @@ public enum ResultCodeEnum {
     PASSWORD_INCONSISTENT(4105, "两次输入密码不一致"),
     OLD_PASSWORD_ERROR(4107, "旧密码错误"),
     NO_LOGIN(4108, "您尚未登录,因此无法注销"),
+    GET_USER_FAIL(4109, "获取用户失败"),
 
     UNTRACE_ID_LIST_NOT_EMPTY(4303, "待取消跟踪的接口的id列表不能为空!");
 

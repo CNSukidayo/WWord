@@ -1,16 +1,18 @@
 package io.github.cnsukidayo.wword.gateway.filter;
 
-import io.github.cnsukidayo.wword.auth.client.AuthFeignClient;
+import io.github.cnsukidayo.wword.auth.client.AuthReactiveFeignClient;
 import io.github.cnsukidayo.wword.gateway.config.properties.WWordProperties;
+import io.github.cnsukidayo.wword.global.exception.BadRequestException;
 import io.github.cnsukidayo.wword.global.handler.AuthenticationFailureHandler;
 import io.github.cnsukidayo.wword.global.handler.DefaultAuthenticationFailureHandler;
 import io.github.cnsukidayo.wword.global.utils.JsonUtils;
+import io.github.cnsukidayo.wword.model.entity.Post;
 import io.github.cnsukidayo.wword.model.environment.WWordConst;
+import io.github.cnsukidayo.wword.model.exception.ResultCodeEnum;
 import io.github.cnsukidayo.wword.model.params.CheckAuthParam;
-import io.github.cnsukidayo.wword.model.support.BaseResponse;
-import io.github.cnsukidayo.wword.model.vo.ErrorVo;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpRequest;
@@ -22,9 +24,6 @@ import reactor.core.publisher.Mono;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
-import java.util.Map;
 
 /**
  * @author sukidayo
@@ -36,15 +35,15 @@ public class GlobalAuthenticationFilter implements GlobalFilter {
 
     private volatile AuthenticationFailureHandler failureHandler;
 
-    private final AuthFeignClient authFeignClient;
+    private final AuthReactiveFeignClient authReactiveFeignClient;
 
     private final WWordProperties wWordProperties;
 
     private final AntPathMatcher antPathMatcher;
 
-    public GlobalAuthenticationFilter(AuthFeignClient authFeignClient,
+    public GlobalAuthenticationFilter(@Lazy AuthReactiveFeignClient authReactiveFeignClient,
                                       WWordProperties wWordProperties) {
-        this.authFeignClient = authFeignClient;
+        this.authReactiveFeignClient = authReactiveFeignClient;
         this.wWordProperties = wWordProperties;
         this.antPathMatcher = new AntPathMatcher();
     }
@@ -62,32 +61,24 @@ public class GlobalAuthenticationFilter implements GlobalFilter {
         CheckAuthParam checkAuthParam = new CheckAuthParam();
         checkAuthParam.setToken(token);
         checkAuthParam.setTargetUrl(targetUrl);
-        try {
-            BaseResponse<Object> result = authFeignClient.getAndCheck(checkAuthParam);
+        return authReactiveFeignClient.getAndCheck(checkAuthParam).flatMap(result -> {
             if (!result.getStatus().equals(HttpStatus.OK.value())) {
                 // 处理异常,将子服务的异常响应给用户
                 return getFailureHandler().onFailure(exchange.getRequest(), exchange.getResponse(), result);
             } else {
                 // 封装请求的用户信息并进行编码,从而支持中文
                 ServerHttpRequest.Builder builder = exchange.getRequest().mutate();
-                String clientUser = URLEncoder.encode(JsonUtils.objectToJson(((Map) result.getData()).get("user")), StandardCharsets.UTF_8);
+                String clientUser = null;
+                try {
+                    clientUser = URLEncoder.encode(JsonUtils.objectToJson(((Post) result.getData())), StandardCharsets.UTF_8);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    throw new BadRequestException(ResultCodeEnum.JSON_HANDLE_ERROR);
+                }
                 builder.header(WWordConst.X_CLIENT_USER, clientUser);
                 return chain.filter(exchange.mutate().request(builder.build()).build());
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-            // 构造一个异常并返回
-            BaseResponse<ErrorVo> errorDetail = new BaseResponse<>();
-            HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
-            errorDetail.setStatus(status.value());
-            errorDetail.setMessage(status.getReasonPhrase());
-            ErrorVo errorVo = new ErrorVo();
-            errorVo.setTimestamp(LocalDateTime.now().toEpochSecond(ZoneOffset.of("+8")));
-            errorVo.setStatus(status.value());
-            errorVo.setMessage("获取用户失败!");
-            errorDetail.setData(errorVo);
-            return getFailureHandler().onFailure(exchange.getRequest(), exchange.getResponse(), errorDetail);
-        }
+        });
     }
 
     @NonNull

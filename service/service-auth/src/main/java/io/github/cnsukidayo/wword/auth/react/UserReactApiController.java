@@ -1,4 +1,4 @@
-package io.github.cnsukidayo.wword.auth.api;
+package io.github.cnsukidayo.wword.auth.react;
 
 import io.github.cnsukidayo.wword.auth.service.UserService;
 import io.github.cnsukidayo.wword.model.bo.UserPermissionBO;
@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Mono;
 
 import java.util.List;
 
@@ -20,19 +21,19 @@ import java.util.List;
  */
 @Tag(name = "用户管理接口")
 @RestController
-@RequestMapping("remote/auth/permission")
-public class UserApiController {
+@RequestMapping("remote/react/auth/permission")
+public class UserReactApiController {
 
     private final UserService userService;
 
-    public UserApiController(UserService userService) {
+    public UserReactApiController(UserService userService) {
         this.userService = userService;
     }
 
     @Operation(summary = "获取并检查token对应的用户是否有目标URL的访问权限")
     @PostMapping("get_and_check")
-    public BaseResponse<UserPermissionBO> getById(@Valid @RequestBody CheckAuthParam checkAuthParam) {
-        return BaseResponse.ok(userService.getAndAuth(checkAuthParam));
+    public Mono<BaseResponse<UserPermissionBO>> getById(@Valid @RequestBody CheckAuthParam checkAuthParam) {
+        return Mono.just(BaseResponse.ok(userService.getAndAuth(checkAuthParam)));
     }
 
     @Operation(summary = "根据id列表获取所有用户")

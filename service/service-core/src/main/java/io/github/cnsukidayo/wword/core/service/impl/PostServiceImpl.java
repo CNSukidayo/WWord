@@ -6,6 +6,7 @@ import io.github.cnsukidayo.wword.core.dao.PostMapper;
 import io.github.cnsukidayo.wword.core.service.PostService;
 import io.github.cnsukidayo.wword.model.entity.Post;
 import io.github.cnsukidayo.wword.model.param.PublishPostParam;
+import io.github.cnsukidayo.wword.third.oss.client.OSSFeignClient;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
@@ -18,8 +19,12 @@ public class PostServiceImpl extends ServiceImpl<PostMapper, Post> implements Po
 
     private final PostMapper postMapper;
 
-    public PostServiceImpl(PostMapper postMapper) {
+    private final OSSFeignClient ossFeignClient;
+
+    public PostServiceImpl(PostMapper postMapper,
+                           OSSFeignClient ossFeignClient) {
         this.postMapper = postMapper;
+        this.ossFeignClient = ossFeignClient;
     }
 
     @Override
@@ -29,8 +34,9 @@ public class PostServiceImpl extends ServiceImpl<PostMapper, Post> implements Po
         ValidationUtils.validate(publishPostParam);
 
         // 远程调用
+//        String resultUrl = ossFeignClient.fileUpLoad(publishPostParam.getFile());
 
-        // 记录发布
+        // 发布到MQ中
 
     }
 }

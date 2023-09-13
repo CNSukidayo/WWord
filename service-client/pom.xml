@@ -15,6 +15,7 @@
         <module>service-auth-client</module>
         <module>service-core-client</module>
         <module>service-search-client</module>
+        <module>service-third-party-client</module>
     </modules>
 
     <properties>

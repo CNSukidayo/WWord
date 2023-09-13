@@ -6,7 +6,6 @@ import io.github.cnsukidayo.wword.global.exception.BadRequestException;
 import io.github.cnsukidayo.wword.global.handler.AuthenticationFailureHandler;
 import io.github.cnsukidayo.wword.global.handler.DefaultAuthenticationFailureHandler;
 import io.github.cnsukidayo.wword.global.utils.JsonUtils;
-import io.github.cnsukidayo.wword.model.entity.Post;
 import io.github.cnsukidayo.wword.model.environment.WWordConst;
 import io.github.cnsukidayo.wword.model.exception.ResultCodeEnum;
 import io.github.cnsukidayo.wword.model.params.CheckAuthParam;
@@ -24,6 +23,7 @@ import reactor.core.publisher.Mono;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.Map;
 
 /**
  * @author sukidayo
@@ -70,7 +70,7 @@ public class GlobalAuthenticationFilter implements GlobalFilter {
                 ServerHttpRequest.Builder builder = exchange.getRequest().mutate();
                 String clientUser = null;
                 try {
-                    clientUser = URLEncoder.encode(JsonUtils.objectToJson(((Post) result.getData())), StandardCharsets.UTF_8);
+                    clientUser = URLEncoder.encode(JsonUtils.objectToJson(((Map) result.getData()).get("user")), StandardCharsets.UTF_8);
                 } catch (Exception e) {
                     e.printStackTrace();
                     throw new BadRequestException(ResultCodeEnum.JSON_HANDLE_ERROR);

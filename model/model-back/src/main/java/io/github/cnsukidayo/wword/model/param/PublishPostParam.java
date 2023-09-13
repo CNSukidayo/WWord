@@ -19,7 +19,7 @@ public class PublishPostParam {
     private String title;
 
     @Schema(description = "文件上传的输入流")
-    @NotNull(message = "没有指定上传的文件")
+    @NotNull(message = "上传的文件不为null")
     private MultipartFile file;
 
     public PublishPostParam() {

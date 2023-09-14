@@ -1,9 +1,8 @@
-package io.github.cnsukidayo.wword.third.oss.config;
+package io.github.cnsukidayo.wword.oss.config;
 
 import com.aliyun.oss.OSS;
 import com.aliyun.oss.OSSClientBuilder;
-import io.github.cnsukidayo.wword.third.config.properties.ServiceThirdPartyProperties;
-import io.github.cnsukidayo.wword.third.oss.config.properties.OSSProperties;
+import io.github.cnsukidayo.wword.oss.config.properties.OSSProperties;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -14,12 +13,12 @@ import org.springframework.context.annotation.Configuration;
  * @date 2023/9/12 15:57
  */
 @Configuration
-@EnableConfigurationProperties(ServiceThirdPartyProperties.class)
-public class ServiceThirdPartyConfig {
+@EnableConfigurationProperties(OSSProperties.class)
+public class OSSConfig {
 
     private final OSSProperties ossProperties;
 
-    public ServiceThirdPartyConfig(OSSProperties ossProperties) {
+    public OSSConfig(OSSProperties ossProperties) {
         this.ossProperties = ossProperties;
     }
 

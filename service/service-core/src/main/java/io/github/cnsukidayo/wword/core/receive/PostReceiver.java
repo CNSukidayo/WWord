@@ -2,7 +2,10 @@ package io.github.cnsukidayo.wword.core.receive;
 
 import com.rabbitmq.client.Channel;
 import io.github.cnsukidayo.wword.core.service.PostService;
+import io.github.cnsukidayo.wword.model.entity.Post;
 import io.github.cnsukidayo.wword.mq.constant.MQConst;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.annotation.Exchange;
 import org.springframework.amqp.rabbit.annotation.Queue;
@@ -20,6 +23,8 @@ import java.io.IOException;
 @Component
 public class PostReceiver {
 
+    private final Logger log = LoggerFactory.getLogger(getClass());
+
     private final PostService postService;
 
     public PostReceiver(PostService postService) {
@@ -31,9 +36,14 @@ public class PostReceiver {
         value = @Queue(value = MQConst.QUEUE_PUBLISH_POST, durable = "true"),
         key = {MQConst.ROUTING_PUBLISH_POST}
     ))
-    public void publishPost(String postUrl, Message message, Channel channel) throws IOException {
-        Assert.notNull(postUrl, "postUrl must not be null");
-        System.out.println(Thread.currentThread() + "接收消息成功!" + postUrl);
+    public void publishPost(Post post, Message message, Channel channel) throws IOException {
+        Assert.notNull(post, "post must not be null");
+        log.info("handle post userId:[{}],file url:[{}]", post.getUuid(), post.getOriginUrl());
+
+        postService.save(post);
+        //
+
+
         channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
     }
 

@@ -1,12 +1,13 @@
-package io.github.cnsukidayo.wword.third.oss.service;
+package io.github.cnsukidayo.wword.oss.component;
 
 import org.springframework.web.multipart.MultipartFile;
 
 /**
  * @author sukidayo
- * @date 2023/9/12 14:12
+ * @date 2023/9/14 13:01
  */
-public interface OSSService {
+public interface OSSComponent {
+
     /**
      * 上传文件到阿里云OSS对象存储服务中
      *
@@ -14,4 +15,5 @@ public interface OSSService {
      * @return 返回上传成功后的文件路径
      */
     String fileUpLoad(MultipartFile multipartFile);
+
 }

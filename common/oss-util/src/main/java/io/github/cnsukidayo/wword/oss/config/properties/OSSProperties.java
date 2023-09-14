@@ -1,14 +1,12 @@
-package io.github.cnsukidayo.wword.third.oss.config.properties;
+package io.github.cnsukidayo.wword.oss.config.properties;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Component;
 
 /**
  * @author sukidayo
  * @date 2023/9/12 16:19
  */
 @ConfigurationProperties(prefix = "service-third-party.oss")
-@Component
 public class OSSProperties {
 
     private String endpoint;

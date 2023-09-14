@@ -5,24 +5,30 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>io.github.cnsukidayo.wword</groupId>
-        <artifactId>WWord</artifactId>
+        <artifactId>common</artifactId>
         <version>0.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>common</artifactId>
-    <packaging>pom</packaging>
-    <modules>
-        <module>request-util</module>
-        <module>service-util</module>
-        <module>global-util</module>
-        <module>rabbit-util</module>
-        <module>oss-util</module>
-    </modules>
+    <artifactId>oss-util</artifactId>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.aliyun.oss</groupId>
+            <artifactId>aliyun-sdk-oss</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>io.github.cnsukidayo.wword</groupId>
+            <artifactId>service-util</artifactId>
+            <version>0.1-SNAPSHOT</version>
+        </dependency>
+
+    </dependencies>
 
 </project>

@@ -1,4 +1,4 @@
-package io.github.cnsukidayo.wword.third.oss.service.impl;
+package io.github.cnsukidayo.wword.oss.component.impl;
 
 import cn.hutool.core.date.DateTime;
 import com.aliyun.oss.OSS;
@@ -7,9 +7,9 @@ import com.aliyun.oss.model.PutObjectResult;
 import io.github.cnsukidayo.wword.common.utils.FileUtils;
 import io.github.cnsukidayo.wword.global.exception.BadRequestException;
 import io.github.cnsukidayo.wword.model.exception.ResultCodeEnum;
-import io.github.cnsukidayo.wword.third.oss.config.properties.OSSProperties;
-import io.github.cnsukidayo.wword.third.oss.service.OSSService;
-import org.springframework.stereotype.Service;
+import io.github.cnsukidayo.wword.oss.component.OSSComponent;
+import io.github.cnsukidayo.wword.oss.config.properties.OSSProperties;
+import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -17,22 +17,20 @@ import java.io.InputStream;
 import java.util.UUID;
 
 /**
- * OSS对象存储服务
- *
  * @author sukidayo
- * @date 2023/9/12 14:13
+ * @date 2023/9/14 13:01
  */
-@Service
-public class OSSServiceImpl implements OSSService {
-
-    private final OSSProperties ossProperties;
+@Component
+public class OSSComponentImpl implements OSSComponent {
 
     private final OSS ossClient;
 
-    public OSSServiceImpl(OSSProperties ossProperties,
-                          OSS ossClient) {
-        this.ossProperties = ossProperties;
+    private final OSSProperties ossProperties;
+
+    public OSSComponentImpl(OSS ossClient,
+                            OSSProperties ossProperties) {
         this.ossClient = ossClient;
+        this.ossProperties = ossProperties;
     }
 
     @Override

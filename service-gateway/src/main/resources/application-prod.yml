@@ -51,10 +51,15 @@ spring:
           uri: lb://service-admin
           predicates:
             - Path=/api/admin/**
+        - id: service-search
+          uri: lb://service-search
+          predicates:
+            - Path=/api/es/**
         - id: service-third-party
           uri: lb://service-third-party
           predicates:
             - Path=/api/third/party/**
+
 
       httpclient:
         ssl:
@@ -83,6 +88,7 @@ knife4j:
         service-name: service-auth
         url: /service-auth/v3/api-docs/auth-cloud
         context-path: /
+
       - name: 业务模块-前端
         service-name: service-core
         url: /service-core/v3/api-docs/core-front
@@ -91,15 +97,37 @@ knife4j:
         service-name: service-core
         url: /service-core/v3/api-docs/core-cloud
         context-path: /
+
       - name: 管理员模块-前端
         service-name: service-admin
         url: /service-admin/v3/api-docs/admin-front
+        context-path: /
+
+      - name: 搜索模块-前端
+        service-name: service-search
+        url: /service-search/v3/api-docs/search-front
+        context-path: /
+      - name: 搜索模块-微服务
+        service-name: service-search
+        url: /service-search/v3/api-docs/search-cloud
+        context-path: /
+
+      - name: 第三方服务-微服务
+        service-name: third-party-cloud
+        url: /service-third-party/v3/api-docs/third-party-cloud
+        context-path: /
+      - name: 第三方服务-前端
+        service-name: third-party-front
+        url: /third-party-front/v3/api-docs/third-party-front
         context-path: /
 # 自定义相关配置
 wword:
   # 白名单,不走gateway转发的路径
   exclude-url-patterns:
-    - api/auth/user/register
-    - api/auth/user/login
-    - api/auth/user/refresh/*
+    - "api/auth/user/register"
+    - "api/auth/user/login"
+    - "api/auth/user/refresh/*"
+  # 哪些路径走gateway的
+  url-patterns:
+    - "/api/**"
   production: false

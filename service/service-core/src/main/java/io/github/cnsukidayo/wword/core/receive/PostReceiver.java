@@ -96,10 +96,13 @@ public class PostReceiver {
                 if (FileUtil.isFile(entryName) && !WWordConst.allowMarkdownSuffix.contains(FileUtil.getSuffix(entryName)))
                     throw new FileHandlerException("上传压缩包中含有不允许的文件类型: " + entryName);
 
-                if (FileUtil.getSuffix(entryName).equalsIgnoreCase(".md")) {
+                if (FileUtil.getSuffix(entryName).equalsIgnoreCase("md")) {
                     if (hasMarkdown) throw new FileHandlerException("markdown文件数量多于一个!");
                     hasMarkdown = true;
                 }
+            }
+            if (!hasMarkdown) {
+                throw new FileHandlerException("没有找到markdown文件");
             }
             // 解压文件
             File unzipFile = ZipUtil.unzip(targetFilePath, targetFilePath.getParentFile(), Charset.forName("GBK"));
@@ -123,10 +126,10 @@ public class PostReceiver {
 
             // 更多的操作
 
-
             // 将markdown文件的内容更新到数据库中
             post.setContent(new String(bufferedInputStream.readAllBytes(), StandardCharsets.UTF_8));
             post.setPostStatus(PostStatus.SUCCESS);
+            post.setDescribeInfo(PostStatus.SUCCESS.getValue());
             postService.updateById(post);
             log.info("publish post success,post id:[{}]", post.getId());
         } catch (FileHandlerException e) {

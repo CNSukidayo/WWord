@@ -7,12 +7,8 @@ server:
       enabled: true
   tomcat:
     uri-encoding: UTF-8
-  ssl:
-    key-store: classpath:ssl/httpsKey.p12
-    key-store-password: abc123456789
-    key-store-type: PKCS12
-    key-alias: wword
 
+# spring相关配置
 spring:
   datasource:
     username: root
@@ -56,6 +52,21 @@ mybatis-plus:
   #  mapper-locations: classpath*:/mapper/**/*.xml
   type-aliases-package: io.github.cnsukidayo.wword.model.entity
 
+#springdoc配置
+springdoc:
+  api-docs:
+    groups:
+      enabled: true
+  group-configs:
+    - group: auth-front
+      display-name: 权限服务-前端
+      packages-to-scan:
+        - io.github.cnsukidayo.wword.auth.controller
+    - group: auth-cloud
+      display-name: 权限服务-微服务
+      packages-to-scan:
+        - io.github.cnsukidayo.wword.auth.api
+
 # knife4j的增强配置,不需要增强可以不配
 knife4j:
   enable: true
@@ -63,6 +74,10 @@ knife4j:
     language: zh_cn
   production: false
 
-
+# 全局配置
 wword:
   resource-locations: D:/Program/Java Project/WWord/wwordResources/
+
+# 当前服务自定义配置
+service-auth:
+  max-login-log: 50

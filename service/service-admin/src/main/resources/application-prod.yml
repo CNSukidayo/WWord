@@ -7,12 +7,6 @@ server:
       enabled: true
   tomcat:
     uri-encoding: UTF-8
-  ssl:
-    key-store: classpath:ssl/httpsKey.p12
-    key-store-password: abc123456789
-    key-store-type: PKCS12
-    key-alias: wword
-
 spring:
   datasource:
     username: root
@@ -47,12 +41,18 @@ spring:
     nacos:
       discovery:
         server-addr: localhost:8848
+    openfeign:
+      httpclient:
+        connection-timeout: 9999999
+        ok-http:
+          read-timeout: 99999
 
 logging:
   file:
-    path: logs/
+    path: logs/admin/
   level:
     io.github.cnsukidayo: info
+
 #mybatis-plus相关配置
 mybatis-plus:
   configuration:
@@ -60,6 +60,17 @@ mybatis-plus:
     map-underscore-to-camel-case: true
   #  mapper-locations: classpath*:/mapper/**/*.xml
   type-aliases-package: io.github.cnsukidayo.wword.model.entity
+
+#springdoc配置
+springdoc:
+  api-docs:
+    groups:
+      enabled: true
+  group-configs:
+    - group: admin-front
+      display-name: 管理员服务
+      packages-to-scan:
+        - io.github.cnsukidayo.wword.admin.controller
 
 # knife4j的增强配置,不需要增强可以不配
 knife4j:

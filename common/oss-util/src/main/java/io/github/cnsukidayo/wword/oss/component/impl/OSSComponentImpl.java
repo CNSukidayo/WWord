@@ -1,7 +1,10 @@
 package io.github.cnsukidayo.wword.oss.component.impl;
 
 import cn.hutool.core.date.DateTime;
+import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.util.URLUtil;
 import com.aliyun.oss.OSS;
+import com.aliyun.oss.model.OSSObject;
 import com.aliyun.oss.model.PutObjectRequest;
 import com.aliyun.oss.model.PutObjectResult;
 import io.github.cnsukidayo.wword.common.utils.FileUtils;
@@ -11,9 +14,11 @@ import io.github.cnsukidayo.wword.oss.component.OSSComponent;
 import io.github.cnsukidayo.wword.oss.config.properties.OSSProperties;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.InputStream;
+import java.io.*;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -66,10 +71,50 @@ public class OSSComponentImpl implements OSSComponent {
             putObjectRequest.setProcess("true");
             PutObjectResult result = this.ossClient.putObject(putObjectRequest);
             // 如果上传成功,则返回200.返回上传之后图片的路径
-            return result.getResponse().getUri();
+            return URLUtil.getPath(result.getResponse().getUri()).substring(1);
         } catch (Exception e) {
             // 这里需要抛出自定义异常
             throw new BadRequestException(ResultCodeEnum.FILE_UPLOAD_ERROR, e);
         }
+    }
+
+    @Override
+    public String downloadFile(String objectName, String targetBasePath) {
+        Assert.hasText(targetBasePath, "targetBasePath must not be null");
+        Assert.hasText(objectName, "objectName must not be null");
+        // 得到文件名称
+        String fileName = FileUtil.getName(objectName);
+        // 得到文件前缀
+        String filePrefix = Optional.ofNullable(FileUtil.getPrefix(fileName))
+            .filter(StringUtils::hasText)
+            .orElseThrow(() -> new IllegalStateException(fileName + "不是一个合法的文件!"));
+
+        // 调用ossClient.getObject返回一个OSSObject实例,该实例包含文件内容及文件元信息.
+        OSSObject ossObject = ossClient.getObject(ossProperties.getBucketName(), objectName);
+        // 调用ossObject.getObjectContent获取文件输入流,可读取此输入流获取其内容.
+        InputStream content = ossObject.getObjectContent();
+        BufferedOutputStream outputStream = null;
+        // 下载到的目标路径
+        File targetFilePath = new File(FileUtil.mkdir(FileUtils.separatorFilePath('/', targetBasePath, filePrefix)),fileName);
+        if (content != null) {
+            try {
+                outputStream = new BufferedOutputStream(new FileOutputStream(targetFilePath));
+                content.transferTo(outputStream);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            } finally {
+                try {
+                    // 数据读取完成后，获取的流必须关闭,否则会造成连接泄漏,导致请求无连接可用,程序无法正常工作.
+                    if (outputStream != null) {
+                        outputStream.flush();
+                        outputStream.close();
+                    }
+                    content.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return targetFilePath.getAbsolutePath();
     }
 }

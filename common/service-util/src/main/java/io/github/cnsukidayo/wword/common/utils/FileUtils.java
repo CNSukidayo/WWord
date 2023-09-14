@@ -8,6 +8,12 @@ import org.springframework.util.Assert;
  */
 public class FileUtils {
 
+    public static final String ZIP_SUFFIX = "zip";
+    public static final String RAR_SUFFIX = "rar";
+    public static final String TAR_SUFFIX = "tar";
+    public static final String SevenZ_SUFFIX = "7z";
+    public static final String TAZ_SUFFIX = "taz";
+
     /**
      * 分隔文件路径,该方法会自动将所有的paths中间只拼接上一个separator分隔符<br>
      * 并且开头和结尾不带分隔符

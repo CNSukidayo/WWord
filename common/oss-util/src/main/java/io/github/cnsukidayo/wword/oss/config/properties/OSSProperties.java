@@ -6,7 +6,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  * @author sukidayo
  * @date 2023/9/12 16:19
  */
-@ConfigurationProperties(prefix = "service-third-party.oss")
+@ConfigurationProperties(prefix = "oss")
 public class OSSProperties {
 
     private String endpoint;

@@ -24,10 +24,23 @@ spring:
     multipart:
       max-file-size: 16MB
   # springcloud相关配置
-#  cloud:
-#    nacos:
-#      discovery:
-#        server-addr: localhost:8848
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+  # rabbitMQ相关配置
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+    publisher-confirm-type: CORRELATED
+    publisher-returns: true
+    listener:
+      simple:
+        prefetch: 1
+        concurrency: 3
+        acknowledge-mode: manual
 
 # 日志相关配置
 logging:
@@ -45,6 +58,10 @@ springdoc:
       display-name: 三方服务模块-微服务
       packages-to-scan:
         - io.github.cnsukidayo.wword.third.oss.api
+    - group: third-party-front
+      display-name: 三方服务模块-前端
+      packages-to-scan:
+        - io.github.cnsukidayo.wword.third.oss.controller
 knife4j:
   enable: true
   setting:
@@ -54,10 +71,3 @@ knife4j:
 # 自定义配置
 wword:
   resource-locations: D:/Program/Java Project/WWord/wwordResources/
-# 服务自定义配置
-service-third-party:
-  oss: # todo 编写自已OSS服务的密钥配置
-    # endpoint:
-    # access-key:
-    # access-key-secret:
-    # bucket-name:

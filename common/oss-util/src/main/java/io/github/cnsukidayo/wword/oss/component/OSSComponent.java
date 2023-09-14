@@ -16,4 +16,13 @@ public interface OSSComponent {
      */
     String fileUpLoad(MultipartFile multipartFile);
 
+    /**
+     * 从阿里云下载文件到本机
+     *
+     * @param objectName 下载的文件地址不为空
+     * @param targetBasePath 存放的基本路径不为空
+     * @return 下载到本机的位置路径不为null
+     */
+    String downloadFile(String objectName, String targetBasePath);
+
 }

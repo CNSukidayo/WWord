@@ -32,6 +32,9 @@ public class Post extends BaseEntity {
     @TableField("origin_url")
     private String originUrl;
 
+    @TableField("describe_info")
+    private String describeInfo;
+
     public Post() {
     }
 
@@ -83,6 +86,11 @@ public class Post extends BaseEntity {
         this.originUrl = originUrl;
     }
 
+    public String getDescribeInfo() {
+        return describeInfo;
+    }
 
-
+    public void setDescribeInfo(String describeInfo) {
+        this.describeInfo = describeInfo;
+    }
 }

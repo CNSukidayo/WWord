@@ -10,6 +10,7 @@ import io.github.cnsukidayo.wword.model.exception.ResultCodeEnum;
 import io.github.cnsukidayo.wword.third.oss.config.properties.OSSProperties;
 import io.github.cnsukidayo.wword.third.oss.service.OSSService;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.InputStream;
@@ -43,8 +44,13 @@ public class OSSServiceImpl implements OSSService {
             InputStream inputStream = multipartFile.getInputStream();
             // 生成文件的名称,随机名称
             String objectName = multipartFile.getOriginalFilename();
+            Assert.notNull(objectName, "objectName must not be null");
             String filePre = UUID.randomUUID().toString().replaceAll("-", "");
-            objectName = filePre + objectName.substring(objectName.lastIndexOf('.'));
+            int suffixIndex = objectName.lastIndexOf('.');
+            if (suffixIndex == -1) {
+                throw new BadRequestException(ResultCodeEnum.FILE_UPLOAD_ERROR, "文件上传失败!找不到文件后缀名");
+            }
+            objectName = filePre + objectName.substring(suffixIndex);
             // 对上传文件进行分组,根据当前年/月/日 objectName:2023/7/1/UUID.png
             objectName = FileUtils.separatorFilePath('/',
                 new DateTime().toString("yyyy/MM/dd"),

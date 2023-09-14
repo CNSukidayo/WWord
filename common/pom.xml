@@ -15,6 +15,7 @@
         <module>request-util</module>
         <module>service-util</module>
         <module>global-util</module>
+        <module>rabbit-util</module>
     </modules>
 
     <properties>

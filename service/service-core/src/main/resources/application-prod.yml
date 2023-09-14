@@ -7,11 +7,7 @@ server:
       enabled: true
   tomcat:
     uri-encoding: UTF-8
-  ssl:
-    key-store: classpath:ssl/httpsKey.p12
-    key-store-password: abc123456789
-    key-store-type: PKCS12
-    key-alias: wword
+
 # spring相关配置
 spring:
   datasource:
@@ -39,6 +35,12 @@ spring:
     nacos:
       discovery:
         server-addr: localhost:8848
+  # rabbitMQ相关配置
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
 
 # 日志相关配置
 logging:
@@ -69,6 +71,19 @@ mybatis-plus:
 #      display-name: "用户端接口"
 #      packages-to-scan: io.github.cnsukidayo.wword.controller.u
 # knife4j的增强配置,不需要增强可以不配
+springdoc:
+  api-docs:
+    groups:
+      enabled: true
+  group-configs:
+    - group: core-front
+      display-name: 业务模块-前端
+      packages-to-scan:
+        - io.github.cnsukidayo.wword.core.controller
+    - group: core-cloud
+      display-name: 业务模块-微服务
+      packages-to-scan:
+        - io.github.cnsukidayo.wword.core.api
 knife4j:
   enable: true
   setting:
@@ -78,3 +93,7 @@ knife4j:
 # 自定义配置
 wword:
   resource-locations: D:/Program/Java Project/WWord/wwordResources/
+
+# 服务自定义配置
+service-core:
+  remote-base-address: /remove/core/

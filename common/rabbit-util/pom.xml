@@ -5,16 +5,24 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>io.github.cnsukidayo.wword</groupId>
-        <artifactId>service</artifactId>
+        <artifactId>common</artifactId>
         <version>0.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>service-rabbit</artifactId>
+    <artifactId>rabbit-util</artifactId>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
+
+    <dependencies>
+        <!--rabbitmq消息队列-->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-bus-amqp</artifactId>
+        </dependency>
+    </dependencies>
 
 </project>

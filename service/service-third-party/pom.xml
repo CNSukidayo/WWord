@@ -22,6 +22,13 @@
             <groupId>com.aliyun.oss</groupId>
             <artifactId>aliyun-sdk-oss</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>io.github.cnsukidayo.wword</groupId>
+            <artifactId>rabbit-util</artifactId>
+            <version>0.1-SNAPSHOT</version>
+        </dependency>
+
     </dependencies>
 
 

@@ -18,6 +18,7 @@ import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
+import org.springframework.util.Assert;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
@@ -51,8 +52,9 @@ public class GlobalAuthenticationFilter implements GlobalFilter {
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         String targetUrl = exchange.getRequest().getURI().getPath();
-        // 检查白名单
-        if (wWordProperties.getExcludeUrlPatterns().stream().anyMatch(p -> antPathMatcher.match(p, targetUrl))) {
+
+        // 判断是否需要执行过滤
+        if (shouldNotFilter(targetUrl)) {
             return chain.filter(exchange);
         }
 
@@ -92,6 +94,16 @@ public class GlobalAuthenticationFilter implements GlobalFilter {
             }
         }
         return failureHandler;
+    }
+
+    private boolean shouldNotFilter(String targetUrl) {
+        Assert.hasText(targetUrl, "targetUrl must not be empty");
+
+        boolean result = wWordProperties.getUrlPatterns().stream()
+            .noneMatch(s -> antPathMatcher.match(s, targetUrl));
+
+        return result || wWordProperties.getExcludeUrlPatterns().stream()
+            .anyMatch(s -> antPathMatcher.match(s, targetUrl));
     }
 
 }

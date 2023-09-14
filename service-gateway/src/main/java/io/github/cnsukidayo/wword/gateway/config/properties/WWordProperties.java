@@ -16,11 +16,21 @@ public class WWordProperties {
 
     private Set<String> excludeUrlPatterns;
 
+    private Set<String> urlPatterns;
+
     public Set<String> getExcludeUrlPatterns() {
         return excludeUrlPatterns;
     }
 
     public void setExcludeUrlPatterns(Set<String> excludeUrlPatterns) {
         this.excludeUrlPatterns = excludeUrlPatterns;
+    }
+
+    public Set<String> getUrlPatterns() {
+        return urlPatterns;
+    }
+
+    public void setUrlPatterns(Set<String> urlPatterns) {
+        this.urlPatterns = urlPatterns;
     }
 }

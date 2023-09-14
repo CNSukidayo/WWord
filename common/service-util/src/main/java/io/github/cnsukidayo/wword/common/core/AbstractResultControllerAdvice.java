@@ -13,7 +13,6 @@ import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.http.server.ServletServerHttpResponse;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
 /**
@@ -21,11 +20,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
  *
  * @author cnsukidayo
  */
-@ControllerAdvice(value = {"io.github.cnsukidayo.wword.core.controller",
-    "io.github.cnsukidayo.wword.admin.controller",
-    "io.github.cnsukidayo.wword.auth.controller",
-    "io.github.cnsukidayo.wword.search.controller"})
-public class CommonResultControllerAdvice implements ResponseBodyAdvice<Object> {
+public abstract class AbstractResultControllerAdvice implements ResponseBodyAdvice<Object> {
 
     @Override
     public boolean supports(MethodParameter returnType,

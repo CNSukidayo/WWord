@@ -6,14 +6,12 @@ import io.github.cnsukidayo.wword.global.handler.BaseExceptionHandler;
 import io.github.cnsukidayo.wword.model.support.BaseResponse;
 import io.github.cnsukidayo.wword.model.vo.ErrorVo;
 import jakarta.validation.ConstraintViolationException;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
+import org.slf4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.Iterator;
 import java.util.List;
@@ -27,16 +25,10 @@ import java.util.Map;
  *
  * @author cnsukidayo
  */
-@RestControllerAdvice(value = {"io.github.cnsukidayo.wword.core.controller",
-    "io.github.cnsukidayo.wword.admin.controller",
-    "io.github.cnsukidayo.wword.auth.controller",
-    "io.github.cnsukidayo.wword.search.api",
-    "io.github.cnsukidayo.wword.third.oss.api",
-    "io.github.cnsukidayo.wword.auth.react"})
-public class ControllerExceptionHandler extends BaseExceptionHandler {
+public abstract class AbstractControllerExceptionHandler extends BaseExceptionHandler {
 
-    public ControllerExceptionHandler(@Value("${knife4j.production}") Boolean production) {
-        super(production, LoggerFactory.getLogger(ControllerExceptionHandler.class));
+    public AbstractControllerExceptionHandler(Boolean production, Logger log) {
+        super(production, log);
     }
 
 

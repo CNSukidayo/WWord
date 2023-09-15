@@ -1,34 +1,40 @@
 # WWord
 
-#### 软件架构
-软件架构说明
+### 介绍
 
+万语词,正如其名它致力于提供一套统一的逻辑完成任意语言词汇的学习.
+引入独创的单词标记技术方便用户更好地对遗忘知识进行查漏补缺,
+用户可以在该平台发布Markdown格式的帖子分享语言学习中的各种心得.
+项目基于SpringBoot+Mybatis实现,采用Docker容器化部署.
+包含管理员模块、权限模块、核心功能模块、搜索模块等.
 
-#### 安装教程
+### 软件架构
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
+### 模块划分
 
-#### 使用说明
+* 注册中心:nacos
+* 网关gateway:Gateway 聚合所有的接口,统一接受处理前端的请求;并且在转发前异步调用权限模块进行鉴权.
+* 公共模块:将所有服务模块需要的功能单独抽离(包括全局异常响应和异常处理,过滤器).
+* 实体类模块:通过拆分为前端、公共、后端三个部分的实体类模块,使得系统各层之间相互独立解耦.
+* 鉴权模块:用户注册、获取用户信息、判断用户是否有目标接口权限、角色管理、角色分配接口权限等.
+* 核心模块:包括用户收藏夹功能管理、markdown帖子管理
+* 管理员模块:单词划分管理、导入单词管理
+* 搜索模块:ElasticSearch单词搜索、更新ES列表
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
+### 界面展示
 
-#### 参与贡献
-
-1.  Fork 本仓库
-2.  新建 Feat_xxx 分支
-3.  提交代码
-4.  新建 Pull Request
-
-
-#### 特技
-
-1.  使用 Readme\_XXX.md 来支持不同的语言，例如 Readme\_en.md, Readme\_zh.md
-2.  Gitee 官方博客 [blog.gitee.com](https://blog.gitee.com)
-3.  你可以 [https://gitee.com/explore](https://gitee.com/explore) 这个地址来了解 Gitee 上的优秀开源项目
-4.  [GVP](https://gitee.com/gvp) 全称是 Gitee 最有价值开源项目，是综合评定出的优秀开源项目
-5.  Gitee 官方提供的使用手册 [https://gitee.com/help](https://gitee.com/help)
-6.  Gitee 封面人物是一档用来展示 Gitee 会员风采的栏目 [https://gitee.com/gitee-stars/](https://gitee.com/gitee-stars/)
+<table border="0px" style="font-size:16px;margin-bottom: 0;">
+    <tr>
+        <img src="images/home_page_1.jpg" alt="登陆界面" style="width: 300px;"/>
+        <img src="images/home_page_2.jpg" alt="登陆界面" style="width: 300px;"/>
+    </tr>    
+    <tr>
+        <img src="images/home_page_3.jpg" alt="登陆界面" style="width: 300px;"/>
+        <img src="images/home_page_4.jpg" alt="登陆界面" style="width: 300px;"/>
+    </tr>
+    <tr>
+        <td colspan="2" style="text-align: center;width: 50%">
+            <img src="images/home_page_5.jpg" alt="登陆界面" style="width: 300px;"> </img>
+        </td>
+    </tr>
+</table>

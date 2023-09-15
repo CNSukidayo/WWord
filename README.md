@@ -1,5 +1,6 @@
-# WWord
-
+<p align="center" style="font-size: 20px">
+    <b>WWord</b>
+</p>
 <p align="center">
     <a href="https://github.com/CNSukidayo/WWord/commits"><img alt="GitHub last commit" src="https://img.shields.io/badge/JDK-17-red.svg?style=flat&logo=Oracle&labelColor=2B9C4C&color=DC2500" /></a>
     <a href="https://github.com/CNSukidayo/WWord/commits"><img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/CNSukidayo/WWord" /></a>

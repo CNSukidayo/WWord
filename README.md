@@ -1,6 +1,6 @@
-<h2 align="center" >
+<h1 align="center" >
     <b>WWord</b>
-</h2>
+</h1>
 <p align="center">
     <a href="https://openjdk.org/projects/jdk/17/"><img alt="GitHub last commit" src="https://img.shields.io/badge/JDK-17-red.svg?style=flat&logo=Oracle&labelColor=2B9C4C&color=DC2500" /></a>
     <a href="https://github.com/CNSukidayo/WWord/commits"><img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/CNSukidayo/WWord" /></a>

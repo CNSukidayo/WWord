@@ -1,10 +1,10 @@
-<p align="center" style="font-size: 20px">
+<h2 align="center" >
     <b>WWord</b>
-</p>
+</h2>
 <p align="center">
-    <a href="https://github.com/CNSukidayo/WWord/commits"><img alt="GitHub last commit" src="https://img.shields.io/badge/JDK-17-red.svg?style=flat&logo=Oracle&labelColor=2B9C4C&color=DC2500" /></a>
+    <a href="https://openjdk.org/projects/jdk/17/"><img alt="GitHub last commit" src="https://img.shields.io/badge/JDK-17-red.svg?style=flat&logo=Oracle&labelColor=2B9C4C&color=DC2500" /></a>
     <a href="https://github.com/CNSukidayo/WWord/commits"><img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/CNSukidayo/WWord" /></a>
-    <a href="https://github.com/CNSukidayo/WWord/commits"><img alt="GitHub last commit" src="https://img.shields.io/badge/license-GPL 3.0-4EB1BA" /></a>
+    <a href="https://github.com/CNSukidayo/WWord/blob/master/LICENSE"><img alt="GitHub last commit" src="https://img.shields.io/badge/license-GPL 3.0-4EB1BA" /></a>
 </p>
 
 ### 介绍
@@ -16,6 +16,8 @@
 包含管理员模块、权限模块、核心功能模块、搜索模块等.
 
 ### 软件架构
+
+![软件架构](images/design.png)
 
 ### 模块划分
 
@@ -29,7 +31,7 @@
 * **搜索模块**:ElasticSearch单词搜索、更新ES列表
 
 ### 界面展示
-
+[仓库地址:https://github.com/CNSukidayo/AnyLanguageWord](https://github.com/CNSukidayo/AnyLanguageWord)
 <table border="0px">
     <tr>
         <img src="images/home_page_1.png" alt="登陆界面" />

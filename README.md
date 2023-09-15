@@ -1,5 +1,11 @@
 # WWord
 
+<p style="text-align: center">
+    <a href="https://github.com/CNSukidayo/WWord/commits"><img alt="GitHub last commit" src="https://img.shields.io/badge/JDK-17-red.svg?style=flat&logo=Oracle&labelColor=2B9C4C&color=DC2500" /></a>
+    <a href="https://github.com/CNSukidayo/WWord/commits"><img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/CNSukidayo/WWord" /></a>
+    <a href="https://github.com/CNSukidayo/WWord/commits"><img alt="GitHub last commit" src="https://img.shields.io/badge/license-GPL 3.0-4EB1BA" /></a>
+</p>
+
 ### 介绍
 
 万语词,正如其名它致力于提供一套统一的逻辑完成任意语言词汇的学习.
@@ -7,12 +13,6 @@
 用户可以在该平台发布Markdown格式的帖子分享语言学习中的各种心得.
 项目基于SpringBoot+Mybatis实现,采用Docker容器化部署.
 包含管理员模块、权限模块、核心功能模块、搜索模块等.
-
-<p style="text-align: center">
-    <a href="https://github.com/CNSukidayo/WWord/commits"><img alt="GitHub last commit" src="https://img.shields.io/badge/JDK-17-red.svg?style=flat&logo=Oracle&labelColor=2B9C4C&color=DC2500" /></a>
-    <a href="https://github.com/CNSukidayo/WWord/commits"><img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/CNSukidayo/WWord" /></a>
-    <a href="https://github.com/CNSukidayo/WWord/commits"><img alt="GitHub last commit" src="https://img.shields.io/badge/license-GPL 3.0-4EB1BA" /></a>
-</p>
 
 ### 软件架构
 

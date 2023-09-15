@@ -25,16 +25,12 @@
 
 <table border="0px">
     <tr>
-        <img src="images/home_page_1.jpg" alt="登陆界面" style="max-width: 50%"/>
-        <img src="images/home_page_2.jpg" alt="登陆界面" style="max-width: 50%"/>
+        <img src="images/home_page_1.png" alt="登陆界面" />
+    </tr>       
+    <tr>
+        <img src="images/home_page_2.png" alt="背词界面" />
     </tr>    
     <tr>
-        <img src="images/home_page_3.jpg" alt="登陆界面" style="width: 300px;"/>
-        <img src="images/home_page_4.jpg" alt="登陆界面" style="width: 300px;"/>
-    </tr>
-    <tr>
-        <td colspan="2" style="text-align: center;width: 50%">
-            <img src="images/home_page_5.jpg" alt="登陆界面" style="width: 300px;"> </img>
-        </td>
-    </tr>
+        <img src="images/home_page_3.png" alt="收藏夹和markdown显示" />
+    </tr>    
 </table>

@@ -23,10 +23,10 @@
 
 ### 界面展示
 
-<table border="0px" style="font-size:16px;margin-bottom: 0;">
+<table border="0px">
     <tr>
-        <img src="images/home_page_1.jpg" alt="登陆界面" style="width: 300px;"/>
-        <img src="images/home_page_2.jpg" alt="登陆界面" style="width: 300px;"/>
+        <img src="images/home_page_1.jpg" alt="登陆界面" style="max-width: 50%"/>
+        <img src="images/home_page_2.jpg" alt="登陆界面" style="max-width: 50%"/>
     </tr>    
     <tr>
         <img src="images/home_page_3.jpg" alt="登陆界面" style="width: 300px;"/>

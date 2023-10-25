@@ -31,7 +31,7 @@ public interface RolePermissionRequest {
      * @param roleParam 角色信息参数
      * @return 返回值不为null
      */
-    ResponseWrapper<BaseResponse<Void>> updateRole(Long roleId,
+    ResponseWrapper<BaseResponse<Void>> updateRole(String roleId,
                                                    RoleParam roleParam);
 
     /**
@@ -40,7 +40,7 @@ public interface RolePermissionRequest {
      * @param roleId 角色id
      * @return 返回值不为null
      */
-    ResponseWrapper<BaseResponse<Void>> removeRole(Long roleId);
+    ResponseWrapper<BaseResponse<Void>> removeRole(String roleId);
 
     /**
      * 分页查询所有角色并按照优先级排序
@@ -64,7 +64,7 @@ public interface RolePermissionRequest {
      * @param roleId 角色id
      * @return 返回值不为null
      */
-    ResponseWrapper<BaseResponse<Void>> revokePermission(Long roleId);
+    ResponseWrapper<BaseResponse<Void>> revokePermission(String roleId);
 
     /**
      * 分页查询一个角色的所有接口
@@ -73,7 +73,7 @@ public interface RolePermissionRequest {
      * @param pageQueryParam 分页查询参数
      * @return 返回值不为null
      */
-    ResponseWrapper<BaseResponse<Void>> rolePermissionPage(Long roleId,
+    ResponseWrapper<BaseResponse<Void>> rolePermissionPage(String roleId,
                                                            PageQueryParam pageQueryParam);
 
     /**
@@ -82,7 +82,7 @@ public interface RolePermissionRequest {
      * @param userRoleParam 用户角色参数
      * @return 返回值不为null
      */
-    ResponseWrapper<BaseResponse<Void>> rolePermissionPage(UserRoleParam userRoleParam);
+    ResponseWrapper<BaseResponse<Void>> grantRole(UserRoleParam userRoleParam);
 
     /**
      * 删除一个用户的所有角色
@@ -90,7 +90,7 @@ public interface RolePermissionRequest {
      * @param uuid 角色id
      * @return 返回值不为null
      */
-    ResponseWrapper<BaseResponse<Void>> rolePermissionPage(Long uuid);
+    ResponseWrapper<BaseResponse<Void>> revokeRole(String uuid);
 
     /**
      * 分页查询一个用户的所有角色
@@ -99,7 +99,7 @@ public interface RolePermissionRequest {
      * @param pageQueryParam 分页查询参数
      * @return 返回值不为null
      */
-    ResponseWrapper<BaseResponse<IPage<RoleDTO>>> userRolePage(Long uuid,
+    ResponseWrapper<BaseResponse<IPage<RoleDTO>>> userRolePage(String uuid,
                                                                PageQueryParam pageQueryParam);
 
     /**

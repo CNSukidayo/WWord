@@ -1,4 +1,4 @@
-package io.github.cnsukidayo.wword.common.utils;
+package io.github.cnsukidayo.wword.global.utils;
 
 import org.springframework.util.Assert;
 
@@ -23,7 +23,6 @@ public class FileUtils {
      * @return 返回凭借的内容不为null
      */
     public static String separatorFilePath(char separatorChar, String... paths) {
-        Assert.notNull(separatorChar, "separator must not be null");
         Assert.notEmpty(paths, "paths must not be empty");
         StringBuilder result = new StringBuilder();
         for (String path : paths) {

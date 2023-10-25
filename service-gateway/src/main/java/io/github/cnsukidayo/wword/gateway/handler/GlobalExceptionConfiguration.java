@@ -49,7 +49,7 @@ public class GlobalExceptionConfiguration extends BaseExceptionHandler implement
         response.setStatusCode(HttpStatus.OK);
 
         BaseResponse<ErrorVo> errorVo = super.handleBaseException(ex);
-
+        errorVo.getData().setStatus(errorVo.getStatus());
         return response
             .writeWith(Mono.fromSupplier(() -> {
                 DataBufferFactory bufferFactory = response.bufferFactory();

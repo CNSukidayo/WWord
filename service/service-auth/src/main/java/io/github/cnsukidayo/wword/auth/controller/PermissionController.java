@@ -55,7 +55,7 @@ public class PermissionController {
 
     @Operation(summary = "更新一个跟踪接口的信息")
     @PostMapping("update_trace/{permissionId}")
-    public void updateTrace(@PathVariable("permissionId") Long permissionId,
+    public void updateTrace(@Parameter(description = "跟踪的目标接口id") @PathVariable("permissionId") Long permissionId,
                             @Valid @RequestBody PermissionParam permissionParam) {
         permissionService.update(permissionId, permissionParam);
     }

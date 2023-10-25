@@ -5,7 +5,7 @@ import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.ZipUtil;
 import com.rabbitmq.client.Channel;
 import io.github.cnsukidayo.wword.common.config.properties.WWordProperties;
-import io.github.cnsukidayo.wword.common.utils.FileUtils;
+import io.github.cnsukidayo.wword.global.utils.FileUtils;
 import io.github.cnsukidayo.wword.core.service.PostService;
 import io.github.cnsukidayo.wword.global.exception.FileHandlerException;
 import io.github.cnsukidayo.wword.model.entity.Post;

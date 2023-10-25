@@ -2,12 +2,14 @@ package io.github.cnsukidayo.wword.common.request;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import io.github.cnsukidayo.wword.model.environment.FileSystemConst;
 import io.github.cnsukidayo.wword.model.support.BaseResponse;
 import io.github.cnsukidayo.wword.model.vo.ErrorVo;
 import okhttp3.*;
 
 import java.io.IOException;
 import java.lang.reflect.ParameterizedType;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -31,6 +33,8 @@ public class RequestHandler {
 
     private Runnable refreshTokenFailHandler;
 
+    public static final String EMPTY_BODY = "";
+
     public RequestHandler(OkHttpClient okHttpClient,
                           Gson gson,
                           OkHttpClientExceptionHandler commonExceptionHandler) {
@@ -38,7 +42,6 @@ public class RequestHandler {
         this.okHttpClient = okHttpClient;
         this.gson = gson;
         this.commonExceptionHandler = commonExceptionHandler;
-        this.refreshTokenFailHandler = refreshTokenFailHandler;
     }
 
 
@@ -101,9 +104,64 @@ public class RequestHandler {
      * @param path 请求路径
      * @return 返回值不为null
      */
-    public HttpUrl createPrefixUrl(String path) {
+    public RequestTemplate createPrefixUrl(String path) {
         if (this.baseUrl == null) throw new IllegalArgumentException("未设置前缀");
-        return baseUrl.newBuilder(path).build();
+        // todo 格式化前缀
+        return new RequestTemplate(path);
+    }
+
+    public class RequestTemplate {
+
+        private String[] pathVariables;
+
+        private Map<String, String> requestParams;
+
+        private final String prefixUrl;
+
+        RequestTemplate(String prefixUrl) {
+            this.prefixUrl = prefixUrl;
+        }
+
+        public RequestTemplate setPathVariable(String... pathVariables) {
+            this.pathVariables = pathVariables;
+            return this;
+        }
+
+        public RequestTemplate setRequestParams(Map<String, String> requestParams) {
+            this.requestParams = requestParams;
+            return this;
+        }
+
+        public HttpUrl build() {
+            if (prefixUrl == null || prefixUrl.isEmpty())
+                throw new IllegalArgumentException("prefixUrl must not be null");
+            StringBuilder path = new StringBuilder(prefixUrl);
+            // 末尾拼接分隔符
+            if (path.charAt(path.length() - 1) != FileSystemConst.separatorChar) {
+                path.append(FileSystemConst.separatorChar);
+            }
+            if (pathVariables != null) {
+                for (String pathVariable : pathVariables) {
+                    path.append(pathVariable)
+                        .append(FileSystemConst.separatorChar);
+                }
+            }
+            // 删除末尾分隔符
+            if (path.charAt(path.length() - 1) == FileSystemConst.separatorChar) {
+                path.deleteCharAt(path.length() - 1);
+            }
+            if (requestParams != null) {
+                path.append("?");
+                for (Map.Entry<String, String> requestParam : requestParams.entrySet()) {
+                    path.append(requestParam.getKey())
+                        .append("=")
+                        .append(requestParam.getValue())
+                        .append("&");
+                }
+            }
+            return baseUrl.newBuilder(path.toString()).build();
+        }
+
     }
 
     /**
@@ -162,6 +220,12 @@ public class RequestHandler {
         return response;
     }
 
+    /**
+     * 执行
+     *
+     * @param request         请求对象
+     * @param responseWrapper 必须传入使用匿名内部,否则无法获取到泛型
+     */
     public void execute(Request request, ResponseWrapper<? extends BaseResponse<?>> responseWrapper) {
         Response response = execute(request);
         ResponseBody responseBody = response.body();

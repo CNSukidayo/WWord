@@ -7,8 +7,9 @@ import com.aliyun.oss.OSS;
 import com.aliyun.oss.model.OSSObject;
 import com.aliyun.oss.model.PutObjectRequest;
 import com.aliyun.oss.model.PutObjectResult;
-import io.github.cnsukidayo.wword.common.utils.FileUtils;
 import io.github.cnsukidayo.wword.global.exception.BadRequestException;
+import io.github.cnsukidayo.wword.global.utils.FileUtils;
+import io.github.cnsukidayo.wword.model.environment.FileSystemConst;
 import io.github.cnsukidayo.wword.model.exception.ResultCodeEnum;
 import io.github.cnsukidayo.wword.oss.component.OSSComponent;
 import io.github.cnsukidayo.wword.oss.config.properties.OSSProperties;
@@ -95,7 +96,7 @@ public class OSSComponentImpl implements OSSComponent {
         InputStream content = ossObject.getObjectContent();
         BufferedOutputStream outputStream = null;
         // 下载到的目标路径
-        File targetFilePath = new File(FileUtil.mkdir(FileUtils.separatorFilePath('/', targetBasePath, filePrefix)),fileName);
+        File targetFilePath = new File(FileUtil.mkdir(FileUtils.separatorFilePath(FileSystemConst.separatorChar, targetBasePath, filePrefix)), fileName);
         if (content != null) {
             try {
                 outputStream = new BufferedOutputStream(new FileOutputStream(targetFilePath));

@@ -2,7 +2,8 @@ package io.github.cnsukidayo.wword.common.request;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import io.github.cnsukidayo.wword.common.request.implement.core.UserRequestUtil;
+import io.github.cnsukidayo.wword.common.request.factory.AuthServiceRequestFactory;
+import io.github.cnsukidayo.wword.common.request.interfaces.auth.UserRequest;
 import io.github.cnsukidayo.wword.model.environment.WWordConst;
 import io.github.cnsukidayo.wword.model.exception.ResultCodeEnum;
 import io.github.cnsukidayo.wword.model.support.BaseResponse;
@@ -33,7 +34,10 @@ public final class TokenCheckOkHttpInterceptor implements Interceptor {
 
     private final Gson gson;
 
-    private Logger logger = LoggerFactory.getLogger(getClass());
+    private final Logger logger = LoggerFactory.getLogger(getClass());
+
+    // 获取单利的UserRequest
+    private final UserRequest userRequest = AuthServiceRequestFactory.getInstance().userRequest();
 
     public TokenCheckOkHttpInterceptor(Gson gson) {
         this.gson = gson;
@@ -65,7 +69,7 @@ public final class TokenCheckOkHttpInterceptor implements Interceptor {
             // 如果产生错误则判断是不是token过期了
             if (errorVoBaseResponse.getData().getStatus().equals(ResultCodeEnum.LOGIN_FAIL.getCode())) {
                 // token过期,尝试刷新token.如果刷新token失败了,必须由refresh方法来保证失败逻辑
-                UserRequestUtil.refresh("b354b877bc434f12a3aefd91253d56bf").execute();
+                userRequest.refresh(authToken.getRefreshToken()).execute();
                 // 重新请求当前方法(会再走一次拦截器,重新设置token等内容),拿到返回值进行返回
                 return RequestRegister.getRequestHandler().execute(response.request());
             }

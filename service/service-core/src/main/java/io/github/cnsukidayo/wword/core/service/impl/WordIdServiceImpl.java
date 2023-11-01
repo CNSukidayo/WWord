@@ -3,9 +3,7 @@ package io.github.cnsukidayo.wword.core.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import io.github.cnsukidayo.wword.core.dao.WordIdMapper;
-import io.github.cnsukidayo.wword.core.dao.WordMapper;
 import io.github.cnsukidayo.wword.core.service.WordIdService;
-import io.github.cnsukidayo.wword.model.entity.Word;
 import io.github.cnsukidayo.wword.model.entity.WordId;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
@@ -21,12 +19,9 @@ public class WordIdServiceImpl extends ServiceImpl<WordIdMapper, WordId> impleme
 
     private final WordIdMapper wordIdMapper;
 
-    private final WordMapper wordMapper;
 
-    public WordIdServiceImpl(WordIdMapper wordIdMapper,
-                             WordMapper wordMapper) {
+    public WordIdServiceImpl(WordIdMapper wordIdMapper) {
         this.wordIdMapper = wordIdMapper;
-        this.wordMapper = wordMapper;
     }
 
     @Override
@@ -43,32 +38,6 @@ public class WordIdServiceImpl extends ServiceImpl<WordIdMapper, WordId> impleme
 
         return wordIdMapper.selectList(new LambdaQueryWrapper<WordId>().gt(WordId::getDivideId, wordId.getDivideId())
             .eq(WordId::getWord, wordId.getWord()));
-    }
-
-    @Override
-    public List<Word> selectWordById(Long wordId) {
-        Assert.notNull(wordId, "wordId must not be null");
-        return wordMapper.selectList(new LambdaQueryWrapper<Word>().eq(Word::getWordId, wordId));
-    }
-
-    @Override
-    public Word saveWord(Word word) {
-        Assert.notNull(word, "word must not be null");
-        wordMapper.insert(word);
-        return word;
-    }
-
-    @Override
-    public Long countStructure(Long wordId) {
-        Assert.notNull(wordId, "wordId must not be null");
-        return wordMapper.countStructure(wordId);
-    }
-
-    @Override
-    public Long countValue(Long wordId) {
-        Assert.notNull(wordId, "wordId must not be null");
-
-        return wordMapper.selectCount(new LambdaQueryWrapper<Word>().eq(Word::getWordId, wordId));
     }
 
     @Override

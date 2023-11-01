@@ -2,17 +2,14 @@ package io.github.cnsukidayo.wword.core.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import io.github.cnsukidayo.wword.global.exception.BadRequestException;
 import io.github.cnsukidayo.wword.core.dao.DivideMapper;
 import io.github.cnsukidayo.wword.core.dao.DivideWordMapper;
 import io.github.cnsukidayo.wword.core.dao.LanguageClassMapper;
 import io.github.cnsukidayo.wword.core.dao.WordIdMapper;
 import io.github.cnsukidayo.wword.core.service.DivideService;
+import io.github.cnsukidayo.wword.global.exception.BadRequestException;
 import io.github.cnsukidayo.wword.model.dto.DivideDTO;
-import io.github.cnsukidayo.wword.model.entity.Divide;
-import io.github.cnsukidayo.wword.model.entity.DivideWord;
-import io.github.cnsukidayo.wword.model.entity.LanguageClass;
-import io.github.cnsukidayo.wword.model.entity.WordId;
+import io.github.cnsukidayo.wword.model.entity.*;
 import io.github.cnsukidayo.wword.model.enums.DivideType;
 import io.github.cnsukidayo.wword.model.exception.ResultCodeEnum;
 import io.github.cnsukidayo.wword.model.params.AddDivideParam;
@@ -157,10 +154,20 @@ public class DivideServiceImpl extends ServiceImpl<DivideMapper, Divide> impleme
     }
 
     @Override
-    public List<DivideWord> listDivideWord(Long divideId) {
-        Assert.notNull(divideId, "divideId must not be null");
+    public List<DivideWord> listDivideWord(List<Long> divideIds) {
+        Assert.notNull(divideIds, "divideId must not be null");
 
-        return Optional.ofNullable(divideWordMapper.selectList(new LambdaQueryWrapper<DivideWord>().eq(DivideWord::getDivideId, divideId))).orElseGet(ArrayList::new);
+        return Optional.ofNullable(
+            divideWordMapper.selectList(
+                new LambdaQueryWrapper<DivideWord>().in(DivideWord::getDivideId, divideIds))).orElse(new ArrayList<>());
+    }
+
+    @Override
+    public List<Word> listWordByDivideId(List<Long> divideIds) {
+        Assert.notNull(divideIds, "divideId must not be null");
+        // 连表查询查询出当前子划分下的所有单词(摘要信息)
+        return Optional.ofNullable(baseMapper.listWordByDivideId(divideIds))
+            .orElse(new ArrayList<>());
     }
 
     @Override

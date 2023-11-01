@@ -7,12 +7,14 @@ import io.github.cnsukidayo.wword.common.request.interfaces.core.DivideRequest;
 import io.github.cnsukidayo.wword.model.dto.DivideDTO;
 import io.github.cnsukidayo.wword.model.dto.DivideWordDTO;
 import io.github.cnsukidayo.wword.model.dto.LanguageClassDTO;
+import io.github.cnsukidayo.wword.model.dto.WordDTO;
 import io.github.cnsukidayo.wword.model.params.AddDivideParam;
 import io.github.cnsukidayo.wword.model.support.BaseResponse;
 import okhttp3.Request;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author sukidayo
@@ -50,16 +52,26 @@ public enum DivideRequestEnum implements DivideRequest {
     }
 
     @Override
-    public ResponseWrapper<BaseResponse<List<DivideWordDTO>>> listDivideWord(String divideId) {
+    public ResponseWrapper<BaseResponse<List<DivideWordDTO>>> listDivideWord(List<Long> divideIds) {
         RequestHandler requestHandler = RequestRegister.getRequestHandler();
         Request request = new Request.Builder()
             .url(requestHandler
                 .createPrefixUrl("api/u/word_divide/listWord/")
-                .setRequestParams(new HashMap<>() {{
-                    put("divideId", divideId);
-                }})
                 .build())
-            .get()
+            .post(requestHandler.jsonBody(divideIds))
+            .build();
+        return new ResponseWrapper<>(requestHandler, request) {
+        };
+    }
+
+    @Override
+    public ResponseWrapper<BaseResponse<Map<Long, List<WordDTO>>>> listWordByDivideId(List<Long> divideIds) {
+        RequestHandler requestHandler = RequestRegister.getRequestHandler();
+        Request request = new Request.Builder()
+            .url(requestHandler
+                .createPrefixUrl("api/u/word_divide/listWordByDivideId/")
+                .build())
+            .post(requestHandler.jsonBody(divideIds))
             .build();
         return new ResponseWrapper<>(requestHandler, request) {
         };

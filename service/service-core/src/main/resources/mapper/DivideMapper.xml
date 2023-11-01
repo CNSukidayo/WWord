@@ -9,4 +9,22 @@
         values (#{uuid}, #{source.languageId}, #{source.name}, #{source.divideType}, #{parentId})
     </insert>
 
+    <select id="listWordByDivideId" resultType="io.github.cnsukidayo.wword.model.entity.Word">
+        SELECT word.word_id,
+               word.word_structure_id,
+               word.value,
+               word.group_id,
+               word.create_time,
+               word.update_time,
+               word.is_deleted
+        FROM word
+                 INNER JOIN divide_word ON word.word_id = divide_word.word_id
+        <where>
+            and divide_word.divide_id in
+            <foreach collection="divideIds" item="divideId" index="index" open="(" separator="," close=")">
+                #{divideId}
+            </foreach>
+        </where>
+        AND divide_word.is_deleted = 0
+    </select>
 </mapper>

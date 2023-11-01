@@ -2,8 +2,11 @@ package io.github.cnsukidayo.wword.core.dao;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import io.github.cnsukidayo.wword.model.entity.Divide;
+import io.github.cnsukidayo.wword.model.entity.Word;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 /**
  * @author sukidayo
@@ -20,4 +23,7 @@ public interface DivideMapper extends BaseMapper<Divide> {
      * @param parentId 父id不为null
      */
     void copy(@Param("source") Divide source, @Param("uuid") Long UUID, @Param("parentId") Long parentId);
+
+    List<Word> listWordByDivideId(@Param("divideIds") List<Long> divideIds);
+
 }

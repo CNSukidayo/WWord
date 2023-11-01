@@ -1,0 +1,5 @@
+# FROM 代表需要的环境,所以这里会自动装JDK17
+FROM openjdk:17
+VOLUME /tmp
+ADD ./ buildSrc/*.jar
+ENTRYPOINT ["java","-jar","/.jar","&"]

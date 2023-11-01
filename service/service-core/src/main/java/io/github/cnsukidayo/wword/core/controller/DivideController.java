@@ -1,21 +1,27 @@
 package io.github.cnsukidayo.wword.core.controller;
 
 import io.github.cnsukidayo.wword.core.service.DivideService;
+import io.github.cnsukidayo.wword.global.exception.BadRequestException;
 import io.github.cnsukidayo.wword.model.dto.DivideDTO;
 import io.github.cnsukidayo.wword.model.dto.DivideWordDTO;
 import io.github.cnsukidayo.wword.model.dto.LanguageClassDTO;
-import io.github.cnsukidayo.wword.model.params.AddDivideParam;
+import io.github.cnsukidayo.wword.model.dto.WordDTO;
 import io.github.cnsukidayo.wword.model.entity.DivideWord;
 import io.github.cnsukidayo.wword.model.entity.LanguageClass;
 import io.github.cnsukidayo.wword.model.entity.User;
+import io.github.cnsukidayo.wword.model.entity.Word;
+import io.github.cnsukidayo.wword.model.exception.ResultCodeEnum;
+import io.github.cnsukidayo.wword.model.params.AddDivideParam;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -38,9 +44,9 @@ public class DivideController {
     @GetMapping("listLanguage")
     public List<LanguageClassDTO> listLanguage() {
         return divideService.listLanguage()
-                .stream()
-                .map((Function<LanguageClass, LanguageClassDTO>) languageClass -> new LanguageClassDTO().convertFrom(languageClass))
-                .collect(Collectors.toList());
+            .stream()
+            .map((Function<LanguageClass, LanguageClassDTO>) languageClass -> new LanguageClassDTO().convertFrom(languageClass))
+            .collect(Collectors.toList());
     }
 
     @Operation(summary = "查询某个人的所有划分")
@@ -50,13 +56,28 @@ public class DivideController {
         return divideService.listDivide(languageId, UUID);
     }
 
-    @Operation(summary = "查询某个子划分下中定义的所有单词")
-    @GetMapping("listWord")
-    public List<DivideWordDTO> listDivideWord(@Parameter(description = "划分id") @RequestParam("divideId") Long divideId) {
-        return divideService.listDivideWord(divideId)
-                .stream()
-                .map((Function<DivideWord, DivideWordDTO>) divideWord -> new DivideWordDTO().convertFrom(divideWord))
-                .collect(Collectors.toList());
+    @Operation(summary = "查询某些子划分下中定义的所有单词(摘要信息)")
+    @PostMapping("listDivideWord")
+    public List<DivideWordDTO> listDivideWord(@Parameter(description = "划分id") @RequestBody @Valid List<Long> divideIds) {
+        if (CollectionUtils.isEmpty(divideIds)) {
+            throw new BadRequestException(ResultCodeEnum.COLLECTION_EMPTY);
+        }
+        return divideService.listDivideWord(divideIds)
+            .stream()
+            .map((Function<DivideWord, DivideWordDTO>) divideWord -> new DivideWordDTO().convertFrom(divideWord))
+            .collect(Collectors.toList());
+    }
+
+    @Operation(summary = "查询某些子划分下中定义的所有单词(单词的详细信息)")
+    @PostMapping("listWordByDivideId")
+    public Map<Long, List<WordDTO>> listWordByDivideId(@Parameter(description = "划分id") @RequestBody @Valid List<Long> divideIds) {
+        if (CollectionUtils.isEmpty(divideIds)) {
+            throw new BadRequestException(ResultCodeEnum.COLLECTION_EMPTY);
+        }
+        return divideService.listWordByDivideId(divideIds)
+            .stream()
+            .collect(Collectors.groupingBy(Word::getWordId,
+                Collectors.mapping(word -> new WordDTO().convertFrom(word), Collectors.toList())));
     }
 
     @Operation(summary = "添加一个划分")

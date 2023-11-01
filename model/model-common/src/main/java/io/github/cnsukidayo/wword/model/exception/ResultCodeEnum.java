@@ -23,6 +23,7 @@ public enum ResultCodeEnum {
     FILE_OPERATION(4005, "文件处理异常"),
     FILE_UPLOAD_ERROR(4006, "文件上传失败"),
     JSON_HANDLE_ERROR(4007, "Json解析异常"),
+    COLLECTION_EMPTY(4008, "指定的列表为空!"),
 
     /**
      * 如果返回此状态码,前端需要刷新token

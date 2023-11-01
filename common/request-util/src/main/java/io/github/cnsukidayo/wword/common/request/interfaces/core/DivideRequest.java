@@ -4,10 +4,12 @@ import io.github.cnsukidayo.wword.common.request.ResponseWrapper;
 import io.github.cnsukidayo.wword.model.dto.DivideDTO;
 import io.github.cnsukidayo.wword.model.dto.DivideWordDTO;
 import io.github.cnsukidayo.wword.model.dto.LanguageClassDTO;
+import io.github.cnsukidayo.wword.model.dto.WordDTO;
 import io.github.cnsukidayo.wword.model.params.AddDivideParam;
 import io.github.cnsukidayo.wword.model.support.BaseResponse;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 划分列表管理接口
@@ -35,12 +37,21 @@ public interface DivideRequest {
                                                               String uuid);
 
     /**
-     * 查询某个子划分下中定义的所有单词
+     * 查询某些子划分下中定义的所有单词(摘要信息)
      *
-     * @param divideId 划分id
+     * @param divideIds 划分id列表
      * @return 返回值不为null
      */
-    ResponseWrapper<BaseResponse<List<DivideWordDTO>>> listDivideWord(String divideId);
+    ResponseWrapper<BaseResponse<List<DivideWordDTO>>> listDivideWord(List<Long> divideIds);
+
+    /**
+     * 查询某些子划分下中定义的所有单词(单词的详细信息)
+     *
+     * @param divideIds 划分id列表
+     * @return 返回值不为null, K:单词的id V:单词的详细信息
+     */
+    ResponseWrapper<BaseResponse<Map<Long, List<WordDTO>>>> listWordByDivideId(List<Long> divideIds);
+
 
     /**
      * 添加一个划分

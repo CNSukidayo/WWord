@@ -5,6 +5,7 @@ import io.github.cnsukidayo.wword.model.dto.DivideDTO;
 import io.github.cnsukidayo.wword.model.entity.Divide;
 import io.github.cnsukidayo.wword.model.entity.DivideWord;
 import io.github.cnsukidayo.wword.model.entity.LanguageClass;
+import io.github.cnsukidayo.wword.model.entity.Word;
 import io.github.cnsukidayo.wword.model.params.AddDivideParam;
 
 import java.util.List;
@@ -66,12 +67,20 @@ public interface DivideService extends IService<Divide> {
     void deleteDivideWord(Long divideId, List<Long> wordIdList, Long UUID);
 
     /**
-     * 展示一个子划分下面的所有单词
+     * 展示子划分下面的所有单词(摘要信息)
      *
-     * @param divideId 子划分的id
+     * @param divideIds 子划分的id列表
      * @return 单词集合
      */
-    List<DivideWord> listDivideWord(Long divideId);
+    List<DivideWord> listDivideWord(List<Long> divideIds);
+
+    /**
+     * 展示子划分下面的所有单词(详细信息)
+     *
+     * @param divideIds 子划分的id列表
+     * @return 单词集合 K:单词的id V:单词的详细信息
+     */
+    List<Word> listWordByDivideId(List<Long> divideIds);
 
     /**
      * 拷贝一个划分

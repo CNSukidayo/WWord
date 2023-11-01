@@ -1,7 +1,6 @@
 package io.github.cnsukidayo.wword.core.api;
 
 import io.github.cnsukidayo.wword.core.service.WordIdService;
-import io.github.cnsukidayo.wword.model.entity.Word;
 import io.github.cnsukidayo.wword.model.entity.WordId;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -37,35 +36,11 @@ public class WordIdApiController {
         return wordIdService.selectSameWordIdWord(wordId);
     }
 
-    @Operation(summary = "根据一个单词的id查询出单词的详细信息")
-    @GetMapping("selectWordById")
-    public List<Word> selectWordById(@Parameter(description = "单词的id") @RequestParam("wordId") Long wordId) {
-        return wordIdService.selectWordById(wordId);
-    }
-
     @Operation(summary = "添加一个WordId")
     @PostMapping("saveWordId")
     public WordId saveWordId(@Parameter(description = "待添加的WordId") @RequestBody WordId wordId) {
         wordIdService.save(wordId);
         return wordId;
-    }
-
-    @Operation(summary = "添加一个Word")
-    @PostMapping("saveWord")
-    public Word saveWord(@Parameter(description = "待添加的单词") @RequestBody Word word) {
-        return wordIdService.saveWord(word);
-    }
-
-    @Operation(summary = "查询一个单词的结构数量")
-    @GetMapping("countStructure")
-    public Long countStructure(@Parameter(description = "单词的id") @RequestParam Long wordId) {
-        return wordIdService.countStructure(wordId);
-    }
-
-    @Operation(summary = "查询一个单词的信息数")
-    @GetMapping("countValue")
-    public Long countValue(@Parameter(description = "单词的id") @RequestParam Long wordId) {
-        return wordIdService.countValue(wordId);
     }
 
     @Operation(summary = "判断一个单词是否在一个划分中")

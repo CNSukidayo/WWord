@@ -1,4 +1,4 @@
-package io.github.cnsukidayo.wword.admin.service;
+package io.github.cnsukidayo.wword.core.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import io.github.cnsukidayo.wword.model.entity.WordStructure;
@@ -9,7 +9,6 @@ import java.util.List;
  * @author sukidayo
  * @date 2023/7/30 14:29
  */
-@Deprecated
 public interface WordStructureService extends IService<WordStructure> {
 
     /**
@@ -18,5 +17,5 @@ public interface WordStructureService extends IService<WordStructure> {
      * @param languageId 语种id不为null
      * @return 返回单词结构
      */
-    List<WordStructure> get(Long languageId);
+    List<WordStructure> selectWordStructureById(Long languageId);
 }

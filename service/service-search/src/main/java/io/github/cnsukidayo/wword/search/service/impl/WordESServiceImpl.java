@@ -54,5 +54,11 @@ public class WordESServiceImpl implements WordESService {
             searchWordParam.getWord(), pageable);
     }
 
+    @Override
+    public void removeLanguage(Long languageId) {
+        Assert.notNull(languageId, "languageId must not be null");
+        wordRepository.removeByLanguageId(languageId);
+    }
+
 
 }

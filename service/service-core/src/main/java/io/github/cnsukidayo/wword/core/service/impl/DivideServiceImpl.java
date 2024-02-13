@@ -5,14 +5,15 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import io.github.cnsukidayo.wword.core.dao.DivideMapper;
 import io.github.cnsukidayo.wword.core.dao.DivideWordMapper;
 import io.github.cnsukidayo.wword.core.dao.LanguageClassMapper;
-import io.github.cnsukidayo.wword.core.dao.WordIdMapper;
 import io.github.cnsukidayo.wword.core.service.DivideService;
+import io.github.cnsukidayo.wword.core.service.WordIdService;
 import io.github.cnsukidayo.wword.global.exception.BadRequestException;
 import io.github.cnsukidayo.wword.model.dto.DivideDTO;
 import io.github.cnsukidayo.wword.model.entity.*;
 import io.github.cnsukidayo.wword.model.enums.DivideType;
 import io.github.cnsukidayo.wword.model.exception.ResultCodeEnum;
 import io.github.cnsukidayo.wword.model.params.AddDivideParam;
+import io.github.cnsukidayo.wword.model.params.WordIdFromOtherParam;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
@@ -32,14 +33,14 @@ public class DivideServiceImpl extends ServiceImpl<DivideMapper, Divide> impleme
 
     private final DivideWordMapper divideWordMapper;
 
-    private final WordIdMapper wordIdMapper;
+    private final WordIdService wordIdService;
 
     public DivideServiceImpl(LanguageClassMapper languageClassMapper,
                              DivideWordMapper divideWordMapper,
-                             WordIdMapper wordIdMapper) {
+                             WordIdService wordIdService) {
         this.languageClassMapper = languageClassMapper;
         this.divideWordMapper = divideWordMapper;
-        this.wordIdMapper = wordIdMapper;
+        this.wordIdService = wordIdService;
     }
 
     @Override
@@ -125,6 +126,53 @@ public class DivideServiceImpl extends ServiceImpl<DivideMapper, Divide> impleme
     }
 
     @Override
+    public void batchDefineWord() {
+        //todo
+    }
+
+    @Override
+    public void batchDefineWordFromOtherDivide(WordIdFromOtherParam wordIdFromOtherParam, Long uuid) {
+        Assert.notNull(wordIdFromOtherParam, "wordIdFromOtherParam must not be null");
+        Assert.notNull(uuid, "uuid must not be null");
+        // 查询源划分并判断对当前用户是否可见
+        Divide originDivide = Optional.ofNullable(
+                this.getOne(
+                    new LambdaQueryWrapper<Divide>().eq(
+                        Divide::getId, wordIdFromOtherParam.getOriginDivideId())))
+            .orElseThrow(() -> new BadRequestException(ResultCodeEnum.NOT_EXISTS, "指定的源划分不存在"));
+
+        // 首先查询目标父划分的信息
+        Divide targetDivide = Optional.ofNullable(
+                this.getOne(
+                    new LambdaQueryWrapper<Divide>().eq(
+                        Divide::getId, wordIdFromOtherParam.getTargetDivideId())))
+            .orElseThrow(() -> new BadRequestException(ResultCodeEnum.NOT_EXISTS, "指定的目标划分不存在"));
+        // 判断该划分对当前用户是否可见
+        if (originDivide.getDivideType() == DivideType.PERSONAL && !originDivide.getUuid().equals(uuid) ||
+            targetDivide.getDivideType() == DivideType.PERSONAL && !targetDivide.getUuid().equals(uuid)) {
+            throw new BadRequestException(ResultCodeEnum.AUTHENTICATION);
+        }
+        // 判断这两个是否都是父划分
+        if (originDivide.getParentId() != -1 || targetDivide.getParentId() != -1) {
+            throw new BadRequestException(ResultCodeEnum.ILLEGAL_ARGUMENT);
+        }
+        // 查询出所有要被添加到目标划分的单词(因为有些单词可能不存在)
+        List<WordId> targetWordIdList = Optional.ofNullable(wordIdService.list(new LambdaQueryWrapper<WordId>()
+                .eq(WordId::getDivideId, originDivide.getId())
+                .in(WordId::getId, wordIdFromOtherParam.getIds())))
+            .orElse(new ArrayList<>())
+            .stream()
+            .filter(wordId -> wordIdFromOtherParam.getIds().contains(wordId.getId()))
+            .peek(wordId -> wordId.setDivideId(targetDivide.getId()))
+            .toList();
+        if (CollectionUtils.isEmpty(targetWordIdList)) {
+            return;
+        }
+        // 批量将单词插入到目标划分中
+        wordIdService.saveOrUpdateBatch(targetWordIdList);
+    }
+
+    @Override
     public void saveBatchDivideWord(Long childDivideId, List<Long> wordIdList, Long UUID) {
         Assert.notNull(childDivideId, "divideId must not be null");
         Assert.notNull(wordIdList, "wordIdList must not be null");
@@ -140,7 +188,7 @@ public class DivideServiceImpl extends ServiceImpl<DivideMapper, Divide> impleme
         LambdaQueryWrapper<WordId> wordIdLambdaQueryWrapper = new LambdaQueryWrapper<>();
         wordIdLambdaQueryWrapper.eq(WordId::getDivideId, parentId)
             .in(WordId::getId, wordIdList);
-        List<WordId> wordIdsList = wordIdMapper.selectList(wordIdLambdaQueryWrapper);
+        List<WordId> wordIdsList = wordIdService.list(wordIdLambdaQueryWrapper);
         divideWordMapper.insertBatchDivideWord(childDivideId, wordIdsList, UUID);
     }
 

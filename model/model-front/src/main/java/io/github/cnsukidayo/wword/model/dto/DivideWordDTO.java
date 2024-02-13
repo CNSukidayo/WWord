@@ -24,7 +24,7 @@ public class DivideWordDTO implements OutputConverter<DivideWordDTO, DivideWord>
     private Long uuid;
 
     @Schema(description = "该单词在当前划分中的顺序,主要用于单词的排序展示")
-    private Integer order;
+    private Integer divideOrder;
 
     public DivideWordDTO() {
     }
@@ -61,11 +61,11 @@ public class DivideWordDTO implements OutputConverter<DivideWordDTO, DivideWord>
         this.uuid = uuid;
     }
 
-    public Integer getOrder() {
-        return order;
+    public Integer getDivideOrder() {
+        return divideOrder;
     }
 
-    public void setOrder(Integer order) {
-        this.order = order;
+    public void setDivideOrder(Integer divideOrder) {
+        this.divideOrder = divideOrder;
     }
 }

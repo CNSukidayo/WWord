@@ -24,8 +24,8 @@ public class DivideWord extends BaseEntity {
     @TableField("uuid")
     private Long uuid;
 
-    @TableField("order")
-    private Integer order;
+    @TableField("divide_order")
+    private Integer divideOrder;
 
     public DivideWord() {
     }
@@ -62,11 +62,11 @@ public class DivideWord extends BaseEntity {
         this.uuid = uuid;
     }
 
-    public Integer getOrder() {
-        return order;
+    public Integer getDivideOrder() {
+        return divideOrder;
     }
 
-    public void setOrder(Integer order) {
-        this.order = order;
+    public void setDivideOrder(Integer divideOrder) {
+        this.divideOrder = divideOrder;
     }
 }

@@ -564,7 +564,8 @@ public class WordHandleServiceImpl implements WordHandleService {
     public void updateESBase(Long baseId, Long languageId) {
         Assert.notNull(baseId, "baseId must not be null");
         Assert.notNull(languageId, "languageId must not be null");
-
+        // 首先删除ES中对应语种的单词
+        searchFeignClient.removeLanguage(languageId);
         // 首先分页查询出单词库中的单词
         int current = 1;
         Page<WordId> queryPage = new Page<>(current, 1000);
@@ -607,6 +608,7 @@ public class WordHandleServiceImpl implements WordHandleService {
                 .eq(WordId::getDivideId, baseId)
                 .orderByAsc(WordId::getId));
         }
+        log.info("WordHandleServiceImpl-updateESBase-finish!");
     }
 
 

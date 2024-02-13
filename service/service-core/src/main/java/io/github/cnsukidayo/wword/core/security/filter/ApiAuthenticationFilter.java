@@ -21,7 +21,8 @@ public class ApiAuthenticationFilter extends AbstractAuthenticationFilter {
         addExcludeUrlPatterns(
             "/api/u/user/login",
             "/api/u/user/register",
-            "/api/u/user/refresh/*");
+            "/api/u/user/refresh/*",
+            "/api/**/uncheck/**");
     }
 
 }

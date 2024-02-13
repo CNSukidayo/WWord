@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -15,14 +16,14 @@ import java.util.List;
  * @author sukidayo
  * @date 2023/9/11 22:54
  */
-@FeignClient("service-search")
+@FeignClient(value = "service-search", path = "/remote/es/word")
 public interface SearchFeignClient {
     /**
      * 添加一个单词到ES中
      *
      * @param addWordESParam 添加单词的参数
      */
-    @PostMapping("/remote/es/word/save")
+    @PostMapping("save")
     void save(@RequestBody AddWordESParam addWordESParam);
 
     /**
@@ -30,7 +31,7 @@ public interface SearchFeignClient {
      *
      * @param addWordESParams 集合不为null
      */
-    @PostMapping("/remote/es/word/saveBatch")
+    @PostMapping("saveBatch")
     void saveBatch(@RequestBody List<AddWordESParam> addWordESParams);
 
     /**
@@ -39,7 +40,10 @@ public interface SearchFeignClient {
      * @param searchWordParam 单词搜索参数不为null
      * @return 返回结果不为null
      */
-    @PostMapping("/remote/es/word/searchWord")
+    @PostMapping("searchWord")
     Page<WordES> searchWord(@Valid @RequestBody SearchWordParam searchWordParam);
+
+    @PostMapping("removeLanguage")
+    void removeLanguage(@RequestParam("languageId") Long languageId);
 
 }

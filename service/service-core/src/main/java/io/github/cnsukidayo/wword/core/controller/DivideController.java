@@ -12,6 +12,7 @@ import io.github.cnsukidayo.wword.model.entity.User;
 import io.github.cnsukidayo.wword.model.entity.Word;
 import io.github.cnsukidayo.wword.model.exception.ResultCodeEnum;
 import io.github.cnsukidayo.wword.model.params.AddDivideParam;
+import io.github.cnsukidayo.wword.model.params.WordIdFromOtherParam;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -91,6 +92,13 @@ public class DivideController {
     public void remove(@Parameter(description = "划分的id,可以是父划分id也可以是子划分id") @RequestParam("id") Long id, User user) {
         divideService.remove(id, user.getUuid());
     }
+
+    @Operation(summary = "批量定义一个单词到一个父划分中,从某个父划分中得到这些单词的定义")
+    @PostMapping("batchDefineWordFromOtherDivide")
+    public void batchDefineWordFromOtherDivide(@RequestBody WordIdFromOtherParam wordIdFromOtherParam, User user) {
+        divideService.batchDefineWordFromOtherDivide(wordIdFromOtherParam, user.getUuid());
+    }
+
 
     @Operation(summary = "批量添加单词到一个子划分中")
     @PostMapping("saveDivideWord")

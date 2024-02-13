@@ -4,13 +4,13 @@ import io.github.cnsukidayo.wword.common.request.RequestHandler;
 import io.github.cnsukidayo.wword.common.request.RequestRegister;
 import io.github.cnsukidayo.wword.common.request.ResponseWrapper;
 import io.github.cnsukidayo.wword.common.request.interfaces.auth.UserRequest;
-import io.github.cnsukidayo.wword.model.dto.UserProfileDTO;
 import io.github.cnsukidayo.wword.model.params.LoginParam;
 import io.github.cnsukidayo.wword.model.params.UpdatePasswordParam;
 import io.github.cnsukidayo.wword.model.params.UpdateUserParam;
 import io.github.cnsukidayo.wword.model.params.UserRegisterParam;
 import io.github.cnsukidayo.wword.model.support.BaseResponse;
 import io.github.cnsukidayo.wword.model.token.AuthToken;
+import io.github.cnsukidayo.wword.model.vo.UserProfileVO;
 import okhttp3.Request;
 
 /**
@@ -51,7 +51,7 @@ public enum UserRequestEnum implements UserRequest {
     }
 
     @Override
-    public ResponseWrapper<BaseResponse<UserProfileDTO>> getProfile() {
+    public ResponseWrapper<BaseResponse<UserProfileVO>> getProfile() {
         RequestHandler requestHandler = RequestRegister.getRequestHandler();
         Request request = new Request.Builder()
             .url(requestHandler.createPrefixUrl("api/auth/user/getProfile").build())

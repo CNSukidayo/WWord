@@ -5,9 +5,9 @@
 <mapper namespace="io.github.cnsukidayo.wword.core.dao.DivideWordMapper">
 
     <insert id="insertBatchDivideWord">
-        INSERT IGNORE INTO divide_word (divide_id, word_id, word_name,uuid) values
+        INSERT IGNORE INTO divide_word (divide_id, word_id, word_name, uuid, divide_order) values
         <foreach collection="wordIdList" item="wordId" index="index" separator=",">
-            (#{divideId},#{wordId.id},#{wordId.word},#{uuid})
+            (#{divideId}, #{wordId.id}, #{wordId.word}, #{uuid}, #{index} + 1)
         </foreach>
     </insert>
 

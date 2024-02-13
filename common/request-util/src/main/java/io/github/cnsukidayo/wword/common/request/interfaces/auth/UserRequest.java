@@ -1,13 +1,13 @@
 package io.github.cnsukidayo.wword.common.request.interfaces.auth;
 
 import io.github.cnsukidayo.wword.common.request.ResponseWrapper;
-import io.github.cnsukidayo.wword.model.dto.UserProfileDTO;
 import io.github.cnsukidayo.wword.model.params.LoginParam;
 import io.github.cnsukidayo.wword.model.params.UpdatePasswordParam;
 import io.github.cnsukidayo.wword.model.params.UpdateUserParam;
 import io.github.cnsukidayo.wword.model.params.UserRegisterParam;
 import io.github.cnsukidayo.wword.model.support.BaseResponse;
 import io.github.cnsukidayo.wword.model.token.AuthToken;
+import io.github.cnsukidayo.wword.model.vo.UserProfileVO;
 
 /**
  * 用户相关请求
@@ -38,7 +38,7 @@ public interface UserRequest {
      *
      * @return 返回值不为null
      */
-    ResponseWrapper<BaseResponse<UserProfileDTO>> getProfile();
+    ResponseWrapper<BaseResponse<UserProfileVO>> getProfile();
 
     /**
      * 刷新token

@@ -13,4 +13,6 @@ public interface WordRepository extends ElasticsearchRepository<WordES, Long> {
 
     Page<WordES> findByLanguageIdAndWordContaining(Long languageId, String word, Pageable pageable);
 
+    void removeByLanguageId(Long languageId);
+
 }

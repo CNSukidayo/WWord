@@ -10,7 +10,8 @@
     </insert>
 
     <select id="listWordByDivideId" resultType="io.github.cnsukidayo.wword.model.entity.Word">
-        SELECT word.word_id,
+        SELECT word.group_flag,
+               word.word_id,
                word.word_structure_id,
                word.value,
                word.group_id,

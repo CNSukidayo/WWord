@@ -6,11 +6,19 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+import io.github.cnsukidayo.wword.global.exception.BadRequestException;
+import org.springframework.http.HttpStatus;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Map;
 
 /**
@@ -51,6 +59,11 @@ public class JsonUtils {
         ObjectMapper mapper = new ObjectMapper();
         // Configure
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        // 添加自定义解析器
+        JavaTimeModule javaTimeModule = new JavaTimeModule();
+        javaTimeModule.addSerializer(LocalDate.class, new LocalDateSerializer(DateTimeFormatter.ISO_LOCAL_DATE));
+        javaTimeModule.addSerializer(LocalDateTime.class, new LocalDateTimeSerializer(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+        mapper.registerModule(javaTimeModule);
         // Set property naming strategy
         if (strategy != null) {
             mapper.setPropertyNamingStrategy(strategy);
@@ -68,9 +81,12 @@ public class JsonUtils {
      * @throws IOException throws when fail to convert
      */
     @NonNull
-    public static <T> T jsonToObject(@NonNull String json, @NonNull Class<T> type)
-            throws IOException {
-        return jsonToObject(json, type, DEFAULT_JSON_MAPPER);
+    public static <T> T jsonToObject(@NonNull String json, @NonNull Class<T> type) {
+        try {
+            return jsonToObject(json, type, DEFAULT_JSON_MAPPER);
+        } catch (IOException e) {
+            throw new BadRequestException(HttpStatus.INTERNAL_SERVER_ERROR.value(), "服务器错误!");
+        }
     }
 
     /**
@@ -86,7 +102,7 @@ public class JsonUtils {
         try {
             return DEFAULT_JSON_MAPPER.readValue(json, typeReference);
         } catch (JsonProcessingException e) {
-            throw new IllegalArgumentException(e);
+            throw new BadRequestException(HttpStatus.INTERNAL_SERVER_ERROR.value(), "服务器错误!");
         }
     }
 
@@ -118,8 +134,12 @@ public class JsonUtils {
      * @throws JsonProcessingException throws when fail to convert
      */
     @NonNull
-    public static String objectToJson(@NonNull Object source) throws JsonProcessingException {
-        return objectToJson(source, DEFAULT_JSON_MAPPER);
+    public static String objectToJson(@NonNull Object source) {
+        try {
+            return objectToJson(source, DEFAULT_JSON_MAPPER);
+        } catch (JsonProcessingException e) {
+            throw new BadRequestException(HttpStatus.INTERNAL_SERVER_ERROR.value(), "服务器错误!");
+        }
     }
 
     /**
@@ -132,7 +152,7 @@ public class JsonUtils {
      */
     @NonNull
     public static String objectToJson(@NonNull Object source, @NonNull ObjectMapper objectMapper)
-            throws JsonProcessingException {
+        throws JsonProcessingException {
         Assert.notNull(source, "Source object must not be null");
         Assert.notNull(objectMapper, "Object mapper must not null");
 
@@ -150,7 +170,7 @@ public class JsonUtils {
      */
     @NonNull
     public static <T> T mapToObject(@NonNull Map<String, ?> sourceMap, @NonNull Class<T> type)
-            throws IOException {
+        throws IOException {
         return mapToObject(sourceMap, type, DEFAULT_JSON_MAPPER);
     }
 
@@ -198,7 +218,7 @@ public class JsonUtils {
      */
     @NonNull
     public static Map<?, ?> objectToMap(@NonNull Object source, @NonNull ObjectMapper objectMapper)
-            throws IOException {
+        throws IOException {
 
         // Serialize the source object
         String json = objectToJson(source, objectMapper);

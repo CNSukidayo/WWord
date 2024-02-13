@@ -4,7 +4,7 @@ import io.github.cnsukidayo.wword.common.request.RequestHandler;
 import io.github.cnsukidayo.wword.common.request.RequestRegister;
 import io.github.cnsukidayo.wword.common.request.ResponseWrapper;
 import io.github.cnsukidayo.wword.common.request.interfaces.core.WordStructureRequest;
-import io.github.cnsukidayo.wword.model.entity.WordStructure;
+import io.github.cnsukidayo.wword.model.dto.WordStructureDTO;
 import io.github.cnsukidayo.wword.model.support.BaseResponse;
 import okhttp3.Request;
 
@@ -20,11 +20,11 @@ public enum WordStructureRequestEnum implements WordStructureRequest {
 
 
     @Override
-    public ResponseWrapper<BaseResponse<List<WordStructure>>> selectWordStructureById(String languageId) {
+    public ResponseWrapper<BaseResponse<List<WordStructureDTO>>> selectWordStructureById(String languageId) {
         RequestHandler requestHandler = RequestRegister.getRequestHandler();
         Request request = new Request.Builder()
             .url(requestHandler
-                .createPrefixUrl("api/word/wordStructure/selectWordById")
+                .createPrefixUrl("api/u/wordStructure/selectWordById")
                 .setRequestParams(new HashMap<>() {{
                     put("languageId", languageId);
                 }})

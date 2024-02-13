@@ -1,13 +1,7 @@
 package io.github.cnsukidayo.wword.common.request.factory;
 
-import io.github.cnsukidayo.wword.common.request.implement.core.DivideRequestEnum;
-import io.github.cnsukidayo.wword.common.request.implement.core.PostCategoryRequestEnum;
-import io.github.cnsukidayo.wword.common.request.implement.core.UniversityRequestEnum;
-import io.github.cnsukidayo.wword.common.request.implement.core.WordStructureRequestEnum;
-import io.github.cnsukidayo.wword.common.request.interfaces.core.DivideRequest;
-import io.github.cnsukidayo.wword.common.request.interfaces.core.PostCategoryRequest;
-import io.github.cnsukidayo.wword.common.request.interfaces.core.UniversityRequest;
-import io.github.cnsukidayo.wword.common.request.interfaces.core.WordStructureRequest;
+import io.github.cnsukidayo.wword.common.request.implement.core.*;
+import io.github.cnsukidayo.wword.common.request.interfaces.core.*;
 
 /**
  * 权限模块的请求类单利工厂
@@ -63,6 +57,10 @@ public class CoreServiceRequestFactory {
      */
     public WordStructureRequest wordStructureRequest() {
         return WordStructureRequestEnum.DEFAULT_IMPLEMENT;
+    }
+
+    public SystemInfoRequest systemInfoRequest() {
+        return SystemInfoRequestEnum.DEFAULT_IMPLEMENT;
     }
 
 

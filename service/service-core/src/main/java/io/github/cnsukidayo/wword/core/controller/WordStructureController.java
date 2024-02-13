@@ -20,7 +20,7 @@ import java.util.function.Function;
  */
 @Tag(name = "单词结构管理接口")
 @RestController
-@RequestMapping("/api/word/wordStructure")
+@RequestMapping("/api/u/wordStructure")
 public class WordStructureController {
 
     private final WordStructureService wordStructureService;

@@ -56,7 +56,7 @@ public enum DivideRequestEnum implements DivideRequest {
         RequestHandler requestHandler = RequestRegister.getRequestHandler();
         Request request = new Request.Builder()
             .url(requestHandler
-                .createPrefixUrl("api/u/word_divide/listWord/")
+                .createPrefixUrl("api/u/word_divide/listDivideWord/")
                 .build())
             .post(requestHandler.jsonBody(divideIds))
             .build();

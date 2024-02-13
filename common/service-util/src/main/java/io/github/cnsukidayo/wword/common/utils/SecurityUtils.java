@@ -15,16 +15,16 @@ public class SecurityUtils {
     /**
      * 验证令牌的前缀
      */
-    private static final String TOKEN_ACCESS_CACHE_PREFIX = "user.access.token.";
+    private static final String TOKEN_ACCESS_CACHE_PREFIX = "wword:auth:user:token:access.token.";
 
     /**
      * 刷新令牌的前缀
      */
-    private static final String TOKEN_REFRESH_CACHE_PREFIX = "user.refresh.token.";
+    private static final String TOKEN_REFRESH_CACHE_PREFIX = "wword:auth:user:token:refresh.token.";
 
-    private static final String ACCESS_TOKEN_CACHE_PREFIX = "user.access_token.";
+    private static final String ACCESS_TOKEN_CACHE_PREFIX = "wword:auth:user:token:access_token.";
 
-    private static final String REFRESH_TOKEN_CACHE_PREFIX = "user.refresh_token.";
+    private static final String REFRESH_TOKEN_CACHE_PREFIX = "wword:auth:user:token:refresh_token.";
 
     private SecurityUtils() {
     }

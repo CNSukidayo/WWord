@@ -7,6 +7,7 @@ import io.github.cnsukidayo.wword.model.entity.DivideWord;
 import io.github.cnsukidayo.wword.model.entity.LanguageClass;
 import io.github.cnsukidayo.wword.model.entity.Word;
 import io.github.cnsukidayo.wword.model.params.AddDivideParam;
+import io.github.cnsukidayo.wword.model.params.WordIdFromOtherParam;
 
 import java.util.List;
 
@@ -47,6 +48,23 @@ public interface DivideService extends IService<Divide> {
      * @param uuid 用户uuid不为null
      */
     void remove(Long id, Long uuid);
+
+    /**
+     * 批量定义单词到一个父划分中<br>
+     * 首先需要明确的一个设计,不同的父划分之间的单词可以是隔离的,什么意思?<br>
+     * 即同一个单词它可以有不同的解释,例如miss;在高中划分中它的意思可以是思念<br>
+     * 而在大学划分中它的意思可以是思念、错过<br>
+     * 所以一个父划分下所有子划分的单词必须来源于当前父划分<br>
+     */
+    void batchDefineWord();
+
+    /**
+     * 该方法的效果类似于{@link DivideService#batchDefineWord()}<br>
+     * 但是当前方法允许从另外一个父划分中得到一个单词的信息给到当前父划分
+     *
+     * @see DivideService#batchDefineWord()
+     */
+    void batchDefineWordFromOtherDivide(WordIdFromOtherParam wordIdFromOtherParam, Long uuid);
 
     /**
      * 批量添加单词到一个子划分中

@@ -1,5 +1,6 @@
 package io.github.cnsukidayo.wword.search.api;
 
+import io.github.cnsukidayo.wword.model.dto.support.DataPage;
 import io.github.cnsukidayo.wword.model.entity.es.WordES;
 import io.github.cnsukidayo.wword.model.param.AddWordESParam;
 import io.github.cnsukidayo.wword.model.params.SearchWordParam;
@@ -8,10 +9,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -45,7 +43,13 @@ public class WordApiController {
     @Operation(summary = "模糊查询单词,这个方法只提供单词的基本信息")
     @PostMapping("searchWord")
     public Page<WordES> searchWord(@Valid @RequestBody SearchWordParam searchWordParam) {
-        return wordESService.searchWord(searchWordParam);
+        return new DataPage<WordES>().convertFrom(wordESService.searchWord(searchWordParam));
+    }
+
+    @Operation(summary = "删除某个语种下的所有单词")
+    @PostMapping("removeLanguage")
+    public void removeLanguage(@RequestParam("languageId") Long languageId) {
+        wordESService.removeLanguage(languageId);
     }
 
 }

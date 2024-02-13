@@ -33,4 +33,11 @@ public interface WordESService {
      * @return 返回结果不为null
      */
     Page<WordES> searchWord(SearchWordParam searchWordParam);
+
+    /**
+     * 删除某个语种的所有单词
+     *
+     * @param languageId 语种的ID
+     */
+    void removeLanguage(Long languageId);
 }

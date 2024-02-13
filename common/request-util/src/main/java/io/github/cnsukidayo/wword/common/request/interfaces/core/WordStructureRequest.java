@@ -1,7 +1,7 @@
 package io.github.cnsukidayo.wword.common.request.interfaces.core;
 
 import io.github.cnsukidayo.wword.common.request.ResponseWrapper;
-import io.github.cnsukidayo.wword.model.entity.WordStructure;
+import io.github.cnsukidayo.wword.model.dto.WordStructureDTO;
 import io.github.cnsukidayo.wword.model.support.BaseResponse;
 
 import java.util.List;
@@ -19,6 +19,6 @@ public interface WordStructureRequest {
      * @param languageId 语种id不为null
      * @return 返回单词结构
      */
-    ResponseWrapper<BaseResponse<List<WordStructure>>> selectWordStructureById(String languageId);
+    ResponseWrapper<BaseResponse<List<WordStructureDTO>>> selectWordStructureById(String languageId);
 
 }

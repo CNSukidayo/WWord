@@ -41,6 +41,7 @@ public abstract class BaseExceptionHandler {
             :
             ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(baseResponse.getData());
+        baseResponse.getData().setStatus(HttpStatus.OK.value());
         return result;
     }
 

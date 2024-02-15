@@ -1,6 +1,5 @@
 package io.github.cnsukidayo.wword.search.api;
 
-import io.github.cnsukidayo.wword.model.dto.support.DataPage;
 import io.github.cnsukidayo.wword.model.entity.es.WordES;
 import io.github.cnsukidayo.wword.model.param.AddWordESParam;
 import io.github.cnsukidayo.wword.model.params.SearchWordParam;
@@ -43,7 +42,7 @@ public class WordApiController {
     @Operation(summary = "模糊查询单词,这个方法只提供单词的基本信息")
     @PostMapping("searchWord")
     public Page<WordES> searchWord(@Valid @RequestBody SearchWordParam searchWordParam) {
-        return new DataPage<WordES>().convertFrom(wordESService.searchWord(searchWordParam));
+        return wordESService.searchWord(searchWordParam);
     }
 
     @Operation(summary = "删除某个语种下的所有单词")

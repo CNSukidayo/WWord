@@ -1,12 +1,13 @@
 package io.github.cnsukidayo.wword.search.controller;
 
+import io.github.cnsukidayo.wword.model.dto.es.WordESDTO;
+import io.github.cnsukidayo.wword.model.dto.support.DataPage;
 import io.github.cnsukidayo.wword.model.entity.es.WordES;
 import io.github.cnsukidayo.wword.model.params.SearchWordParam;
 import io.github.cnsukidayo.wword.search.service.WordESService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,8 +30,9 @@ public class WordSearchController {
 
     @Operation(summary = "模糊查询单词,这个方法只提供单词的基本信息")
     @PostMapping("searchWord")
-    public Page<WordES> searchWord(@Valid @RequestBody SearchWordParam searchWordParam) {
-        return wordESService.searchWord(searchWordParam);
+    public DataPage<WordESDTO> searchWord(@Valid @RequestBody SearchWordParam searchWordParam) {
+        return new DataPage<WordES>().convertFrom(wordESService.searchWord(searchWordParam))
+            .convertMap(wordES -> new WordESDTO().convertFrom(wordES));
     }
 
 }

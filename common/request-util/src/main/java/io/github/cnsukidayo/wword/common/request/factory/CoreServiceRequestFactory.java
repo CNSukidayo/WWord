@@ -59,9 +59,22 @@ public class CoreServiceRequestFactory {
         return WordStructureRequestEnum.DEFAULT_IMPLEMENT;
     }
 
+    /**
+     * 系统信息管理接口
+     *
+     * @return 返回值不为null
+     */
     public SystemInfoRequest systemInfoRequest() {
         return SystemInfoRequestEnum.DEFAULT_IMPLEMENT;
     }
 
+    /**
+     * 单词管理接口
+     *
+     * @return 返回值不为null
+     */
+    public WordRequest wordRequest() {
+        return WordRequestEnum.DEFAULT_IMPLEMENT;
+    }
 
 }

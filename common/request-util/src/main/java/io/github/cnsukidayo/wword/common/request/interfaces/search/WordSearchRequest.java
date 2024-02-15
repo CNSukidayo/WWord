@@ -1,8 +1,8 @@
 package io.github.cnsukidayo.wword.common.request.interfaces.search;
 
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.github.cnsukidayo.wword.common.request.ResponseWrapper;
-import io.github.cnsukidayo.wword.model.entity.es.WordES;
+import io.github.cnsukidayo.wword.model.dto.es.WordESDTO;
+import io.github.cnsukidayo.wword.model.dto.support.DataPage;
 import io.github.cnsukidayo.wword.model.params.SearchWordParam;
 import io.github.cnsukidayo.wword.model.support.BaseResponse;
 
@@ -18,7 +18,7 @@ public interface WordSearchRequest {
      * @param searchWordParam 搜索单词参数
      * @return 返回值不为null
      */
-    ResponseWrapper<BaseResponse<Page<WordES>>> searchWord(SearchWordParam searchWordParam);
+    ResponseWrapper<BaseResponse<DataPage<WordESDTO>>> searchWord(SearchWordParam searchWordParam);
 
 
 }

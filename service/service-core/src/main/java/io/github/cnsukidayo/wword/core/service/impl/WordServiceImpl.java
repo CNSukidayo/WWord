@@ -38,6 +38,7 @@ public class WordServiceImpl extends ServiceImpl<WordMapper, Word> implements Wo
     @Override
     public List<Word> selectWordById(Long wordId) {
         Assert.notNull(wordId, "wordId must not be null");
+        // todo 添加缓存
         return baseMapper.selectList(new LambdaQueryWrapper<Word>().eq(Word::getWordId, wordId));
     }
 

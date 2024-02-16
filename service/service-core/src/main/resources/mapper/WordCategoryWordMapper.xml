@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.github.cnsukidayo.wword.core.dao.WordCategoryWordMapper">
+    <select id="findOrderByWordOrderDescLast" resultType="WordCategoryWord">
+        select *
+        from word_category_word
+        where word_category_id = #{wordCategoryId}
+        order by word_order desc
+        limit 1;
+    </select>
+</mapper>

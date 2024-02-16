@@ -43,18 +43,18 @@ public class PostCategoryController {
     @GetMapping("list")
     public List<PostCategoryDTO> list(User user) {
         return postCategoryService.list(user.getUuid())
-                .stream()
-                .map((Function<PostCategory, PostCategoryDTO>) postCategory -> new PostCategoryVO().convertFrom(postCategory))
-                .collect(Collectors.toList());
+            .stream()
+            .map((Function<PostCategory, PostCategoryDTO>) postCategory -> new PostCategoryVO().convertFrom(postCategory))
+            .collect(Collectors.toList());
     }
 
     @Operation(summary = "根据id查询某个用户所有公开的帖子收藏夹")
     @GetMapping("listPublic")
     public List<PostCategoryDTO> listPublic(@Parameter(description = "目标用户的UUID") @RequestParam("UUID") Long UUID) {
         return postCategoryService.listPublic(UUID)
-                .stream()
-                .map((Function<PostCategory, PostCategoryDTO>) postCategory -> new PostCategoryVO().convertFrom(postCategory))
-                .collect(Collectors.toList());
+            .stream()
+            .map((Function<PostCategory, PostCategoryDTO>) postCategory -> new PostCategoryVO().convertFrom(postCategory))
+            .collect(Collectors.toList());
     }
 
     @Operation(summary = "更新某个收藏夹的信息")
@@ -69,9 +69,11 @@ public class PostCategoryController {
         postCategoryService.removeById(id, user.getUuid());
     }
 
-    @Operation(summary = "点赞某个收藏夹")
+    @Operation(summary = "点赞某个收藏夹", responses = {
+        @ApiResponse(responseCode = "200", description = "返回值为布尔值,true代表成功.false代表失败")
+    })
     @GetMapping("like")
-    public @ApiResponse(responseCode = "200", description = "返回值为布尔值,true代表成功.false代表失败") Boolean
+    public Boolean
     like(@Parameter(description = "收藏夹的id") @RequestParam("id") Long id, User user) {
         return postCategoryService.like(id, user.getUuid());
     }

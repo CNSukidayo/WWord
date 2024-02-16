@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.github.cnsukidayo.wword.core.dao.WordCategoryMapper">
+    <select id="findOrderByCategoryOrderFirst" resultType="wordCategory">
+        select *
+        from word_category
+        where uuid = #{uuid}
+          and is_deleted = 0
+        order by category_order desc
+        limit 1;
+    </select>
+</mapper>

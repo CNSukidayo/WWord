@@ -54,10 +54,14 @@ public final class TokenCheckOkHttpInterceptor implements Interceptor {
         Response response = chain.proceed(request);
         // 如果请求成功则有数据
         String body;
+        ResponseBody responseBody = response.body();
         try {
-            body = getResponseBody(response.body());
+            body = getResponseBody(responseBody);
         } catch (Exception e) {
             throw new RuntimeException(e);
+        }
+        if (!responseBody.contentType().equals(RequestHandler.APPLICATION_JSON_VALUE)) {
+            return response;
         }
         BaseResponse baseResponse = gson.fromJson(body, BaseResponse.class);
         // 首先判断有没有异常

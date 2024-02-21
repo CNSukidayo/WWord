@@ -18,6 +18,8 @@ public class WWordProperties {
 
     private Set<String> urlPatterns;
 
+    private String resourceLocations;
+
     public Set<String> getExcludeUrlPatterns() {
         return excludeUrlPatterns;
     }
@@ -32,5 +34,13 @@ public class WWordProperties {
 
     public void setUrlPatterns(Set<String> urlPatterns) {
         this.urlPatterns = urlPatterns;
+    }
+
+    public String getResourceLocations() {
+        return resourceLocations;
+    }
+
+    public void setResourceLocations(String resourceLocations) {
+        this.resourceLocations = resourceLocations;
     }
 }

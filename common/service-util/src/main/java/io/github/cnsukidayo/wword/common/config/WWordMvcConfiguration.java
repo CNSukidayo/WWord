@@ -6,9 +6,6 @@ import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import io.github.cnsukidayo.wword.common.config.properties.WWordProperties;
 import io.github.cnsukidayo.wword.common.security.resolver.AuthenticationArgumentResolver;
-import io.github.cnsukidayo.wword.global.support.enums.FileBasePath;
-import io.github.cnsukidayo.wword.global.utils.FileUtils;
-import io.github.cnsukidayo.wword.model.environment.WWordConst;
 import org.springframework.boot.autoconfigure.http.HttpMessageConvertersAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cache.annotation.EnableCaching;
@@ -17,7 +14,6 @@ import org.springframework.context.annotation.Import;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.util.StringUtils;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -66,14 +62,6 @@ public class WWordMvcConfiguration implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        if (StringUtils.hasText(wWordProperties.getResourceLocations())) {
-            registry.addResourceHandler("/public/**")
-                .addResourceLocations(FILE_PROTOCOL +
-                    FileUtils.separatorFilePath(WWordConst.separatorChar,
-                        wWordProperties.getResourceLocations(),
-                        FileBasePath.FileNameSpace.PUBLIC.getBasePath()) +
-                    WWordConst.separatorChar);
-        }
         registry.addResourceHandler("favicon.ico")
             .addResourceLocations("classpath:/static/");
         // 注册swagger相关的映射信息

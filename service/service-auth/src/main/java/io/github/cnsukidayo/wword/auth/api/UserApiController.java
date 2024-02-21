@@ -51,5 +51,11 @@ public class UserApiController {
         return userService.getById(uuid);
     }
 
+    @Operation(summary = "批量根据用户的id获取用户信息")
+    @GetMapping("getByIdList")
+    public List<User> getByIdList(@Parameter(description = "用户id列表") @RequestParam("uuidList") List<Long> uuidList) {
+        return userService.listByIds(uuidList);
+    }
+
 
 }

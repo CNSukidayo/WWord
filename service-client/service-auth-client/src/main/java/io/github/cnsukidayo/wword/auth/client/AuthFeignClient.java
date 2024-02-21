@@ -17,7 +17,7 @@ import java.util.List;
  * @author sukidayo
  * @date 2023/9/7 19:34
  */
-@FeignClient("service-auth")
+@FeignClient(value = "service-auth", path = "/remote/auth/permission")
 public interface AuthFeignClient {
 
     /**
@@ -31,7 +31,7 @@ public interface AuthFeignClient {
      * @param checkAuthParam 权限校验参数不为null
      * @return 返回值不为null
      */
-    @PostMapping("/remote/auth/permission/get_and_check")
+    @PostMapping("get_and_check")
     BaseResponse<Object> getAndCheck(@RequestBody CheckAuthParam checkAuthParam);
 
     /**
@@ -40,7 +40,7 @@ public interface AuthFeignClient {
      * @param idList 用户id不为空
      * @return 返回值不为null
      */
-    @GetMapping("remote/auth/permission/list_by_ids")
+    @GetMapping("list_by_ids")
     List<User> listByIds(@RequestBody List<Long> idList);
 
     /**
@@ -49,7 +49,16 @@ public interface AuthFeignClient {
      * @param uuid 用户id不为null
      * @return 返回值不为null
      */
-    @GetMapping("remote/auth/permission/get_by_id")
+    @GetMapping("get_by_id")
     User getById(@RequestParam("uuid") Long uuid);
+
+    /**
+     * 根据用户Id批量获取用户信息
+     *
+     * @param uuidList 用户的id列表
+     * @return 返回用户信息列表
+     */
+    @GetMapping("getByIdList")
+    List<User> getByIdList(@RequestParam("uuidList") List<Long> uuidList);
 
 }

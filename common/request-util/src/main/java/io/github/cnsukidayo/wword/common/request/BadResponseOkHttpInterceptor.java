@@ -39,13 +39,14 @@ public final class BadResponseOkHttpInterceptor implements Interceptor {
         Response response = chain.proceed(request);
         // 如果出现异常,终止操作,下面这段代码会最后执行.
         String body = null;
+        ResponseBody responseBody = response.body();
         try {
-            body = getResponseBody(response.body());
+            body = getResponseBody(responseBody);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        // 客户端错误
-        if (!response.isSuccessful()) {
+        // 客户端错误,注意当前的返回值得是Json格式
+        if (!response.isSuccessful() && responseBody.contentType().equals(RequestHandler.APPLICATION_JSON_VALUE)) {
             Type type = new TypeToken<ErrorVo>() {
             }.getType();
             ErrorVo errorVo = gson.fromJson(body, type);

@@ -86,5 +86,14 @@ public class CoreServiceRequestFactory {
         return WordCategoryEnum.DEFAULT_IMPLEMENT;
     }
 
+    /**
+     * 帖子管理接口
+     *
+     * @return 返回值不为null
+     */
+    public PostRequestEnum postRequest() {
+        return PostRequestEnum.DEFAULT_IMPLEMENT;
+    }
+
 
 }

@@ -21,7 +21,7 @@ import java.util.Optional;
  */
 public class RequestHandler {
 
-    private final OkHttpClient okHttpClient;
+    private static OkHttpClient okHttpClient;
 
     private final Gson gson;
 
@@ -29,7 +29,7 @@ public class RequestHandler {
 
     private HttpUrl baseUrl;
 
-    private final String APPLICATION_JSON_VALUE = "application/json";
+    public static final String APPLICATION_JSON_VALUE = "application/json";
 
     private Runnable refreshTokenFailHandler;
 
@@ -39,7 +39,7 @@ public class RequestHandler {
                           Gson gson,
                           OkHttpClientExceptionHandler commonExceptionHandler) {
         if (gson == null) throw new IllegalArgumentException("gson param must not be null");
-        this.okHttpClient = okHttpClient;
+        RequestHandler.okHttpClient = okHttpClient;
         this.gson = gson;
         this.commonExceptionHandler = commonExceptionHandler;
     }
@@ -94,8 +94,8 @@ public class RequestHandler {
      *
      * @return 返回创建当前对象的OkHttpClient
      */
-    public OkHttpClient getOkHttpClient() {
-        return okHttpClient;
+    public static OkHttpClient getOkHttpClient() {
+        return RequestHandler.okHttpClient;
     }
 
     /**

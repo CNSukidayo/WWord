@@ -79,12 +79,8 @@ public class WordCategoryServiceImpl extends ServiceImpl<WordCategoryMapper, Wor
             .size() != wordCategoryParams.size()) {
             throw new BadRequestException(ResultCodeEnum.ILLEGAL_STATE, "更新失败,收藏夹列表顺序不一致!");
         }
-
-        wordCategoryParams.sort((o1, o2) -> o1.getCategoryOrder() - o2.getCategoryOrder());
-        // 必须保证顺序的一致
-        int order = 0;
+        // 顺序由客户端保证
         for (WordCategory wordCategoryParam : wordCategoryParams) {
-            wordCategoryParam.setCategoryOrder(order++);
             baseMapper.updateById(wordCategoryParam);
         }
 

@@ -1,4 +1,4 @@
-package io.github.cnsukidayo.wword.core.security.support;
+package io.github.cnsukidayo.wword.core.support.security.support;
 
 import io.github.cnsukidayo.wword.common.core.AbstractResultControllerAdvice;
 import org.springframework.web.bind.annotation.ControllerAdvice;

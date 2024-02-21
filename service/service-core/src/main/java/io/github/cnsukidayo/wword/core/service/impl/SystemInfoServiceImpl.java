@@ -2,7 +2,7 @@ package io.github.cnsukidayo.wword.core.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import io.github.cnsukidayo.wword.model.environment.RedisConstant;
+import io.github.cnsukidayo.wword.global.support.constant.RedisConstant;
 import io.github.cnsukidayo.wword.core.dao.SystemInfoMapper;
 import io.github.cnsukidayo.wword.core.service.SystemInfoService;
 import io.github.cnsukidayo.wword.global.exception.BadRequestException;
@@ -34,7 +34,7 @@ public class SystemInfoServiceImpl extends ServiceImpl<SystemInfoMapper, SystemI
         if (systemInfoJson != null) {
             return JsonUtils.jsonToObject(systemInfoJson, SystemInfo.class).getContext();
         }
-        // 缓存查询不到则从数据库中查询
+        // 缓存查询不到则从数据库中查询;可能存在缓存击穿的问题,推荐将缓存设置为永不过期
         SystemInfo systemInfo = baseMapper.selectOne(new LambdaQueryWrapper<SystemInfo>().eq(SystemInfo::getSystemInfoType, systemInfoType));
         if (systemInfo != null) {
             redisTemplate.opsForValue().set(String.format(RedisConstant.SYSTEM_INFO, systemInfoType.name()), JsonUtils.objectToJson(systemInfo));

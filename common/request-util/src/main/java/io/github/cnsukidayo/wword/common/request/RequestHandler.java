@@ -2,7 +2,7 @@ package io.github.cnsukidayo.wword.common.request;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import io.github.cnsukidayo.wword.model.environment.FileSystemConst;
+import io.github.cnsukidayo.wword.model.environment.WWordConst;
 import io.github.cnsukidayo.wword.model.support.BaseResponse;
 import io.github.cnsukidayo.wword.model.vo.ErrorVo;
 import okhttp3.*;
@@ -137,17 +137,17 @@ public class RequestHandler {
                 throw new IllegalArgumentException("prefixUrl must not be null");
             StringBuilder path = new StringBuilder(prefixUrl);
             // 末尾拼接分隔符
-            if (path.charAt(path.length() - 1) != FileSystemConst.separatorChar) {
-                path.append(FileSystemConst.separatorChar);
+            if (path.charAt(path.length() - 1) != WWordConst.separatorChar) {
+                path.append(WWordConst.separatorChar);
             }
             if (pathVariables != null) {
                 for (String pathVariable : pathVariables) {
                     path.append(pathVariable)
-                        .append(FileSystemConst.separatorChar);
+                        .append(WWordConst.separatorChar);
                 }
             }
             // 删除末尾分隔符
-            if (path.charAt(path.length() - 1) == FileSystemConst.separatorChar) {
+            if (path.charAt(path.length() - 1) == WWordConst.separatorChar) {
                 path.deleteCharAt(path.length() - 1);
             }
             if (requestParams != null) {

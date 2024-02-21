@@ -42,5 +42,11 @@ public interface WordService extends IService<Word> {
      */
     List<Word> selectWordById(Long wordId);
 
-
+    /**
+     * 批量查询单词详情信息
+     *
+     * @param wordIds 单词详情列表
+     * @return 返回所有单词信息
+     */
+    List<Word> batchSelectWordById(List<Long> wordIds);
 }

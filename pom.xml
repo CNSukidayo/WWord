@@ -27,6 +27,7 @@
         <spring-cloud-alibaba.version>2022.0.0.0</spring-cloud-alibaba.version>
         <aliyun-sdk-oss.version>3.17.1</aliyun-sdk-oss.version>
         <feign-reactor.version>4.0.0</feign-reactor.version>
+        <commonmark.version>0.21.0</commonmark.version>
     </properties>
 
 
@@ -110,7 +111,12 @@
                 <artifactId>feign-reactor-spring-configuration</artifactId>
                 <version>${feign-reactor.version}</version>
             </dependency>
-
+            <!--解析markdown的组件-->
+            <dependency>
+                <groupId>org.commonmark</groupId>
+                <artifactId>commonmark</artifactId>
+                <version>${commonmark.version}</version>
+            </dependency>
 
         </dependencies>
     </dependencyManagement>

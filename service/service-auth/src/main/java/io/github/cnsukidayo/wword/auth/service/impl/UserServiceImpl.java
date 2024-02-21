@@ -11,6 +11,7 @@ import io.github.cnsukidayo.wword.auth.service.RolePermissionService;
 import io.github.cnsukidayo.wword.auth.service.UserService;
 import io.github.cnsukidayo.wword.common.security.authentication.Authentication;
 import io.github.cnsukidayo.wword.common.security.context.SecurityContextHolder;
+import io.github.cnsukidayo.wword.common.utils.RedisUtils;
 import io.github.cnsukidayo.wword.common.utils.SecurityUtils;
 import io.github.cnsukidayo.wword.common.utils.ServletUtils;
 import io.github.cnsukidayo.wword.core.client.CoreFeignClient;
@@ -257,20 +258,20 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         AuthToken token = new AuthToken();
 
         token.setAccessToken(UUID.randomUUID().toString().replaceAll("-", ""));
-        token.setExpiredIn(WWordConst.ACCESS_TOKEN_EXPIRED_SECONDS);
+        token.setExpiredIn((int) RedisUtils.ONE_DAY);
         token.setRefreshToken(UUID.randomUUID().toString().replaceAll("-", ""));
 
         // 缓存这些令牌仅仅是为了清除令牌
         redisTemplate.opsForValue().set(SecurityUtils.buildAccessTokenKey(user), token.getAccessToken(),
-            WWordConst.ACCESS_TOKEN_EXPIRED_SECONDS, TimeUnit.SECONDS);
+            RedisUtils.ONE_DAY, TimeUnit.SECONDS);
         redisTemplate.opsForValue().set(SecurityUtils.buildRefreshTokenKey(user), token.getRefreshToken(),
-            WWordConst.REFRESH_TOKEN_EXPIRED_DAYS, TimeUnit.DAYS);
+            RedisUtils.ONE_MONTH, TimeUnit.SECONDS);
 
         // 缓存这些令牌,通过令牌获取用户的ID
         redisTemplate.opsForValue().set(SecurityUtils.buildTokenAccessKey(token.getAccessToken()), String.valueOf(user.getUuid()),
-            WWordConst.ACCESS_TOKEN_EXPIRED_SECONDS, TimeUnit.SECONDS);
+            RedisUtils.ONE_DAY, TimeUnit.SECONDS);
         redisTemplate.opsForValue().set(SecurityUtils.buildTokenRefreshKey(token.getRefreshToken()), String.valueOf(user.getUuid()),
-            WWordConst.REFRESH_TOKEN_EXPIRED_DAYS, TimeUnit.DAYS);
+            RedisUtils.ONE_MONTH, TimeUnit.SECONDS);
 
         return token;
     }

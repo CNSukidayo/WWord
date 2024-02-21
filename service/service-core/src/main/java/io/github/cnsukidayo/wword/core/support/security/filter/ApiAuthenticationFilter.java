@@ -1,4 +1,4 @@
-package io.github.cnsukidayo.wword.core.security.filter;
+package io.github.cnsukidayo.wword.core.support.security.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.cnsukidayo.wword.common.security.filter.AbstractAuthenticationFilter;

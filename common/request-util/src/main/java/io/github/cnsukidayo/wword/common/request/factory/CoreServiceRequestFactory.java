@@ -77,4 +77,14 @@ public class CoreServiceRequestFactory {
         return WordRequestEnum.DEFAULT_IMPLEMENT;
     }
 
+    /**
+     * 单词收藏夹管理接口
+     *
+     * @return 返回值不为null
+     */
+    public WordCategoryRequest wordCategoryRequest() {
+        return WordCategoryEnum.DEFAULT_IMPLEMENT;
+    }
+
+
 }

@@ -3,6 +3,7 @@ package io.github.cnsukidayo.wword.core.controller;
 import io.github.cnsukidayo.wword.common.annotation.ValidList;
 import io.github.cnsukidayo.wword.core.service.WordCategoryService;
 import io.github.cnsukidayo.wword.model.base.InputConverter;
+import io.github.cnsukidayo.wword.model.dto.WordCategoryDTO;
 import io.github.cnsukidayo.wword.model.entity.User;
 import io.github.cnsukidayo.wword.model.entity.WordCategory;
 import io.github.cnsukidayo.wword.model.params.WordCategoryParam;
@@ -37,9 +38,9 @@ public class WordCategoryController {
 
     @Operation(summary = "创建一个单词收藏夹")
     @PostMapping("save")
-    public WordCategory save(@RequestBody @Validated(CreateCheck.class) WordCategoryParam addWordCategoryParam,
-                             User user) {
-        return this.wordCategoryService.save(addWordCategoryParam.convertTo(), user.getUuid());
+    public WordCategoryDTO save(@RequestBody @Validated(CreateCheck.class) WordCategoryParam addWordCategoryParam,
+                                User user) {
+        return new WordCategoryDTO().convertFrom(this.wordCategoryService.save(addWordCategoryParam.convertTo(), user.getUuid()));
     }
 
     @Operation(summary = "删除某个单词收藏夹")

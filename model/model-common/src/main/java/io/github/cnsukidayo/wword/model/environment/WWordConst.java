@@ -10,22 +10,37 @@ import java.util.Set;
  */
 public class WWordConst {
 
-    // 用户携带token的请求头
+    /**
+     * 用户携带token的请求头
+     */
     public static final String API_ACCESS_KEY_HEADER_NAME = "API-" + HttpHeaders.AUTHORIZATION;
 
+    /**
+     * 网关转发token时使用的请求头
+     */
     public static final String X_CLIENT_USER = "X-CLIENT-USER";
 
-    public static final int ACCESS_TOKEN_EXPIRED_SECONDS = 24 * 3600;
-
-    public static final int REFRESH_TOKEN_EXPIRED_DAYS = 30;
-
-    // 用户昵称前缀
+    /**
+     * 用户昵称前缀
+     */
     public static final String USER_NICK_PREFIX = "用户_";
 
-    // 帖子文件处理临时路径
-    public static final String HANDLE_POST_PATH = "post" + '/' + "temp";
+    /**
+     * 路径分隔符
+     */
+    public static char separatorChar = '/';
 
-    // 允许用户上传的markdown文件后缀
-    public static final Set<String> allowMarkdownSuffix = Set.of("png", "jpg", "md");
+    /**
+     * 允许用户上传的markdown文件后缀
+     */
+    public static final Set<String> allowMarkdownSuffix = Set.of("png", "jpg", "gif", "md", "MD", "PNG", "JPG", "JPEG", "GIF");
+
+    /**
+     * 允许用于发布的文件后缀
+     */
+    public static final Set<String> allowPublicSuffix = Set.of("png", "jpg", "gif", "jpeg", "PNG", "JPG", "JPEG", "GIF");
+
+
+    public static final String dateFormat = "yyyy/MM/dd";
 
 }

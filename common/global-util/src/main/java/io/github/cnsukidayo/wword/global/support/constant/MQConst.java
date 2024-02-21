@@ -1,4 +1,4 @@
-package io.github.cnsukidayo.wword.mq.constant;
+package io.github.cnsukidayo.wword.global.support.constant;
 
 /**
  * @author sukidayo

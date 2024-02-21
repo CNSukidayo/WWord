@@ -24,11 +24,6 @@
             <artifactId>model-front</artifactId>
             <version>0.1-SNAPSHOT</version>
         </dependency>
-        <dependency>
-            <groupId>io.github.cnsukidayo.wword</groupId>
-            <artifactId>global-util</artifactId>
-            <version>0.1-SNAPSHOT</version>
-        </dependency>
 
         <dependency>
             <groupId>com.squareup.okhttp3</groupId>

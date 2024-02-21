@@ -22,4 +22,12 @@ public interface WordRequest {
      */
     ResponseWrapper<BaseResponse<List<WordDTO>>> selectWordById(Long wordId);
 
+    /**
+     * 单词单词的id列表查询出单词的所有详细信息
+     *
+     * @param wordIds 单词的id列表
+     * @return 返回单词的信息
+     */
+    ResponseWrapper<BaseResponse<List<WordDTO>>> batchSelectWordById(List<Long> wordIds);
+
 }

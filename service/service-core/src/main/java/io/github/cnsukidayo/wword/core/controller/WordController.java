@@ -35,6 +35,16 @@ public class WordController {
             .toList();
     }
 
+    @Operation(summary = "根据一个单词的id批量查询单词的信息")
+    @PostMapping("batchSelectWordById")
+    public List<WordDTO> batchSelectWordById(@Parameter(description = "单词的id列表") @RequestBody List<Long> wordIds) {
+        return wordService.batchSelectWordById(wordIds)
+            .stream()
+            .map((Function<Word, WordDTO>) word -> new WordDTO().convertFrom(word))
+            .toList();
+    }
+
+
     @Operation(summary = "添加一个Word")
     @PostMapping("saveWord")
     public Word saveWord(@Parameter(description = "待添加的单词") @RequestBody Word word) {

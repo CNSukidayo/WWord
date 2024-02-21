@@ -10,7 +10,7 @@ import io.github.cnsukidayo.wword.global.exception.BadRequestException;
 import io.github.cnsukidayo.wword.global.utils.JsonUtils;
 import io.github.cnsukidayo.wword.model.dto.SystemInfoDTO;
 import io.github.cnsukidayo.wword.model.entity.SystemInfo;
-import io.github.cnsukidayo.wword.model.environment.RedisConstant;
+import io.github.cnsukidayo.wword.global.support.constant.RedisConstant;
 import io.github.cnsukidayo.wword.model.exception.ResultCodeEnum;
 import io.github.cnsukidayo.wword.model.params.PageQueryParam;
 import io.github.cnsukidayo.wword.model.params.SystemInfoParam;

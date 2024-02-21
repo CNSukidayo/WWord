@@ -1,5 +1,6 @@
 package io.github.cnsukidayo.wword.common.utils;
 
+import io.github.cnsukidayo.wword.global.support.constant.RedisConstant;
 import io.github.cnsukidayo.wword.model.entity.User;
 import org.springframework.lang.NonNull;
 import org.springframework.util.Assert;
@@ -12,19 +13,6 @@ import org.springframework.util.Assert;
  */
 public class SecurityUtils {
 
-    /**
-     * 验证令牌的前缀
-     */
-    private static final String TOKEN_ACCESS_CACHE_PREFIX = "wword:auth:user:token:access.token.";
-
-    /**
-     * 刷新令牌的前缀
-     */
-    private static final String TOKEN_REFRESH_CACHE_PREFIX = "wword:auth:user:token:refresh.token.";
-
-    private static final String ACCESS_TOKEN_CACHE_PREFIX = "wword:auth:user:token:access_token.";
-
-    private static final String REFRESH_TOKEN_CACHE_PREFIX = "wword:auth:user:token:refresh_token.";
 
     private SecurityUtils() {
     }
@@ -33,28 +21,28 @@ public class SecurityUtils {
     public static String buildAccessTokenKey(@NonNull User user) {
         Assert.notNull(user, "User must not be null");
         // 从User->access_token
-        return ACCESS_TOKEN_CACHE_PREFIX + user.getUuid();
+        return RedisConstant.ACCESS_TOKEN_CACHE_PREFIX + user.getUuid();
     }
 
     @NonNull
     public static String buildRefreshTokenKey(@NonNull User user) {
         Assert.notNull(user, "User must not be null");
         // 从User->refresh_token
-        return REFRESH_TOKEN_CACHE_PREFIX + user.getUuid();
+        return RedisConstant.REFRESH_TOKEN_CACHE_PREFIX + user.getUuid();
     }
 
     @NonNull
     public static String buildTokenAccessKey(@NonNull String accessToken) {
         Assert.hasText(accessToken, "Access token must not be blank");
         // 从access_token->user
-        return TOKEN_ACCESS_CACHE_PREFIX + accessToken;
+        return RedisConstant.TOKEN_ACCESS_CACHE_PREFIX + accessToken;
     }
 
     @NonNull
     public static String buildTokenRefreshKey(@NonNull String refreshToken) {
         Assert.hasText(refreshToken, "Refresh token must not be blank");
         // 从refresh_token->user
-        return TOKEN_REFRESH_CACHE_PREFIX + refreshToken;
+        return RedisConstant.TOKEN_REFRESH_CACHE_PREFIX + refreshToken;
     }
 
 }

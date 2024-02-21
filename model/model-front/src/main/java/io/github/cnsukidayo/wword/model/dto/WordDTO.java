@@ -8,7 +8,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
  * @author sukidayo
  * @date 2023/7/28 16:30
  */
-@Schema(description = "单词详细信息")
+@Schema(description = "单词元信息")
 public class WordDTO implements OutputConverter<WordDTO, Word> {
     @Schema(description = "单词组标记")
     private Long groupFlag;

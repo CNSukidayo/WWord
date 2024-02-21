@@ -33,4 +33,15 @@ public enum WordRequestEnum implements WordRequest {
         return new ResponseWrapper<>(requestHandler, request) {
         };
     }
+
+    @Override
+    public ResponseWrapper<BaseResponse<List<WordDTO>>> batchSelectWordById(List<Long> wordIds) {
+        RequestHandler requestHandler = RequestRegister.getRequestHandler();
+        Request request = new Request.Builder()
+            .url(requestHandler.createPrefixUrl("/api/u/word/batchSelectWordById").build())
+            .post(requestHandler.jsonBody(wordIds))
+            .build();
+        return new ResponseWrapper<>(requestHandler, request) {
+        };
+    }
 }

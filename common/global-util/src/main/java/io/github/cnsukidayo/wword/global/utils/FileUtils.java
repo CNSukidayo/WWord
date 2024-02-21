@@ -1,6 +1,12 @@
 package io.github.cnsukidayo.wword.global.utils;
 
+import cn.hutool.core.io.FileUtil;
 import org.springframework.util.Assert;
+
+import java.io.IOException;
+import java.nio.file.*;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.util.Set;
 
 /**
  * @author sukidayo
@@ -41,5 +47,28 @@ public class FileUtils {
         }
         return result.toString();
     }
+
+    public static void copyFolder(Path source, Path target, String... ignoreSuffix) throws IOException {
+        Set<String> ignoreSuffixSet = Set.of(ignoreSuffix);
+        Files.walkFileTree(source, new SimpleFileVisitor<>() {
+
+            @Override
+            public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
+                Path current = target.resolve(source.relativize(dir).toString());
+                Files.createDirectories(current);
+                if (dir.toFile().isFile() && ignoreSuffixSet.contains(FileUtil.getSuffix(dir.toFile()))) {
+                    return FileVisitResult.SKIP_SIBLINGS;
+                }
+                return FileVisitResult.CONTINUE;
+            }
+
+            @Override
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                Files.copy(file, target.resolve(source.relativize(file).toString()), StandardCopyOption.REPLACE_EXISTING);
+                return FileVisitResult.CONTINUE;
+            }
+        });
+    }
+
 
 }

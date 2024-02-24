@@ -35,6 +35,9 @@ public class Post extends BaseEntity {
     @TableField("describe_info")
     private String describeInfo;
 
+    @TableField("cover_url")
+    private String coverUrl;
+
     public Post() {
     }
 
@@ -92,5 +95,13 @@ public class Post extends BaseEntity {
 
     public void setDescribeInfo(String describeInfo) {
         this.describeInfo = describeInfo;
+    }
+
+    public String getCoverUrl() {
+        return coverUrl;
+    }
+
+    public void setCoverUrl(String coverUrl) {
+        this.coverUrl = coverUrl;
     }
 }

@@ -76,12 +76,14 @@
             <artifactId>mybatis-plus-boot-starter</artifactId>
         </dependency>
 
-
-
-
         <dependency>
             <groupId>com.alibaba.cloud</groupId>
             <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+        </dependency>
+        <!--nacos配置中心-->
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
         </dependency>
 
         <!-- 服务调用feign -->
@@ -114,7 +116,5 @@
             </plugin>
         </plugins>
     </build>
-
-
 
 </project>

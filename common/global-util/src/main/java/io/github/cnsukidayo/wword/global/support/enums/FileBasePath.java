@@ -27,7 +27,7 @@ public class FileBasePath {
     }
 
     public enum FileCategory implements BasePathInterface {
-        POST("post");
+        POST("post"), COVER("cover");
         private final String basePath;
 
         FileCategory(String basePath) {

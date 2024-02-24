@@ -27,6 +27,9 @@ public class PostDTO implements OutputConverter<PostDTO, Post> {
     @Schema(description = "帖子的描述信息,该信息由系统创建")
     private String describeInfo;
 
+    @Schema(description = "帖子的封面Url")
+    private String coverUrl;
+
     public PostDTO() {
     }
 
@@ -68,5 +71,13 @@ public class PostDTO implements OutputConverter<PostDTO, Post> {
 
     public void setUuid(Long uuid) {
         this.uuid = uuid;
+    }
+
+    public String getCoverUrl() {
+        return coverUrl;
+    }
+
+    public void setCoverUrl(String coverUrl) {
+        this.coverUrl = coverUrl;
     }
 }

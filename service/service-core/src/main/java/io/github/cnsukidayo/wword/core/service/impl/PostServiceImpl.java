@@ -1,6 +1,7 @@
 package io.github.cnsukidayo.wword.core.service.impl;
 
 import cn.hutool.core.date.DateTime;
+import cn.hutool.core.io.FileUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import io.github.cnsukidayo.wword.auth.client.AuthFeignClient;
 import io.github.cnsukidayo.wword.common.utils.ValidationUtils;
@@ -28,10 +29,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -67,17 +65,28 @@ public class PostServiceImpl extends ServiceImpl<PostMapper, Post> implements Po
         DateTime dateTime = new DateTime();
         // 文件上传
         String originUrl = null;
-        MultipartFile multipartFile = publishPostParam.getFile();
+        String coverUrl = null;
+        MultipartFile markDownFile = publishPostParam.getMarkDownFile();
+        MultipartFile coverFile = publishPostParam.getCoverFile();
         try {
-            originUrl = ossComponent.fileUpLoadAutoRename(multipartFile.getInputStream(),
+            originUrl = ossComponent.fileUpLoadAutoRename(markDownFile.getInputStream(),
                 FileUtils.separatorFilePath(WWordConst.separatorChar,
                     FileBasePath.FileNameSpace.USER.getBasePath(),
                     FileBasePath.FileCategory.POST.getBasePath(),
                     FileBasePath.FileBasePathDIR.UPLOAD_DIR.getBasePath(),
                     dateTime.toString(WWordConst.dateFormat)),
-                multipartFile.getOriginalFilename());
+                markDownFile.getOriginalFilename());
+            coverUrl = FileUtils.separatorFilePath(WWordConst.separatorChar,
+                FileBasePath.FileNameSpace.PUBLIC.getBasePath(),
+                FileBasePath.FileCategory.COVER.getBasePath(),
+                FileBasePath.FileBasePathDIR.PUBLIC_DIR.getBasePath(),
+                dateTime.toString(WWordConst.dateFormat),
+                UUID.randomUUID().toString().replaceAll("-", "")) +
+                "." +
+                FileUtil.getSuffix(coverFile.getOriginalFilename());
+            ossComponent.fileUpLoadOriginName(coverFile.getInputStream(), coverUrl);
         } catch (IOException e) {
-            logger.error("PostServiceImpl-publishPost-uploadFileError;FileName:[{}]", multipartFile.getOriginalFilename());
+            logger.error("PostServiceImpl-publishPost-uploadFileError;FileName:[{}]", markDownFile.getOriginalFilename());
             throw new RuntimeException(e);
         }
 
@@ -89,6 +98,7 @@ public class PostServiceImpl extends ServiceImpl<PostMapper, Post> implements Po
         post.setOriginUrl(originUrl);
         LocalDateTime localDateTime = dateTime.toLocalDateTime();
         post.setCreateTime(localDateTime);
+        post.setCoverUrl(coverUrl);
 
         // 发布到MQ中
         rabbitService.sendMessage(MQConst.EXCHANGE_POST_DIRECT, MQConst.ROUTING_PUBLISH_POST, post);

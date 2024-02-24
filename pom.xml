@@ -23,14 +23,16 @@
         <mybatis-plus.version>3.5.3.1</mybatis-plus.version>
         <knife4j.version>4.3.0</knife4j.version>
         <hutool.version>5.8.20</hutool.version>
+        <spring-boot.version>3.0.4</spring-boot.version>
         <spring-cloud.version>2022.0.3</spring-cloud.version>
         <spring-cloud-alibaba.version>2022.0.0.0</spring-cloud-alibaba.version>
         <aliyun-sdk-oss.version>3.17.1</aliyun-sdk-oss.version>
         <feign-reactor.version>4.0.0</feign-reactor.version>
         <commonmark.version>0.21.0</commonmark.version>
+        <mysql.version>8.0.30</mysql.version>
     </properties>
 
-
+    <!--SpringBoot版本管理,必须使用parent的方式指定,因为涉及到插件的管理-->
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
@@ -40,7 +42,25 @@
 
     <dependencyManagement>
         <dependencies>
+            <!--springcloud版本管理-->
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
 
+            <!--springcloud-alibaba版本管理-->
+            <dependency>
+                <groupId>com.alibaba.cloud</groupId>
+                <artifactId>spring-cloud-alibaba-dependencies</artifactId>
+                <version>${spring-cloud-alibaba.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <!--数据库组件相关-->
             <dependency>
                 <groupId>mysql</groupId>
                 <artifactId>mysql-connector-java</artifactId>
@@ -53,6 +73,7 @@
                 <version>${mybatis-plus.version}</version>
             </dependency>
 
+            <!--swagger组件相关-->
             <dependency>
                 <groupId>com.github.xiaoymin</groupId>
                 <artifactId>knife4j-openapi3-jakarta-spring-boot-starter</artifactId>
@@ -66,34 +87,14 @@
                 <version>${knife4j.version}</version>
             </dependency>
 
-            <dependency>
-                <groupId>cn.hutool</groupId>
-                <artifactId>hutool-crypto</artifactId>
-                <version>${hutool.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.springframework.cloud</groupId>
-                <artifactId>spring-cloud-dependencies</artifactId>
-                <version>${spring-cloud.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-
-            <dependency>
-                <groupId>com.alibaba.cloud</groupId>
-                <artifactId>spring-cloud-alibaba-dependencies</artifactId>
-                <version>${spring-cloud-alibaba.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-
+            <!--OSS组件相关-->
             <dependency>
                 <groupId>com.aliyun.oss</groupId>
                 <artifactId>aliyun-sdk-oss</artifactId>
                 <version>${aliyun-sdk-oss.version}</version>
             </dependency>
 
+            <!--微服务组件相关-->
             <dependency>
                 <groupId>com.playtika.reactivefeign</groupId>
                 <artifactId>feign-reactor-webclient</artifactId>
@@ -111,13 +112,21 @@
                 <artifactId>feign-reactor-spring-configuration</artifactId>
                 <version>${feign-reactor.version}</version>
             </dependency>
-            <!--解析markdown的组件-->
+
+            <!--工具类-->
             <dependency>
                 <groupId>org.commonmark</groupId>
                 <artifactId>commonmark</artifactId>
                 <version>${commonmark.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>cn.hutool</groupId>
+                <artifactId>hutool-crypto</artifactId>
+                <version>${hutool.version}</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
+
 </project>

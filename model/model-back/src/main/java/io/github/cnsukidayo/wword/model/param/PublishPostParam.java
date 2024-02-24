@@ -20,7 +20,11 @@ public class PublishPostParam {
 
     @Schema(description = "文件上传的输入流")
     @NotNull(message = "上传的文件不为null")
-    private MultipartFile file;
+    private MultipartFile markDownFile;
+
+    @Schema(description = "封面文件的输入流")
+    @NotNull(message = "必须指定封面")
+    private MultipartFile coverFile;
 
     public PublishPostParam() {
     }
@@ -33,11 +37,19 @@ public class PublishPostParam {
         this.title = title;
     }
 
-    public MultipartFile getFile() {
-        return file;
+    public MultipartFile getMarkDownFile() {
+        return markDownFile;
     }
 
-    public void setFile(MultipartFile file) {
-        this.file = file;
+    public void setMarkDownFile(MultipartFile markDownFile) {
+        this.markDownFile = markDownFile;
+    }
+
+    public MultipartFile getCoverFile() {
+        return coverFile;
+    }
+
+    public void setCoverFile(MultipartFile coverFile) {
+        this.coverFile = coverFile;
     }
 }

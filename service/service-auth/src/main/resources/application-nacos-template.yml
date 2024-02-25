@@ -1,3 +1,4 @@
+# 服务相关配置
 server:
   port: 8203
   servlet:
@@ -10,49 +11,46 @@ server:
 
 # spring相关配置
 spring:
-  datasource:
-    username: root
-    password: 123456
-    url: jdbc:mysql://localhost:3306/wword-auth?serverTimezone=UTC
-    driver-class-name: com.mysql.cj.jdbc.Driver
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
     throw-exception-if-no-handler-found: true
-  data:
-    redis:
-      host: localhost
-      port: 6379
-      # password:
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
     time-zone: GMT+8
   servlet:
     multipart:
-      max-file-size: 1024MB
-      max-request-size: 1024MB
+      max-file-size: 128MB
+      max-request-size: 128MB
   web:
     resources:
       add-mappings: false
-  # 微服务相关配置
-  cloud:
-    nacos:
-      discovery:
-        server-addr: localhost:8848
+  datasource:
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+    url: ${SPRING_DATASOURCE_URL:jdbc:mysql://192.168.230.128:7901/wword-auth?serverTimezone=UTC}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  data:
+    redis:
+      host: ${SPRING_DATA_REDIS_HOST}
+      port: ${SPRING_DATA_REDIS_PORT}
+      password: ${SPRING_DATA_REDIS_PASSWORD}
 
+# 日志相关配置
 logging:
   file:
-    path: logs/${spring.application.name}/
+    path: ${LOGGING_FILE_PATH:${wword.resource-locations}logs/${spring.application.name:service-auth}/}
+  level:
+    io.github.cnsukidayo: info
 
 #mybatis-plus相关配置
 mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
     map-underscore-to-camel-case: true
-  #  mapper-locations: classpath*:/mapper/**/*.xml
   type-aliases-package: io.github.cnsukidayo.wword.model.entity
 
-#springdoc配置
+# 分组API配置
 springdoc:
   api-docs:
     groups:
@@ -66,18 +64,14 @@ springdoc:
       display-name: 权限服务-微服务
       packages-to-scan:
         - io.github.cnsukidayo.wword.auth.api
-
-# knife4j的增强配置,不需要增强可以不配
 knife4j:
   enable: true
   setting:
     language: zh_cn
   production: false
 
-# 全局配置
+# 自定义配置
 wword:
-  resource-locations: D:/Program/Java Project/WWord/wwordResources/
-
-# 当前服务自定义配置
-service-auth:
-  max-login-log: 50
+  resource-locations: ${WWORD_RESOURCE_LOCATIONS:~/wwordResources/}
+  service-auth:
+    max-login-log: 50

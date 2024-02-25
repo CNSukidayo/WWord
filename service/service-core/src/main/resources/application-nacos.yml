@@ -1,0 +1,15 @@
+server:
+  port: 8201
+
+spring:
+  cloud:
+    nacos:
+      server-addr: ${NACOS_ADDRESS}
+      username: ${NACOS_USERNAME}
+      password: ${NACOS_PASSWORD}
+      config:
+        namespace: ${NACOS_NAMESPACE}
+  config:
+    import:
+      - ${NACOS_CONFIG_URL_COMMON}
+      - ${NACOS_CONFIG_URL_CUSTOM}

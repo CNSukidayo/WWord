@@ -30,7 +30,7 @@ public class WordStructureController {
     }
 
     @Operation(summary = "查询一个单词的结构信息")
-    @GetMapping("selectWordById")
+    @GetMapping("uncheck/selectWordById")
     public List<WordStructureDTO> selectWordStructureById(@Parameter(description = "语种的id") @RequestParam("languageId") Long languageId) {
         return wordStructureService.selectWordStructureById(languageId)
             .stream()

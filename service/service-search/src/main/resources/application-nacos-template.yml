@@ -1,5 +1,5 @@
+# 服务相关配置
 server:
-  port: 8204
   servlet:
     encoding:
       charset: UTF-8
@@ -22,23 +22,17 @@ spring:
   web:
     resources:
       add-mappings: false
-  # springcloud相关配置
-  #  cloud:
-  #    nacos:
-  #      discovery:
-  #        server-addr: localhost:8848
-
   # ES相关配置
   elasticsearch:
-    uris: http://localhost:9200
+    uris: ${SPRING_ELASTICSEARCH_URIS}
 
 # 日志相关配置
 logging:
   file:
-    path: logs/${spring.application.name}/
+    path: ${LOGGING_FILE_PATH:${wword.resource-locations}logs/${spring.application.name:service-search}/}
   level:
     io.github.cnsukidayo: info
-# knife4j的增强配置,不需要增强可以不配
+# 分组API配置
 springdoc:
   api-docs:
     groups:
@@ -60,4 +54,4 @@ knife4j:
 
 # 自定义配置
 wword:
-  resource-locations: D:/Program/Java Project/WWord/wwordResources/
+  resource-locations: ${WWORD_RESOURCE_LOCATIONS:~/wwordResources/}

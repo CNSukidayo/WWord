@@ -1,5 +1,5 @@
+# 服务相关配置
 server:
-  port: 8201
   servlet:
     encoding:
       charset: UTF-8
@@ -12,39 +12,36 @@ server:
 spring:
   servlet:
     multipart:
-      max-file-size: 16MB
-      max-request-size: 64MB
-  datasource:
-    username: root
-    password: 123456
-    url: jdbc:mysql://localhost:3306/wword?serverTimezone=UTC
-    driver-class-name: com.mysql.cj.jdbc.Driver
+      max-file-size: 128MB
+      max-request-size: 128MB
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
     throw-exception-if-no-handler-found: true
-  data:
-    redis:
-      host: localhost
-      port: 6379
-      # password:
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
     time-zone: GMT+8
   web:
     resources:
       add-mappings: false
-  # springcloud相关配置
-  cloud:
-    nacos:
-      discovery:
-        server-addr: localhost:8848
+  # 数据库相关配置
+  datasource:
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+    url: ${SPRING_DATASOURCE_URL:jdbc:mysql://192.168.230.128:3306/wword?serverTimezone=UTC}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  # redis相关配置
+  data:
+    redis:
+      host: ${SPRING_DATA_REDIS_HOST}
+      port: ${SPRING_DATA_REDIS_PORT}
+      password: ${SPRING_DATA_REDIS_PASSWORD}
   # rabbitMQ相关配置
   rabbitmq:
-    host: localhost
-    port: 5672
-    username: guest
-    password: guest
+    host: ${SPRING_RABBITMQ_HOST}
+    port: ${SPRING_RABBITMQ_PORT}
+    username: ${SPRING_RABBITMQ_USERNAME}
+    password: ${SPRING_RABBITMQ_PASSWORD}
     publisher-confirm-type: CORRELATED
     publisher-returns: true
     listener:
@@ -56,7 +53,7 @@ spring:
 # 日志相关配置
 logging:
   file:
-    path: logs/core/
+    path: ${LOGGING_FILE_PATH:${wword.resource-locations}logs/${spring.application.name:service-core}/}
   level:
     io.github.cnsukidayo: info
 
@@ -65,23 +62,9 @@ mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
     map-underscore-to-camel-case: true
-  #  mapper-locations: classpath*:/mapper/**/*.xml
   type-aliases-package: io.github.cnsukidayo.wword.model.entity
 
-# springdoc-openapi项目配置
-#springdoc:
-#  swagger-ui:
-#    path: /swagger-ui.html
-#    tags-sorter: alpha
-#    operations-sorter: alpha
-#    version: v0.0.1
-#  api-docs:
-#    path: /v3/api-docs
-#  group-configs:
-#    - group: 'user'
-#      display-name: "用户端接口"
-#      packages-to-scan: io.github.cnsukidayo.wword.controller.u
-# knife4j的增强配置,不需要增强可以不配
+# 分组API配置
 springdoc:
   api-docs:
     groups:
@@ -103,15 +86,15 @@ knife4j:
 
 # 自定义配置
 wword:
-  resource-locations: D:/Program/Java Project/WWord/wwordResources/
-
-# 服务自定义配置
-service-core:
-  remote-base-address: /remove/core/
-
-# oss相关配置 todo 改成自已OSS的服务配置
-#oss:
-  # endpoint:
-  # access-key:
-  # access-key-secret:
-  # bucket-name:
+  resource-locations: ${WWORD_RESOURCE_LOCATIONS:~/wwordResources/}
+  # oss相关配置
+  oss:
+    oss-type: local
+    work-space-dir: ${WWORD_OSS_WORK_SPACE_DIR:${wword.resource-locations}}
+    ali:
+      endpoint: ${WWORD_OSS_ALI_ENDPOINT}
+      access-key: ${WWORD_OSS_ALI_ACCESS_KEY}
+      access-key-secret: ${WWORD_OSS_ALI_ACCESS_KEY_SECRET}
+      bucket-name: ${WWORD_OSS_ALI_BUCKET_NAME}
+    local:
+      upload-dir: ${WWORD_OSS_LOCAL_UPLOAD_DIR:${wword.resource-locations}}

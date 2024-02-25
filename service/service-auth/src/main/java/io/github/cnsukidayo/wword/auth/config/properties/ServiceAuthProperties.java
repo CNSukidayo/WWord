@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
  * @date 2023/9/8 15:27
  */
 @Component
-@ConfigurationProperties(prefix = "service-auth")
+@ConfigurationProperties(prefix = "wword.service-auth")
 public class ServiceAuthProperties {
 
     private Integer maxLoginLog;

@@ -49,6 +49,20 @@ spring:
         prefetch: 1
         concurrency: 3
         acknowledge-mode: manual
+  cloud:
+    sentinel:
+      transport:
+        dashboard: ${SPRING_CLOUD_SENTINEL_TRANSPORT_DASHBOARD}
+      datasource:
+        nacosTemplate:
+          nacos:
+            server-addr: ${SPRING_CLOUD_SENTINEL_DATASOURCE_NACOSTEMPLATE_NACOS_SERVER_ADDR}
+            username: ${SPRING_CLOUD_SENTINEL_DATASOURCE_NACOSTEMPLATE_NACOS_USERNAME}
+            password: ${SPRING_CLOUD_SENTINEL_DATASOURCE_NACOSTEMPLATE_NACOS_PASSWORD}
+            data-id: ${spring.application.name}-sentinel
+            group-id: DEFAULT_GROUP
+            data-type: json
+
 
 # 日志相关配置
 logging:

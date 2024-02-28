@@ -121,13 +121,13 @@ knife4j:
 wword:
   # 白名单,不走gateway转发的路径
   exclude-url-patterns:
-    - "/api/auth/user/register"
-    - "/api/auth/user/login"
-    - "/api/auth/user/refresh/*"
-    - "/api/**/uncheck/**"
+    - /api/auth/user/register
+    - /api/auth/user/login
+    - /api/auth/user/refresh/*
+    - /api/**/uncheck/**
   # 哪些路径走gateway的
   url-patterns:
-    - "/api/**"
+    - /api/**
   # 是否是生产环境
   production: false
   # 静态资源映射规则
